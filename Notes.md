@@ -25,3 +25,11 @@ Disable same-origin policy:
 
 
 Possible command flags: http://peter.sh/experiments/chromium-command-line-switches/
+
+Remote debugging on external machine:
+  http://superuser.com/questions/630923/forward-connections-on-0-0-0-080-to-127-0-0-19091
+
+Audio:
+  https://github.com/njh/bbcradio-tingapp#making-usb-audio-default
+
+
