@@ -32,4 +32,9 @@ Remote debugging on external machine:
 Audio:
   https://github.com/njh/bbcradio-tingapp#making-usb-audio-default
 
+# Install with systemd
 
+    cd manager && JOBS=MAX npm install --production && cd ..
+    sudo cp systemd/* /etc/systemd/system/
+    sudo systemctl daemon-reload
+    sudo systemctl start manager
