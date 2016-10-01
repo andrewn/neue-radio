@@ -1,7 +1,6 @@
 sudo raspi-config # expand file system, reboot
 sudo apt-get update
-sudo apt-get install rpi-chromium-mods
-sudo apt-get install xvfb
+sudo apt-get install rpi-chromium-mods xvfb
 xvfb-run chromium-browser
 
 # To enable remote debugging
@@ -38,3 +37,10 @@ Audio:
     sudo cp systemd/* /etc/systemd/system/
     sudo systemctl daemon-reload
     sudo systemctl start manager
+
+You should hear audio!
+
+Enable on startup:
+
+    sudo systemctl enable manager
+    sudo systemctl enable manager-web-server
