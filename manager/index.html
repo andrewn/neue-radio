@@ -6,11 +6,43 @@
       {
         id: "radio"
       }
-    ]
+    ];
   </script>
 </head>
 <body>
-  <h1>This is the public part of the radio app</h1>
-  <p>Useful for remote controls etc</p>
+  <h1>App manager (internal)</h1>
+  <script>
+    let instances;
+
+    setTimeout(init, 3000);
+
+    function init() {
+      console.log('Create apps...');
+      instances = openApps(apps);
+      console.log('...done');
+    }
+
+    function openApps(apps) {
+      const { protocol, host } = window.location;
+      const server = protocol + '//' + host;
+      const rootElement = document.body;
+
+      const instances = apps.map(function (app) {
+        const url = server + '/' + app.id;
+        const id = app.id;
+
+        return mountAppUrlAtRoot(id, url, rootElement);
+      });
+      return instances;
+    }
+
+    function mountAppUrlAtRoot(id, url, rootElement) {
+      const frame = document.createElement('iframe');
+      frame.src = url;
+      frame.dataset.appId = id;
+      rootElement.appendChild(frame);
+      return frame;
+    }
+  </script>
 </body>
 </html>
