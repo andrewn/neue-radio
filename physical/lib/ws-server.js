@@ -17,7 +17,7 @@ module.exports.create = function(server, router) {
       // On connection, send the currently registered
       // devices
       ws.send(JSON.stringify({
-        type: 'registered',
+        key: 'physical/registered',
         data: router.registered()
       }));
 
@@ -36,7 +36,7 @@ module.exports.create = function(server, router) {
         console.log('close', event.code, event.reason);
 
         // Tidy up when connection closes
-        router.removeEventListener('pubish', handlePublish);
+        router.removeListener('publish', handlePublish);
         ws = null;
 
         // // remove object from list of connections
