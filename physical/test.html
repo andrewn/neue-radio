@@ -5,9 +5,12 @@
 </head>
 <body>
   <script>
-    const ws = new WebSocket('ws://localhost:' + window.location.port);
+    const ws = new WebSocket('ws://' + window.location.host);
     ws.addEventListener('open', function (evt) {
       console.log('connected');
+    });
+    ws.addEventListener('message', function (evt) {
+      console.log('message', JSON.parse(evt.data));
     });
   </script>
 </body>
