@@ -2,7 +2,7 @@ const createPhysical = require('./lib/physical').create;
 const createHttpServer = require('./lib/http-server').create;
 const createWsServer = require('./lib/ws-server').create;
 const Router = require('./lib/router');
-const port = process.env.PORT || 6000;
+const port = process.env.PORT || 5200;
 
 // We use a router to connect the WebSockets with
 // the physical UI so they don't need to know
