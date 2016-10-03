@@ -23,7 +23,7 @@ Router.prototype.register = function (type, id) {
   const routable = new EventEmitter();
   routable.publish = function (topic, data) {
     const path = type + SEP + id + SEP + topic;
-    self.emit(path, data);
+    self.emit('publish', { key: path, data: data });
   };
 
   console.log('Router#register: ', type + SEP + id);
