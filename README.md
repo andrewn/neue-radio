@@ -46,7 +46,7 @@ Visit http://raspberrypi.local:9223 on another machine to access the web inspect
 
 ## Physical interface
 
-A very rough implementation for controlling connected lights and buttons exists in `physical`. When run it connects to the peripherals specified in `physical/config/physical-config.json`. The Buttons and RGB LEDs map onto the [Johnny-Five](http://johnny-five.io) API. The Rotary Encoders are provided by the [andrewn/rotary-encoder](https://github.com/andrewn/raspi-rotary-encoder) package.
+A very rough implementation for controlling connected lights and buttons exists in `physical`. When run it connects to the peripherals specified in `physical/config/physical-config.json`. The Buttons and RGB LEDs map onto the [Johnny-Five](http://johnny-five.io) API. The Rotary Encoders are provided by the [andrewn/raspi-rotary-encoder](https://github.com/andrewn/raspi-rotary-encoder) package.
 
 The physical server listens for WebSocket connections on port `5100` and emits and receives simple events to all connected clients.
 
