@@ -157,7 +157,7 @@ function createLedRGBInstance(spec, routable) {
   return rgb;
 }
 
-function createEncoderInstance(spec, publisher) {
+function createEncoderInstance(spec, routable) {
   const id = spec.id;
   const config = spec.config;
   // const topicKey = 'event.rotary-encoder.' + id + '.turn';
