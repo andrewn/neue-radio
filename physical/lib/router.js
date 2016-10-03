@@ -40,12 +40,24 @@ Router.prototype.route = function (path, data) {
   const type = parts[0];
   const id = parts[1];
   const event = parts[2];
+
   if (this.types[type] && this.types[type][id] && event) {
     this.types[type][id].emit(event, data);
   } else {
     console.warn('Could not route: ', path);
   }
 };
+
+// Returns the currently registered types
+Router.prototype.registered = function () {
+  const registered = {};
+
+  Object.keys(this.types).forEach(function (type) {
+    registered[type] = Object.keys(this.types[type]);
+  }.bind(this));
+
+  return registered;
+}
 
 
 module.exports = Router;

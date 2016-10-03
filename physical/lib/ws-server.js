@@ -17,6 +17,13 @@ module.exports.create = function(server, router) {
       //   data: state.get()
       // }));
 
+      // On connection, send the currently registered
+      // devices
+      ws.send(JSON.stringify({
+        type: 'registered',
+        data: router.registered()
+      }));
+
       // We expect incoming messages to have the shape:
       // {
       //    key: '<type>.<id>',
