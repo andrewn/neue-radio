@@ -6,16 +6,13 @@ module.exports.create = function(server, router) {
 
   server.on('upgrade', function(request, socket, body) {
     if (WebSocket.isWebSocket(request)) {
-      var ws = new WebSocket(request, socket, body);
-      // var updateHandler = emitStateChange.bind(null, ws);
+      const ws = new WebSocket(request, socket, body);
 
       // connections.push(ws);
 
-      // send complete state on new connection
-      // ws.send(JSON.stringify({
-      //   type: 'state',
-      //   data: state.get()
-      // }));
+      const handlePublish = function (evt) {
+        ws.send(JSON.stringify(evt));
+      };
 
       // On connection, send the currently registered
       // devices
@@ -37,36 +34,20 @@ module.exports.create = function(server, router) {
 
       ws.on('close', function(event) {
         console.log('close', event.code, event.reason);
-        // state.off('update', updateHandler);
+
+        // Tidy up when connection closes
+        router.removeEventListener('pubish', handlePublish);
         ws = null;
 
-      // // remove object from list of connections
-      // connections = connections.filter(function(s) {
-      //   return ws !== s;
-      // });
+        // // remove object from list of connections
+        // connections = connections.filter(function(s) {
+        //   return ws !== s;
+        // });
       });
 
-      router.on('publish', function (evt) {
-        console.log('public', evt.topic, evt.data);
-      });
-
-      // send updates when state changes
-      // state.on('update', updateHandler);
+      // Send messages when the router publishes
+      // something
+      router.on('publish', handlePublish);
     }
   });
-
-  const instance = new EventEmitter();
-  instance.publish = function (msg) {
-    console.log('Publish ', msg);
-  };
-
-  return instance;
-}
-
-function emitStateChange(ws, e) {
-  var eventData = e.data;
-  ws.send(JSON.stringify({
-    type: 'update',
-    data: eventData
-  }));
-}
+};
