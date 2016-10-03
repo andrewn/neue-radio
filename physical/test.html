@@ -2,16 +2,34 @@
 <html>
 <head>
   <title>Physical UI test</title>
+  <style type="text/css">
+    body {
+      font-family: --apple-system, sans-serif;
+    }
+  </style>
 </head>
 <body>
+  <h1>Physical interface server test</h1>
+  <button onClick="send('Led.RGB/magic/request', { params: { color: 'yellow' }})">Magic light yellow</button>
+  <button onClick="send('Led.RGB/magic/request', { params: { color: 'purple' }})">Magic light purple</button>
+  <p>View <code>console</code> for incoming messages</p>
   <script>
+    console.log('%cHello', 'color:blue;font-weight:bold', 'messages from the server');
     const ws = new WebSocket('ws://' + window.location.host);
     ws.addEventListener('open', function (evt) {
       console.log('connected');
     });
     ws.addEventListener('message', function (evt) {
-      console.log('message', JSON.parse(evt.data));
+      const msg = JSON.parse(evt.data);
+      console.log('message', msg);
     });
+
+    function send(key, data) {
+      ws.send(JSON.stringify({
+        key: key,
+        data: data
+      }));
+    }
   </script>
 </body>
 </html>

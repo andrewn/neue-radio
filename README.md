@@ -44,6 +44,16 @@ In another session on the Pi run the following command:
 
 Visit http://raspberrypi.local:9223 on another machine to access the web inspector where all pages are accessible.
 
+## Physical interface
+
+A very rough implementation for controlling connected lights and buttons exists in `physical`. When run it connects to the peripherals specified in `physical/config/physical-config.json`. The Buttons and RGB LEDs map onto the [Johnny-Five](http://johnny-five.io) API. The Rotary Encoders are provided by the [andrewn/rotary-encoder](https://github.com/andrewn/raspi-rotary-encoder) package.
+
+The physical server listens for WebSocket connections on port `5100` and emits and receives simple events to all connected clients.
+
+At the moment, the messages are quite low-level. Further work would be to wrap the messages in a simple library that make listing available components and controlling and listening to them a bit easier.
+
+A simple demo page at `http://localhost:5100` allows limited interaction.
+
 ## What does it do?
 
 This initial implementation doesn't do very much. [radio/index.html](radio/index.html)  plays a live HLS radio stream using [HLS.js](https://github.com/dailymotion/hls.js) in a webpage.
