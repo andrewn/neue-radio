@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Physical UI test</title>
+</head>
+<body>
+  <script>
+    const ws = new WebSocket('ws://localhost:' + window.location.port);
+    ws.addEventListener('open', function (evt) {
+      console.log('connected');
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+{
+  "Button": [
+    {
+      "id": "next",
+      "config": {
+        "pin": 2,
+        "isPullup": true,
+        "invert": true
+      }
+    },
+    {
+      "id": "magic",
+      "config": {
+        "pin": 7,
+        "isPullup": false,
+        "isPulldown": true,
+        "invert": false
+      }
+    },
+    {
+      "id": "power",
+      "config": {
+        "pin": 3,
+        "isPullup": false,
+        "isPulldown": true,
+        "invert": false
+      }
+    }
+  ],
+  "Encoder": [
+    {
+      "id": "power",
+      "config": {
+        "pins": {
+          "a": 5,
+          "b": 4
+        },
+        "pullResistors": {
+          "a": "up",
+          "b": "up"
+        }
+      }
+    },
+    {
+      "id": "magic",
+      "config": {
+        "pins": {
+          "a": 8,
+          "b": 9
+        },
+        "pullResistors": {
+          "a": "up",
+          "b": "up"
+        }
+      }
+    }
+  ],
+  "Led.RGB": [
+    {
+      "id": "magic",
+      "config": {
+        "pins": {
+          "red": 12,
+          "green": 13,
+          "blue": 14
+        },
+        "isAnode": true
+      }
+    },
+    {
+      "id": "power",
+      "config": {
+        "pins": {
+          "red": 6,
+          "green": 10,
+          "blue": 11
+        },
+        "isAnode": true
+      }
+    }
+  ]
+}
