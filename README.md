@@ -65,6 +65,12 @@ Install the manager and example app:
     npm install --production
     cd ..
 
+Install the physical interface manager:
+
+    cd physical
+    JOBS=MAX npm install --production # use all cores
+    cd ..
+
 Install scripts to manage processes:
 
     sudo cp systemd/* /etc/systemd/system/
@@ -77,3 +83,4 @@ Run on boot:
 
     sudo systemctl enable manager
     sudo systemctl enable manager-web-server
+    sudo systemctl enable physical

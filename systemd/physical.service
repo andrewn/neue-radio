@@ -1,0 +1,14 @@
+[Unit]
+Description=Physical interface
+
+[Service]
+WorkingDirectory=/opt/radiodan/rde/physical
+ExecStart=/usr/local/bin/npm start
+Restart=on-failure
+StandardOutput=syslog
+SyslogIdentifier=rde-physical
+Type=idle
+Environment=PORT=5100
+
+[Install]
+WantedBy=multi-user.target
