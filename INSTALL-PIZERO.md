@@ -20,10 +20,12 @@ Andrew's instructions are here and mostly hold - I've made some tweaks.
 
 See http://blog.gbaman.info/?p=791 (do this while the card is still in your main machine).
 
-## basic card stuff
+## Connect to the pi
 
 On your laptop, share your wifi over ethernet and "RNDIS / Ethernet Gadget"
-Put the card in the pi and connect to you laptop using the cable. 
+Put the card in the pi and connect to your laptop via its micro USB port (not its power port) using the cable. 
+This will both power the pi zero and allow you to connect to it.
+
 ssh into the pi
     
     ssh pi@raspberry.local
