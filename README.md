@@ -9,6 +9,8 @@ A basic sketch of how things could work if a headless web browser instance was u
 
 This forked version of Andrew Nicolaou's work adds websockets to connect the public and private radio pages.
 
+See INSTALL-PIZERO.md for detailed instructions.
+
 How does it work?
 ---
 
