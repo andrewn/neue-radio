@@ -7,6 +7,8 @@ What is this?
 
 A basic sketch of how things could work if a headless web browser instance was used to playback audio on an embedded linux device like the Raspberry Pi.
 
+This forked version of Andrew Nicolaou's work adds websockets to connect the public and private radio pages.
+
 How does it work?
 ---
 

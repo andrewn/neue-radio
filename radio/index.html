@@ -1,26 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="lib/hls.min.js" charset="utf-8"></script>
 </head>
 <body>
   <h1>This is the part of the radio app that runs in the radio itself</h1>
   <p>Users never see this page</p>
-  <audio></audio>
+  <audio id="audio"></audio>
   <script>
-    const stream = "http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/llnw/bbc_radio_one.m3u8";
-  </script>
-  <audio id="media"></audio>
-  <script>
-    if(Hls.isSupported()) {
-      var media = document.getElementById('media');
-      var hls = new Hls();
-      hls.loadSource(stream);
-      hls.attachMedia(media);
-      hls.on(Hls.Events.MANIFEST_PARSED,function() {
-        media.play();
-      });
-   }
+    console.log('%cHello!', 'color:blue;font-weight:bold', 'messages from the server');
+    const ws = new WebSocket('ws://localhost:8000');
+    ws.addEventListener('open', function (evt) {
+      console.log('connected');
+    });
+    ws.addEventListener('message', function (evt) {
+      const msg = JSON.parse(evt.data);
+      console.log('message', msg);
+      console.log('message key', msg.key);
+      if(msg.key = "play"){
+         var audio_file = msg.data.params.file;
+         console.log("setting attribute to "+audio_file);
+         var a  = document.querySelector("#audio");
+         a.setAttribute("src",audio_file);         
+         a.setAttribute("autoplay","autoplay");         
+      }
+    });
+    function send(key, data) {
+      ws.send(JSON.stringify({
+        key: key,
+        data: data
+      }));
+    }
   </script>
 </body>
 </html>

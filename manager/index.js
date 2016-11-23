@@ -1,5 +1,11 @@
 const path = require('path');
 const express = require('express');
+var server = require('http').createServer()
+  , url = require('url')
+  , WebSocketServer = require('ws').Server
+  , wss = new WebSocketServer({ server: server })
+  , app = express()
+  , wsport = 8000;
 
 
 function mountAppWithName(instance, name, contentDir) {
@@ -38,3 +44,29 @@ appNamesToMount.forEach(function (name) {
 });
 
 listen(external, externalPort);
+
+/*
+app.use(function (req, res) {
+  res.send({ msg: "hello" });
+});
+
+*/
+
+//see https://github.com/websockets/ws
+wss.on('connection', function connection(ws) {
+  var location = url.parse(ws.upgradeReq.url, true);
+  // you might use location.query.access_token to authenticate or share sessions
+  // or ws.upgradeReq.headers.cookie (see http://stackoverflow.com/a/16395220/151312)
+
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+      wss.clients.forEach(function each(client) {
+        console.log("sending to "+client);
+        console.log(message);
+        client.send(message);
+      });
+  });
+
+});
+
+server.listen(wsport, function () { console.log('Listening on ' + server.address().port) });
