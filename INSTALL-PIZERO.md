@@ -52,9 +52,9 @@ Radiodan:
     git clone https://github.com/libbymiller/neue-radio rde
     cd rde/manager
 
-## install node 4  
+## install node 
 
-use https://blog.wia.io/installing-node-js-v4-0-0-on-a-raspberry-pi
+e.g. via radiodan provisioning if you're using it (https://github.com/radiodan/provision) or https://blog.wia.io/installing-node-js-v4-0-0-on-a-raspberry-pi
 
 then
 
