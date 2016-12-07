@@ -15,6 +15,22 @@ Andrew's instructions are here and mostly hold - I've made some tweaks.
     diskutil list
     diskutil unmountDisk /dev/diskN
     sudo dd bs=1m if=~/Downloads/2016-09-23-raspbian-jessie.img of=/dev/rdiskN
+    
+Note that if you use the latest, you need to tweak it for ssh access:
+
+     tar xzvf 2016-11-25-raspbian-jessie.zip
+
+(unzip gave an error)
+
+     diskutil list
+     diskutil unmountDisk /dev/diskN
+     sudo dd bs=1m if=~/Downloads/2016-11-25-raspbian-jessie.img of=/dev/rdiskN
+
+when done but before ejecting
+
+     touch /Volumes/boot/ssh
+
+(see https://www.raspberrypi.org/blog/a-security-update-for-raspbian-pixel/)
 
 ## change to make zero an appliance 
 
