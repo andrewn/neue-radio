@@ -44,7 +44,7 @@ This will both power the pi zero and allow you to connect to it.
 
 ssh into the pi
     
-    ssh pi@raspberry.local
+    ssh pi@raspberrypi.local
 
 then
 
