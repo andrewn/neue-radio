@@ -2,6 +2,7 @@
 <html>
 <head>
   <script src="lib/hls.min.js" charset="utf-8"></script>
+  <script src="lib/Tone.js" charset="utf-8"></script>
 </head>
 <body>
   <h1>This is the part of the radio app that runs in the radio itself</h1>
@@ -24,6 +25,10 @@
       }
     }
 
+    function playTone() {
+      var osc = new Tone.Oscillator(440, "sine").toMaster().start();
+    }
+
     console.log('%cHello!', 'color:blue;font-weight:bold', 'messages from the server');
     const ws = new WebSocket('ws://' + location.hostname + ':8000');
     ws.addEventListener('open', function (evt) {
@@ -41,6 +46,8 @@
          a.setAttribute("autoplay","autoplay");         
       } else if (msg.key === "hls") {
         playHlsStream();
+      } else if (msg.key === "tone") {
+        playTone();
       }
     });
     function send(key, data) {
