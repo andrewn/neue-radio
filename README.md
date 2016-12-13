@@ -7,7 +7,6 @@ What is this?
 
 A basic sketch of how things could work if a headless web browser instance was used to playback audio on an embedded linux device like the Raspberry Pi.
 
-This forked version of Andrew Nicolaou's work adds websockets to connect the public and private radio pages.
 ### Installation
 
 See [INSTALL.md](INSTALL.md) for detailed instructions.
@@ -65,4 +64,7 @@ This initial implementation doesn't do very much. [radio/index.html](radio/index
 
 In a future version it would be good to present a simple remote control that allows you to play/pause the stream.
 
+## Contributors
 
+- [Andrew Nicolaou](https://github.com/andrewn): initial version
+- [Libby Miller](https://github.com/libbymiller): added remote control and websockets to connect the public and private radio pages.
