@@ -8,8 +8,9 @@ What is this?
 A basic sketch of how things could work if a headless web browser instance was used to playback audio on an embedded linux device like the Raspberry Pi.
 
 This forked version of Andrew Nicolaou's work adds websockets to connect the public and private radio pages.
+### Installation
 
-See INSTALL-PIZERO.md for detailed instructions.
+See [INSTALL.md](INSTALL.md) for detailed instructions.
 
 How does it work?
 ---
@@ -64,37 +65,4 @@ This initial implementation doesn't do very much. [radio/index.html](radio/index
 
 In a future version it would be good to present a simple remote control that allows you to play/pause the stream.
 
-## Installation on a Pi
 
-Install chromium and xvfb:
-
-    sudo apt-get update
-    sudo apt-get install rpi-chromium-mods xvfb
-
-Install the manager and example app:
-
-    mkdir /opt/radiodan
-    git clone https://github.com/andrewn/neue-radio rde
-    cd rde/manager
-    npm install --production
-    cd ..
-
-Install the physical interface manager:
-
-    cd physical
-    JOBS=MAX npm install --production # use all cores
-    cd ..
-
-Install scripts to manage processes:
-
-    sudo cp systemd/* /etc/systemd/system/
-    sudo systemctl daemon-reload
-    sudo systemctl start manager
-
-You should hear some radio playing out of the default speakers!
-
-Run on boot:
-
-    sudo systemctl enable manager
-    sudo systemctl enable manager-web-server
-    sudo systemctl enable physical
