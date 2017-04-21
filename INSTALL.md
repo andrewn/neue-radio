@@ -53,6 +53,7 @@ Once you've followed the setup instructions there:
 Install the manager and example app:
 
     mkdir /opt/radiodan
+    cd /opt/radiodan 
     git clone https://github.com/andrewn/neue-radio rde
     cd rde/manager
     npm install --production
