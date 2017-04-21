@@ -42,7 +42,7 @@ Use [radiodan provisioning](https://github.com/radiodan/provision) to install no
 
 Once you've followed the setup instructions there:
 
-    sudo ./provision node ip-tables
+    sudo ./provision node iptables
 
 ## Install pHat DAC if using
 
