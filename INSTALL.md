@@ -42,7 +42,7 @@ Use [radiodan provisioning](https://github.com/radiodan/provision) to install no
 
 Once you've followed the setup instructions there:
 
-    sudo ./provision node ip-tables
+    sudo ./provision node iptables
 
 ## Install pHat DAC if using
 
@@ -53,6 +53,7 @@ Once you've followed the setup instructions there:
 Install the manager and example app:
 
     mkdir /opt/radiodan
+    cd /opt/radiodan 
     git clone https://github.com/andrewn/neue-radio rde
     cd rde/manager
     npm install --production
