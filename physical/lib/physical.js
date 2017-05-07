@@ -28,7 +28,7 @@ try {
 var uiConfig = require('../config/physical-config.json');
 
 module.exports.create = function (router) {
-  const io = new IO();
+  const io = new IO({ enableSoftPwm: true });
   // const msgClient = MessagingClient.create();
   // const publisher = msgClient.Publisher.create();
 

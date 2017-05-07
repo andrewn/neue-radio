@@ -16,6 +16,6 @@
   },
   "optionalDependencies": {
     "raspi-rotary-encoder": "andrewn/raspi-rotary-encoder",
-    "raspi-io": "^7.3.1"
+    "raspi-io": "^8.0.1"
   }
 }
