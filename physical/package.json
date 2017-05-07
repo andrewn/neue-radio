@@ -16,6 +16,6 @@
   },
   "optionalDependencies": {
     "raspi-rotary-encoder": "andrewn/raspi-rotary-encoder",
-    "raspi-io": "andrewn/raspi-io#pull-down-soft-pwm"
+    "raspi-io": "^7.3.1"
   }
 }
