@@ -1,6 +1,6 @@
 Experiment for a new radio prototyping kit for the next radiodan.
 
-[See here for some context](https://usecanvas.com/andrewn/neue-radio-aka-radiodan-evolution-public/4OwWxY1DB3XiGKEu35KBDF).
+~[See here for some context](https://usecanvas.com/andrewn/neue-radio-aka-radiodan-evolution-public/4OwWxY1DB3XiGKEu35KBDF).~ I lost this document :-(
 
 What is this?
 -------------
