@@ -30,10 +30,10 @@ Connect an Ethernet cable or set-up wifi. Power as normal via it's power input.
 
 ## Steps for all Pis
 
-Install chromium and xvfb:
+Install chromium:
 
     sudo apt-get update
-    sudo apt-get install rpi-chromium-mods xvfb
+    sudo apt-get install rpi-chromium-mods
 
 ## Install node
 
