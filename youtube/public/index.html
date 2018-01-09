@@ -10,13 +10,20 @@
 </head>
 
 <body>
-  <h1>YouTube Player</h1>
-  <p>Paste a YouTube link in the box below and press play.</p>
-  <form>
-    <input type="text" placeholder="e.g. https://www.youtube.com/watch?v=NCvKXgp-Awo" value="https://www.youtube.com/watch?v=NCvKXgp-Awo"
-    />
-    <button class="submit">▶️</button>
-  </form>
+  <root data-state="loading">
+    <view class="control">
+      <h1>YouTube Player</h1>
+      <p>Paste a YouTube link in the box below and press play.</p>
+      <form>
+        <input class="url" type="search" placeholder="e.g. https://www.youtube.com/watch?v=NCvKXgp-Awo" value="https://www.youtube.com/watch?v=NCvKXgp-Awo"
+        />
+        <div class="row">
+          <button class="submit">▶️</button>
+        </div>
+      </form>
+    </view>
+    <view class="loading">Loading</view>
+  </root>
 
   <script src="app.js"></script>
 </body>

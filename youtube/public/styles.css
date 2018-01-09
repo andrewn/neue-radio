@@ -5,6 +5,44 @@ body {
   margin: 0.5rem 1rem;
 }
 
+root[data-state='loading'] view.control {
+  opacity: 0;
+  pointer-events: none;
+}
+
+root:not([data-state='loading']) view.loading {
+  opacity: 0;
+  pointer-events: none;
+  animation: none;
+}
+
+view {
+  transition: 0.5s opacity ease-in;
+}
+
+view.loading {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  animation: 1s infinite spin;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 h1 {
   font-size: 3rem;
   margin: 0;
@@ -19,20 +57,52 @@ form {
   flex-direction: column;
 }
 
-input[type='text'] {
+input.url {
   padding: 1rem 0.5rem;
   border: 1px solid blue;
 }
 
-button.submit {
-  width: 100%;
+.row {
+  display: flex;
+
   margin-top: 1rem;
+}
+
+button {
+  flex: 1;
 
   background: white;
   border: 1px solid blue;
   box-shadow: -3px 4px blue;
 
+  padding: 0;
+
+  overflow: hidden;
+
   font-size: 2rem;
 
-  transition: box-shadow 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+
+root[data-state='requested'] button.submit {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+button.stop {
+  width: 0;
+
+  flex: 0;
+
+  opacity: 0;
+  pointer-events: none;
+}
+
+root[data-state='playing'] button.stop {
+  width: auto;
+  flex: 1;
+  opacity: 1;
+
+  margin-left: 1rem;
+  pointer-events: initial;
 }

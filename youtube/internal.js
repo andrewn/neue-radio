@@ -1,5 +1,7 @@
 let ws = null;
 
+const DEBUG = true;
+
 const createComms = async handler => {
   const ws = new WebSocket('ws://' + location.hostname + ':8000');
 
@@ -14,8 +16,13 @@ const createComms = async handler => {
 
   const instance = {
     downloadMedia: url => {
-      // send('mediaRequest', { url })
-      handler({ topic: 'mediaAvailable', payload: { url } });
+      DEBUG
+        ? handler({ topic: 'mediaAvailable', payload: { url } })
+        : send('mediaRequest', { url });
+    },
+    playing: url => {
+      send('playing', { url });
+    },
     }
   };
 
@@ -45,6 +52,7 @@ const handleMessage = comms => ({ topic, payload }) => {
       break;
     case 'mediaAvailable':
       playMedia(payload.url);
+      comms.playing(payload.sourceUrl);
       break;
   }
 };

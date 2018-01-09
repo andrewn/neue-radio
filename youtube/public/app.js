@@ -13,7 +13,7 @@ const createComms = async handler => {
   };
 
   const instance = {
-    requestPlay: url => send('requestPlay', { url })
+    requestPlay: url => send('requestPlay', { url }),
   };
 
   ws.addEventListener('message', function(evt) {
@@ -28,23 +28,44 @@ const createComms = async handler => {
   });
 };
 
+const setState = id => {
+  document.querySelector('root').dataset.state = id;
+};
+
 const onFormSubmit = handler => {
   document.querySelector('form').addEventListener('submit', evt => {
     evt.preventDefault();
 
-    const value = document.querySelector('input[type="text"]').value;
+    console.log('onFormSubmit');
+
+    const value = document.querySelector('input.url').value;
     if (value != '') {
       handler(value);
     }
   });
 };
 
-const handleMessage = msg => console.log(msg);
+const handleMessage = ({ topic, payload }) => {
+  console.log('incoming message', topic);
+  switch (topic) {
+    case 'playing':
+      setState('playing');
+      break;
+  }
+};
 
 const init = async () => {
   console.log('init');
+
+  setState('ready');
+
   const comms = await createComms(handleMessage);
-  onFormSubmit(url => comms.requestPlay(url));
+
+  onFormSubmit(url => {
+    comms.requestPlay(url);
+    setState('requested');
+  });
+
 };
 
 init();
