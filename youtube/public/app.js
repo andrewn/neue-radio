@@ -14,6 +14,7 @@ const createComms = async handler => {
 
   const instance = {
     requestPlay: url => send('requestPlay', { url }),
+    requestStop: () => send('requestStop', {})
   };
 
   ws.addEventListener('message', function(evt) {
@@ -45,11 +46,23 @@ const onFormSubmit = handler => {
   });
 };
 
+const onStopClick = handler => {
+  console.log('stop', document.querySelector('button.stop'));
+
+  document.querySelector('button.stop').addEventListener('click', evt => {
+    evt.preventDefault();
+    handler();
+  });
+};
+
 const handleMessage = ({ topic, payload }) => {
   console.log('incoming message', topic);
   switch (topic) {
     case 'playing':
       setState('playing');
+      break;
+    case 'stopped':
+      setState('ready');
       break;
   }
 };
@@ -66,6 +79,9 @@ const init = async () => {
     setState('requested');
   });
 
+  onStopClick(() => {
+    comms.requestStop();
+  });
 };
 
 init();

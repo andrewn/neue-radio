@@ -23,6 +23,8 @@ const createComms = async handler => {
     playing: url => {
       send('playing', { url });
     },
+    stopped: () => {
+      send('stopped', {});
     }
   };
 
@@ -44,11 +46,20 @@ const playMedia = url => {
   mediaEl.play();
 };
 
+const stopMedia = url => {
+  const mediaEl = document.querySelector('.media');
+  mediaEl.pause();
+};
+
 const handleMessage = comms => ({ topic, payload }) => {
   console.log(topic, payload);
   switch (topic) {
     case 'requestPlay':
       comms.downloadMedia(payload.url);
+      break;
+    case 'requestStop':
+      stopMedia();
+      comms.stopped();
       break;
     case 'mediaAvailable':
       playMedia(payload.url);
