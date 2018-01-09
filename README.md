@@ -40,13 +40,25 @@ The manager is responsible for starting and stopping all radio apps. It's a webp
 
 ### Debugging
 
-A remote web inspector is available on localhost port 5222. This isn't accessible from other machines on the network. You can use ssh on the Pi to make this available externally.
+A remote web inspector is available on localhost port 5222 and is accessible from other machines on the network.
 
-In another session on the Pi run the following command:
+Visit http://raspberrypi.local:9222 in a browser on another machine to access the web inspector where all pages are accessible.
 
-    ssh -L 0.0.0.0:9223:localhost:9222 localhost -N
+NB: Accessing the web inspector directly is currently broken. You need to jump through a few hoops to access it:
 
-Visit http://raspberrypi.local:9223 on another machine to access the web inspector where all pages are accessible.
+1. Visit http://raspberrypi.local:9222 in a browser
+2. Click the link "localhost:5001/manager/" on the page
+3. This link won't load, but copy the Page ID at the end of the URL in the address bar:
+
+    e.g. in the URL `/devtools/page/**41521fab-b30d-41a5-8a47-9557abede207**&remoteFrontend=true`
+    the page ID is **`41521fab-b30d-41a5-8a47-9557abede207`**
+4. Put the Page ID into the following URL and paste into the Chrome instance runnning on your computer:
+
+    chrome-devtools://devtools/bundled/inspector.html?ws=raspberrypi.local:9222/devtools/page/**PAGE_ID_GOES_HERE**
+
+    For the Page ID above, that would be:
+
+    chrome-devtools://devtools/bundled/inspector.html?ws=raspberrypi.local:9222/devtools/page/**41521fab-b30d-41a5-8a47-9557abede207**
 
 ## Physical interface
 
