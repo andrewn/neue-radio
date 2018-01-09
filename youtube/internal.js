@@ -1,4 +1,4 @@
-const DEBUG = true;
+const DEBUG = false;
 
 const createComms = async handler => {
   const ws = new WebSocket('ws://' + location.hostname + ':8000');
