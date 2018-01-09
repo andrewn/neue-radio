@@ -18,14 +18,14 @@ const httpServer = createHttpServer();
 // Upgrades HTTP connections to WebSockets
 // Allows the physical stuff to be controlled
 // by sending messages over a websocket connection
-const wsServer = createWsServer(httpServer, router);
+createWsServer(httpServer, router);
 
 // Controls connected lights and buttons
 // It listens for `message` events from the wsServer
 // and publishes new messages back over the connection
-const physical = createPhysical(router);
+createPhysical(router);
 
 // Start listening
-httpServer.listen(port, function () {
+httpServer.listen(port, function() {
   console.log('Listening on port: ', port);
 });

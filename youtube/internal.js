@@ -1,5 +1,3 @@
-let ws = null;
-
 const DEBUG = true;
 
 const createComms = async handler => {
@@ -33,8 +31,8 @@ const createComms = async handler => {
     handler(msg);
   });
 
-  return new Promise((resolve, reject) => {
-    ws.addEventListener('open', function(evt) {
+  return new Promise(resolve => {
+    ws.addEventListener('open', function() {
       resolve(instance);
     });
   });
@@ -46,7 +44,7 @@ const playMedia = url => {
   mediaEl.play();
 };
 
-const stopMedia = url => {
+const stopMedia = () => {
   const mediaEl = document.querySelector('.media');
   mediaEl.pause();
 };
