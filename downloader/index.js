@@ -6,7 +6,7 @@ const downloader = require('./lib/downloader');
 const http = require('./lib/io/http');
 const ws  = require('./lib/io/ws');
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5002;
 const host = new URL(`http://${ip.address()}:${port}`);
 const downloadPath = path.join(__dirname, 'public', 'videos');
 
