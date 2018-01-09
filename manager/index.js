@@ -1,5 +1,6 @@
 const path = require('path');
 const express = require('express');
+const fs = require('fs');
 var server = require('http').createServer()
   , url = require('url')
   , WebSocketServer = require('ws').Server
@@ -7,6 +8,17 @@ var server = require('http').createServer()
   , app = express()
   , wsport = 8000;
 
+const isDirectory = ({ path, name }) => fs.lstatSync(path).isDirectory();
+const getDirectories = source => 
+  fs.readdirSync(source)
+    .map(name => ({ path: path.join(source, name), name }))
+    .filter(isDirectory)
+    .map(({ path, name }) => name);
+
+const rootPath = path.resolve(__dirname, '..');
+const managerId = 'manager';
+const unmountableDirectories = [ '.git', 'systemd', 'physical' ];
+const appNamesToMount = getDirectories(rootPath).filter(dir => !unmountableDirectories.includes(dir));
 
 function mountAppWithName(instance, name, contentDir) {
   const mountAt = '/' + name;
@@ -20,11 +32,6 @@ function listen(instance, port) {
   })
 }
 
-const appNamesToMount = [
-  'manager',
-  'radio'
-];
-
 const internal = express();
 const internalPort = process.env.INTERNAL_PORT || 5001;
 
@@ -32,6 +39,13 @@ appNamesToMount.forEach(function (name) {
   const dirPath = path.join(__dirname, '..', name);
   mountAppWithName(internal, name, dirPath);
 });
+
+internal.get(
+  '/',
+  (req, res) => res.json({
+    apps: appNamesToMount.filter(id => id != managerId).map(id => ({ id }))
+  })
+);
 
 listen(internal, internalPort);
 
@@ -44,13 +58,6 @@ appNamesToMount.forEach(function (name) {
 });
 
 listen(external, externalPort);
-
-/*
-app.use(function (req, res) {
-  res.send({ msg: "hello" });
-});
-
-*/
 
 //see https://github.com/websockets/ws
 wss.on('connection', function connection(ws) {

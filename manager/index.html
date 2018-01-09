@@ -1,25 +1,23 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <script>
-    const apps = [
-      {
-        id: "radio"
-      }
-    ];
-  </script>
-</head>
+<head></head>
 <body>
   <h1>App manager (internal)</h1>
   <script>
-    let instances;
+    let instances, apps;
 
     setTimeout(init, 3000);
 
-    function init() {
+    async function init() {
       console.log('Create apps...');
+      apps = await getApps();
       instances = openApps(apps);
       console.log('...done');
+    }
+
+    async function getApps() {
+      const config = await fetch('/').then(res => res.json());
+      return config.apps;
     }
 
     function openApps(apps) {
