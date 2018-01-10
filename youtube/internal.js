@@ -1,4 +1,5 @@
-const DEBUG = false;
+const DEBUG =
+  new URL(window.location.href).searchParams.get('debug') === 'true';
 
 const createComms = async handler => {
   const ws = new WebSocket('ws://' + location.hostname + ':8000');
@@ -67,6 +68,7 @@ const handleMessage = comms => ({ topic, payload }) => {
 };
 
 const init = async () => {
+  console.log('YouTube app:init. DEBUG? ', DEBUG);
   const comms = await createComms(msg => handleMessage(comms)(msg));
 };
 
