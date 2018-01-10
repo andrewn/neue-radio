@@ -1,5 +1,3 @@
-let ws = null;
-
 const createComms = async handler => {
   const ws = new WebSocket('ws://' + location.hostname + ':8000');
 
@@ -22,8 +20,8 @@ const createComms = async handler => {
     handler(msg);
   });
 
-  return new Promise((resolve, reject) => {
-    ws.addEventListener('open', function(evt) {
+  return new Promise(resolve => {
+    ws.addEventListener('open', function() {
       resolve(instance);
     });
   });
@@ -55,7 +53,7 @@ const onStopClick = handler => {
   });
 };
 
-const handleMessage = ({ topic, payload }) => {
+const handleMessage = ({ topic }) => {
   console.log('incoming message', topic);
   switch (topic) {
     case 'playing':
