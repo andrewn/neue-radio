@@ -1,0 +1,24 @@
+{
+  "name": "neue-radio",
+  "version": "0.1.0",
+  "description":
+    "Experiment for a new radio prototyping kit for the next radiodan.",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint **/*.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrewn/neue-radio.git"
+  },
+  "author": "Andrew Nicolaou <me@andrewnicolaou.co.uk>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/andrewn/neue-radio/issues"
+  },
+  "homepage": "https://github.com/andrewn/neue-radio#readme",
+  "devDependencies": {
+    "eslint": "^4.15.0"
+  }
+}

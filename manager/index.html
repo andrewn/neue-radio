@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head></head>
+
 <body>
   <h1>App manager (internal)</h1>
   <script>
@@ -21,12 +23,12 @@
     }
 
     function openApps(apps) {
-      const { protocol, host } = window.location;
-      const server = protocol + '//' + host;
       const rootElement = document.body;
 
       const instances = apps.map(function (app) {
-        const url = server + '/' + app.id;
+        const url = new URL(window.location);
+        url.pathname = app.id;
+
         const id = app.id;
 
         return mountAppUrlAtRoot(id, url, rootElement);
@@ -43,4 +45,5 @@
     }
   </script>
 </body>
+
 </html>

@@ -1,11 +1,7 @@
 {
   "extends": "eslint:recommended",
   "env": {
-    "browser": true,
-    "es6": true
-  },
-  "parserOptions": {
-    "ecmaVersion": 8
+    "node": true
   },
   "rules": {
     "no-console": "off"
