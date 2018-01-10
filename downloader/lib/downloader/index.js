@@ -17,7 +17,8 @@ const command = (rootPath, url) => {
 };
 
 const parsedOutputPath = (rootPath, output) => {
-  const videoPath = path.join(rootPath, '([0-9a-z_\-\\\/\.]+)');
+  const escapedRootPath = rootPath.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+  const videoPath = path.join(escapedRootPath, '([0-9a-z_\\-\\\/\.]+)');
   const match = output.match(
     new RegExp(`\[download\].*${videoPath}.*`, 'i')
   );
