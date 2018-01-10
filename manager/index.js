@@ -19,7 +19,7 @@ const getDirectories = source =>
 
 const rootPath = path.resolve(__dirname, '..');
 const managerId = 'manager';
-const unmountableDirectories = ['.git', 'systemd', 'physical'];
+const unmountableDirectories = ['.git', '.vscode', 'systemd', 'physical'];
 const appNamesToMount = getDirectories(rootPath).filter(
   dir => !unmountableDirectories.includes(dir)
 );
