@@ -57,6 +57,10 @@ form {
   flex-direction: column;
 }
 
+input.download {
+  margin-top: 1rem;
+}
+
 input.url {
   padding: 1rem 0.5rem;
   border: 1px solid blue;
