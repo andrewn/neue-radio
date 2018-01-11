@@ -47,18 +47,9 @@ Visit http://raspberrypi.local:9222 in a browser on another machine to access th
 NB: Accessing the web inspector directly is currently broken. You need to jump through a few hoops to access it:
 
 1. Visit http://raspberrypi.local:9222 in a browser
-2. Click the link "localhost:5001/manager/" on the page
-3. This link won't load, but copy the Page ID at the end of the URL in the address bar:
-
-    e.g. in the URL `/devtools/page/**41521fab-b30d-41a5-8a47-9557abede207**&remoteFrontend=true`
-    the page ID is **`41521fab-b30d-41a5-8a47-9557abede207`**
-4. Put the Page ID into the following URL and paste into the Chrome instance runnning on your computer:
-
-    chrome-devtools://devtools/bundled/inspector.html?ws=raspberrypi.local:9222/devtools/page/**PAGE_ID_GOES_HERE**
-
-    For the Page ID above, that would be:
-
-    chrome-devtools://devtools/bundled/inspector.html?ws=raspberrypi.local:9222/devtools/page/**41521fab-b30d-41a5-8a47-9557abede207**
+2. Copy the link named "localhost:5001/manager/" on the page
+3. Paste it into [this form](https://jsfiddle.net/pixelblend/s3w3dqsh/)
+4. Visit the corresponding URL
 
 ## Physical interface
 
