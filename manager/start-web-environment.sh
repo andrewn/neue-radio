@@ -9,6 +9,7 @@ ARGS="--disable-gpu --remote-debugging-port=$REMOTE_DEBUGGING_PORT --remote-debu
 MACOS_CHROME=/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 
 if command -v chromium-browser; then
+  sleep 5
   chromium-browser --headless $ARGS
 elif [ -f "$MACOS_CHROME" ]; then
   "$MACOS_CHROME" $ARGS
