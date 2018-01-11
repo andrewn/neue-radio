@@ -47,6 +47,15 @@ Visit http://raspberrypi.local:9222 in a browser on another machine to access th
 NB: Accessing the web inspector directly is currently broken. You need to jump through a few hoops to access it:
 
 1. Visit http://raspberrypi.local:9222 in a browser
+
+### Faster Debug
+
+2. Copy the link named "localhost:5001/manager/" on the page
+3. Paste it into [this form](https://jsfiddle.net/pixelblend/s3w3dqsh/)
+4. Visit the corresponding URL
+
+### Manual Debug (In case the fiddle disappears)
+
 2. Click the link "localhost:5001/manager/" on the page
 3. This link won't load, but copy the Page ID at the end of the URL in the address bar:
 
