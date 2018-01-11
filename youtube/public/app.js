@@ -11,7 +11,7 @@ const createComms = async handler => {
   };
 
   const instance = {
-    requestPlay: url => send('requestPlay', { url }),
+    requestPlay: (url, type) => send('requestPlay', { url, type }),
     requestStop: () => send('requestStop', {})
   };
 
@@ -37,9 +37,11 @@ const onFormSubmit = handler => {
 
     console.log('onFormSubmit');
 
-    const value = document.querySelector('input.url').value;
-    if (value != '') {
-      handler(value);
+    const download = document.querySelector('input.download').checked;
+
+    const url = document.querySelector('input.url').value;
+    if (url != '') {
+      handler({ url, download });
     }
   });
 };
@@ -72,8 +74,8 @@ const init = async () => {
 
   const comms = await createComms(handleMessage);
 
-  onFormSubmit(url => {
-    comms.requestPlay(url);
+  onFormSubmit(({ url, download }) => {
+    comms.requestPlay(url, download ? 'download' : 'direct');
     setState('requested');
   });
 

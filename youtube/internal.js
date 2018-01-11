@@ -45,19 +45,32 @@ const playMedia = url => {
   mediaEl.play();
 };
 
-const stopMedia = () => {
+const stopAll = () => {
   const mediaEl = document.querySelector('.media');
   mediaEl.pause();
+
+  stopYouTube();
 };
+
+const youtube = new YouTube(document.body);
+
+const playYouTubeDirectly = url => youtube.play(url);
+
+const stopYouTube = () => youtube.stop();
 
 const handleMessage = comms => ({ topic, payload }) => {
   console.log(topic, payload);
   switch (topic) {
     case 'requestPlay':
-      comms.downloadMedia(payload.url);
+      if (payload.type === 'download') {
+        comms.downloadMedia(payload.url);
+      } else if (payload.type === 'direct') {
+        playYouTubeDirectly(payload.url);
+        comms.playing();
+      }
       break;
     case 'requestStop':
-      stopMedia();
+      stopAll();
       comms.stopped();
       break;
     case 'mediaAvailable':
