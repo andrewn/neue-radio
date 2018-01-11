@@ -33,14 +33,14 @@ echo "*** Radiodan"
 mkdir -p /opt/radiodan
 cd /opt/radiodan
 git clone https://github.com/andrewn/neue-radio rde
-cd rde/manager
+cd rde/services/manager
 npm install --unsafe-perm --production
 cd ..
 cd physical
 JOBS=MAX npm install --unsafe-perm --production # use all cores
-cd ..
+cd ../..
 chown -R pi:pi /opt/radiodan
-cp systemd/* /etc/systemd/system/
+cp deployment/systemd/* /etc/systemd/system/
 systemctl daemon-reload
 systemctl start manager
 systemctl enable manager

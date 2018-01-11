@@ -4,7 +4,7 @@ Requires=manager-web-server.service
 After=manager-web-server.service
 
 [Service]
-WorkingDirectory=/opt/radiodan/rde/manager
+WorkingDirectory=/opt/radiodan/rde/services/manager
 ExecStart=/opt/radiodan/rde/manager/start-web-environment.sh
 Restart=on-failure
 StandardOutput=syslog

@@ -30,7 +30,7 @@ Connect an Ethernet cable or set-up wifi. Power as normal via it's power input.
 
 ## Steps for all Pis
 
-Run the `setup/provision` script from the command line.
+Run the `deployment/provision` script from the command line.
 
 ## Install pHat DAC if using
 
