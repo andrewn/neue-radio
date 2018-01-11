@@ -1,0 +1,13 @@
+[Unit]
+Description=RFID reader on SPI Interface
+
+[Service]
+WorkingDirectory=/opt/radiodan/rde/services/rfid
+ExecStart=/usr/local/bin/npm start
+Restart=on-failure
+StandardOutput=syslog
+SyslogIdentifier=rde-rfid
+Type=idle
+
+[Install]
+WantedBy=multi-user.target

@@ -22,6 +22,9 @@ dpkg -i browser.deb || apt --fix-broken install -y
 rm browser*.deb
 apt-get install rpi-chromium-mods -y
 
+echo "*** Enable SPI (RFID reader)"
+raspi-config nonint do_spi 0
+
 echo "*** Node"
 mkdir -pv /opt/node
 curl -L https://nodejs.org/dist/v8.9.4/node-v8.9.4-linux-armv6l.tar.gz | tar xz --strip-components 1 -C /opt/node
@@ -38,6 +41,9 @@ npm install --unsafe-perm --production
 cd ..
 cd physical
 JOBS=MAX npm install --unsafe-perm --production # use all cores
+cd ..
+cd rfid
+JOBS=MAX npm install --unsafe-perm --production # use all cores
 cd ../..
 chown -R pi:pi /opt/radiodan
 cp deployment/systemd/* /etc/systemd/system/
@@ -46,6 +52,7 @@ systemctl start manager
 systemctl enable manager
 systemctl enable manager-web-server
 systemctl enable physical
+systemctl enable rfid
 
 echo "*** IPTables (Port forwarding)"
 DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages iptables-persistent
