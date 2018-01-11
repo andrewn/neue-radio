@@ -18,7 +18,7 @@
     }
 
     async function getApps() {
-      const config = await fetch('/').then(res => res.json());
+      const config = await fetch('/apps').then(res => res.json());
       return config.apps;
     }
 
@@ -27,11 +27,9 @@
 
       const instances = apps.map(function (app) {
         const url = new URL(window.location);
-        url.pathname = app.id;
+        url.pathname = app;
 
-        const id = app.id;
-
-        return mountAppUrlAtRoot(id, url, rootElement);
+        return mountAppUrlAtRoot(app, url, rootElement);
       });
       return instances;
     }

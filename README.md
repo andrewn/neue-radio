@@ -50,13 +50,13 @@ NB: Accessing the web inspector directly is currently broken. You need to jump t
 
 ### Faster Debug
 
-2. Copy the link named "localhost:5001/manager/" on the page
+2. Copy the link named "localhost:5001/" on the page
 3. Paste it into [this form](https://jsfiddle.net/pixelblend/s3w3dqsh/)
 4. Visit the corresponding URL
 
 ### Manual Debug (In case the fiddle disappears)
 
-2. Click the link "localhost:5001/manager/" on the page
+2. Click the link "localhost:5001/" on the page
 3. This link won't load, but copy the Page ID at the end of the URL in the address bar:
 
     e.g. in the URL `/devtools/page/**41521fab-b30d-41a5-8a47-9557abede207**&remoteFrontend=true`

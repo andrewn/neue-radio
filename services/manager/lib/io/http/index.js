@@ -11,7 +11,7 @@ const mountApp = ({ server, name, path }) => {
 const mountAppList = (apps, server) => {
   const appNames = apps.map( a => a.name );
 
-  server.get('/', (req, res) =>
+  server.get('/apps', (req, res) =>
     res.json({
       apps: appNames,
     })
@@ -29,20 +29,21 @@ const startServer = (server, port, name) => {
 const mountExternal = (apps, port, index) => {
   const server = express();
 
-  apps.map(({ name, path }) => (
-    mountApp({ server, name, path })
-  ));
+  apps.map(({ name, path }) => {
+    mountApp({ server, name, path: pathLib.join(path, 'public') })
+  });
 
-  mountAppList(apps, server);
   startServer(server, port, 'Public');
 };
 
 const mountInternal = (apps, port, publicPath) => {
   const server = express();
 
-  apps.map(({ name, path }) => {
-    mountApp({ server, name, path: pathLib.join(path, 'public') })
-  });
+  mountAppList(apps, server);
+
+  apps.map(({ name, path }) => (
+    mountApp({ server, name, path })
+  ));
 
   server.use(
     express.static(publicPath)
