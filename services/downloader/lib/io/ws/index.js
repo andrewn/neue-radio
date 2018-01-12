@@ -1,6 +1,8 @@
 const { URL } = require('url');
 const WebSocket = require('ws');
 
+const logger = require('../../logger')('ws');
+
 const subscribedTopic = 'mediaRequest';
 const publishTopic = 'mediaAvailable';
 
@@ -10,7 +12,7 @@ const webSocket = ({ host, downloader }) => {
   const callback = sendMessage(ws);
   const handler = handleMessage({ host, downloader, callback });
 
-  ws.on('open', () => console.log(`Listening to web socket ${wsPath}`));
+  ws.on('open', () => logger.info(`Listening to web socket ${wsPath}`));
 
   ws.addEventListener('message', function(evt) {
     handler(

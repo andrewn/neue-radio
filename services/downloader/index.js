@@ -2,20 +2,23 @@ const path = require('path');
 const ip = require('ip');
 const { URL } = require('url');
 
-const downloader = require('./lib/downloader');
+const createDownloader = require('./lib/downloader');
 const http = require('./lib/io/http');
+const logger = require('./lib/logger')('index');
 const ws  = require('./lib/io/ws');
 
 const port = process.env.PORT || 5002;
 const host = new URL(`http://${ip.address()}:${port}`);
 const downloadPath = path.join(__dirname, 'public', 'videos');
 
+const downloader = createDownloader(downloadPath);
+
 http({ port, publicPath: downloadPath });
-ws({ host, downloader: downloader.download(downloadPath) });
+ws({ host, downloader });
 
 if(process.env.DEBUG) {
   setTimeout(() => {
-    console.log('Sending demo message');
+    logger.info('Sending demo message');
 
     const WebSocket = require('ws');
     const ws = new WebSocket('ws://' + host.host + ':8000');

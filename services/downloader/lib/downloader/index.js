@@ -2,28 +2,32 @@ const path = require('path');
 const { URL } = require('url');
 
 const asyncExec = require('./async-exec');
+const logger = require('../logger')('downloader');
 
-const download = rootPath => async url => {
+const download = downloadPath => async url => {
   const validatedURL = new URL(url);
-  const output = await asyncExec(command(rootPath, validatedURL));
 
-  return parsedOutputPath(rootPath, output);
+  logger.info(`Downloading ${validatedURL}`);
+
+  const output = await asyncExec(command(downloadPath, validatedURL));
+
+  return parsedOutputPath(downloadPath, output);
 };
 
-const command = (rootPath, url) => {
-  const videoPath = path.join(rootPath, '%(id)s.%(ext)s');
+const command = (downloadPath, url) => {
+  const videoPath = path.join(downloadPath, '%(id)s.%(ext)s');
 
   return `youtube-dl -v -o "${videoPath}" -f bestaudio ${url.toString()}`;
 };
 
-const parsedOutputPath = (rootPath, output) => {
-  const escapedRootPath = rootPath.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-  const videoPath = path.join(escapedRootPath, '([0-9a-z_\\-\\\/\.]+)');
+const parsedOutputPath = (downloadPath, output) => {
+  const videoPath = path.join(downloadPath, '([0-9a-z_\\-\\\/\.]+)');
   const match = output.match(
     new RegExp(`\[download\].*${videoPath}.*`, 'i')
   );
 
+  logger.info(`Downloaded to ${match[1]}`);
   return match[1];
 };
 
-module.exports.download = download;
+module.exports = download;
