@@ -3,7 +3,7 @@ Description=Radio app manager web server
 
 [Service]
 WorkingDirectory=/opt/radiodan/rde/services/manager
-ExecStart=/opt/radiodan/rde/manager/start-server-environment.sh
+ExecStart=/opt/radiodan/rde/services/manager/start-server-environment.sh
 Restart=on-failure
 StandardOutput=syslog
 SyslogIdentifier=rde-server
