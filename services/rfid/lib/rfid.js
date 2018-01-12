@@ -22,14 +22,6 @@ if (mfrc522 == null) {
   };
 }
 
-// Init WiringPi with SPI Channel 0
-mfrc522.initWiringPi(0);
-
-// This loop keeps checking for chips. If one is near it will get the UID and authenticate
-console.log('Scanning...');
-console.log('Please put chip or keycard in the antenna inductive zone!');
-console.log('Press Ctrl-C to stop.');
-
 const CARD_QUERY_INTERVAL_MS = 500;
 
 /*
@@ -77,8 +69,13 @@ const rfid = handler => {
   let currentCard;
   const scanner = scan(handler);
 
+  // Init WiringPi with SPI Channel 0
+  mfrc522.initWiringPi(0);
+
+  console.log('Begin scanning...');
+
   const scanIntervalId = setInterval(() => {
-    currentCard = scanner(currentCard)
+    currentCard = scanner(currentCard);
   }, CARD_QUERY_INTERVAL_MS);
 
   return {
