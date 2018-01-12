@@ -1,0 +1,19 @@
+{
+  "name": "rfid-spi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "optionalDependencies": {
+    "mfrc522-rpi": "^1.1.0"
+  },
+  "dependencies": {
+    "ip": "^1.1.5",
+    "ws": "^4.0.0"
+  }
+}
