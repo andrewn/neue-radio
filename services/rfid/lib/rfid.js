@@ -33,23 +33,21 @@ console.log('Press Ctrl-C to stop.');
 const CARD_QUERY_INTERVAL_MS = 500;
 
 /*
-  
+
 */
-let currentCardPresented = null;
 
 const hex = num => (num < 10 ? '0' + num : num.toString(16));
 const hexString = array => array.map(hex).join('');
 
-const scan = ({ error, presented, removed }) => () => {
+const scan = ({ error, presented, removed }) => (currentUid = null) => {
   // reset card
   mfrc522.reset();
 
-  const response = mfrc522.findCard();
-  if (!response.status) {
+  const cardResponse = mfrc522.findCard();
+  if (!cardResponse.status) {
     // No card
-    if (currentCardPresented != null) {
-      removed({ uid: currentCardPresented });
-      currentCardPresented = null;
+    if (currentUid != null) {
+      removed({ uid: currentUid });
     }
     return;
   }
@@ -62,23 +60,26 @@ const scan = ({ error, presented, removed }) => () => {
 
   const uid = hexString(uidResponse.data);
 
-  if (currentCardPresented === uid) {
-    return;
+  if (currentUid === uid) {
+    return currentUid;
   }
 
-  if (currentCardPresented != null) {
-    removed({ uid: currentCardPresented });
+  if (currentUid != null) {
+    removed({ uid: currentUid });
   }
-
-  currentCardPresented = uid;
 
   presented({ uid });
+
+  return uid;
 };
 
-let scanIntervalId = null;
-
 const rfid = handler => {
-  scanIntervalId = setInterval(scan(handler), CARD_QUERY_INTERVAL_MS);
+  let currentCard;
+  const scanner = scan(handler);
+
+  const scanIntervalId = setInterval(() => {
+    currentCard = scanner(currentCard)
+  }, CARD_QUERY_INTERVAL_MS);
 
   return {
     destroy: () => clearInterval(scanIntervalId)
