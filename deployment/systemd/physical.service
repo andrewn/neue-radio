@@ -1,14 +1,14 @@
 [Unit]
-Description=YouTube Downloader
+Description=Physical interface
 
 [Service]
-WorkingDirectory=/opt/radiodan/rde/downloader
+WorkingDirectory=/opt/radiodan/rde/services/physical
 ExecStart=/usr/local/bin/npm start
 Restart=on-failure
 StandardOutput=syslog
-SyslogIdentifier=rde-downloader
+SyslogIdentifier=rde-physical
 Type=idle
-Environment=PORT=5002
+Environment=PORT=5100
 
 [Install]
 WantedBy=multi-user.target

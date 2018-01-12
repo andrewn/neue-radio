@@ -20,7 +20,7 @@ wget https://launchpad.net/~osomon/+archive/ubuntu/chromium-dev/+build/13722974/
 dpkg -i browser_codec.deb
 dpkg -i browser.deb || apt --fix-broken install -y
 rm browser*.deb
-apt-get install rpi-chromium-mods -y
+DEBIAN_FRONTEND=noninteractive apt-get install rpi-chromium-mods -y
 
 echo "*** Node"
 mkdir -pv /opt/node
@@ -33,14 +33,14 @@ echo "*** Radiodan"
 mkdir -p /opt/radiodan
 cd /opt/radiodan
 git clone https://github.com/andrewn/neue-radio rde
-cd rde/manager
+cd rde/services/manager
 npm install --unsafe-perm --production
 cd ..
 cd physical
 JOBS=MAX npm install --unsafe-perm --production # use all cores
-cd ..
+cd ../..
 chown -R pi:pi /opt/radiodan
-cp systemd/* /etc/systemd/system/
+cp deployment/systemd/* /etc/systemd/system/
 systemctl daemon-reload
 systemctl start manager
 systemctl enable manager
