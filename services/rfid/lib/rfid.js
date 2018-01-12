@@ -24,10 +24,6 @@ if (mfrc522 == null) {
 
 const CARD_QUERY_INTERVAL_MS = 500;
 
-/*
-
-*/
-
 const hex = num => (num < 10 ? '0' + num : num.toString(16));
 const hexString = array => array.map(hex).join('');
 
