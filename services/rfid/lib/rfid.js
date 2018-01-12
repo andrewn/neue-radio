@@ -1,26 +1,4 @@
-let mfrc522 = null;
-
-const DEBUG = process.env.DEBUG;
-
-// Try to handle not running on a Pi more gracefully
-try {
-  mfrc522 = require('mfrc522-rpi');
-} catch (e) {
-  console.warn('RFID library not found. Are you on a Pi?\n\n');
-
-  if (!DEBUG) {
-    throw new Error(e);
-  }
-}
-
-if (mfrc522 == null) {
-  mfrc522 = {
-    initWiringPi: () => {},
-    reset: () => {},
-    findCard: () => ({ status: '💯' }),
-    getUid: () => ({ status: '💯', data: new Buffer('FAKE') })
-  };
-}
+const mfrc522 = require('mfrc522-rpi');
 
 const CARD_QUERY_INTERVAL_MS = 500;
 
