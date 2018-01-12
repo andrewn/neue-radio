@@ -21,7 +21,7 @@ Make sure the card reader can use SPI, then wire it up as follows:
 
 ## Installation
 
-`npm install --producttion`
+`npm install --production`
 
 ## Running
 
