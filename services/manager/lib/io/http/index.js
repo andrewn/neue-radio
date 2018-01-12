@@ -30,7 +30,7 @@ const mountExternal = (apps, port, index) => {
   const server = express();
 
   apps.map(({ name, path }) => {
-    mountApp({ server, name, path: pathLib.join(path, 'public') })
+    mountApp({ server, name, path: pathLib.join(path, 'external') })
   });
 
   startServer(server, port, 'Public');
@@ -42,7 +42,7 @@ const mountInternal = (apps, port, publicPath) => {
   mountAppList(apps, server);
 
   apps.map(({ name, path }) => (
-    mountApp({ server, name, path })
+    mountApp({ server, name, path: pathLib.join(path, 'internal') })
   ));
 
   server.use(
