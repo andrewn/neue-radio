@@ -1,0 +1,14 @@
+{
+  "name": "debug",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "PORT=5004 node index"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "ip": "^1.1.5"
+  }
+}
