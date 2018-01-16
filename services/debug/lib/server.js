@@ -2,6 +2,8 @@ const assert = require('assert');
 const http = require('http');
 const URL = require('url');
 
+const html = require('./template').html;
+
 const regex = new RegExp('\\?ws=([^&]+).*');
 
 const websocketFromUrl = value => {
@@ -15,11 +17,17 @@ const translateToChromeInternal = value =>
   )}`;
 
 const template = () => item => `
-  <div>
+  <div class="item">
     <h3>${item.title}</h3>
-    <a href="${translateToChromeInternal(
+    <label>Chrome's built-in debugger</label>
+    <input type="text" value="${translateToChromeInternal(
       item.devtoolsFrontendUrl
-    )}">Chrome built-in debugger</a>
+    )}" />
+
+    <div class="copy">
+      <span class="do">Click anywhere to copy</span>
+      <span class="done">Copied!</span>
+    </div>
   </div>
 `;
 
@@ -32,10 +40,16 @@ const start = ({ debuggers, port = 3000 } = {}) => {
     try {
       const list = await debuggers();
       response.setHeader('Content-Type', 'text/html');
-      response.end(`
-      There are ${list.length} debuggers.
-      ${list.map(tmpl).join('<hr />\n')}
-    `);
+
+      const content = html(`
+      <h1>Web Inspector</h1>
+      <p>There ${list.length === 1 ? 'is' : 'are'} ${list.length} debugger${
+        list.length === 1 ? '' : 's'
+      } available.</p>
+        ${list.map(tmpl).join('<hr />\n')}
+      `);
+
+      response.end(content);
     } catch (e) {
       console.error(e);
       response.end(`Error: ${e.message}`);
