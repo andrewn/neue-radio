@@ -1,0 +1,14 @@
+[Unit]
+Description=Web Inspector Debug URL
+
+[Service]
+WorkingDirectory=/opt/radiodan/rde/services/debug
+ExecStart=/usr/local/bin/npm start
+Restart=on-failure
+StandardOutput=syslog
+SyslogIdentifier=rde-debug
+Type=idle
+Environment=PORT=5004
+
+[Install]
+WantedBy=multi-user.target
