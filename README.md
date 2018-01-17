@@ -40,30 +40,32 @@ The manager is responsible for starting and stopping all radio apps. It's a webp
 
 ### Debugging
 
-A remote web inspector is available on localhost port 5222 and is accessible from other machines on the network.
+A remote web inspector is available on localhost port 9222 and is accessible from other machines on the network. This allows you to use the full [Chrome DevTools](https://developers.google.com/web/tools/chrome-devtools/) to inspect what's running on the device.
 
-Visit http://raspberrypi.local:9222 in a browser on another machine to access the web inspector where all pages are accessible.
+### Fastest Debug
 
-NB: Accessing the web inspector directly is currently broken. You need to jump through a few hoops to access it:
-
-1. Visit http://raspberrypi.local:9222 in a browser
+1. Visit http://raspberrypi.local:5004 where a list of all available pages will be waiting.
+2. Copy/paste the given link into Chrome on your computer to launch the inspector.
 
 ### Faster Debug
 
+1. Visit http://raspberrypi.local:9222 in a browser
 2. Copy the link named "localhost:5001/" on the page
 3. Paste it into [this form](https://jsfiddle.net/pixelblend/s3w3dqsh/)
 4. Visit the corresponding URL
 
 ### Manual Debug (In case the fiddle disappears)
 
+1. Visit http://raspberrypi.local:9222 in a browser
 2. Click the link "localhost:5001/" on the page
 3. This link won't load, but copy the Page ID at the end of the URL in the address bar:
 
-    e.g. in the URL `/devtools/page/**41521fab-b30d-41a5-8a47-9557abede207**&remoteFrontend=true`
-    the page ID is **`41521fab-b30d-41a5-8a47-9557abede207`**
+   e.g. in the URL `/devtools/page/**41521fab-b30d-41a5-8a47-9557abede207**&remoteFrontend=true`
+   the page ID is **`41521fab-b30d-41a5-8a47-9557abede207`**
+
 4. Put the Page ID into the following URL and paste into the Chrome instance runnning on your computer:
 
-    chrome-devtools://devtools/bundled/inspector.html?ws=raspberrypi.local:9222/devtools/page/**PAGE_ID_GOES_HERE**
+   chrome-devtools://devtools/bundled/inspector.html?ws=raspberrypi.local:9222/devtools/page/**PAGE_ID_GOES_HERE**
 
     For the Page ID above, that would be:
 
