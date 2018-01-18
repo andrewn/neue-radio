@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const isDirectory = ({ path }) => fs.lstatSync(path).isDirectory();
+const isDirectory = ({ path }) => fs.statSync(path).isDirectory();
 const isNotHiddenDirectory = ({ path }) => path[0] !== '.';
 
 const getDirectories = source =>
