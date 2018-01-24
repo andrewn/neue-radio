@@ -4,7 +4,7 @@ INTERNAL_PORT=5001
 REMOTE_DEBUGGING_PORT=9222
 REMOTE_DEBUGGING_ADDRESS=0.0.0.0
 APP_URL=http://localhost:$INTERNAL_PORT/
-ARGS="--disable-gpu --remote-debugging-port=$REMOTE_DEBUGGING_PORT --remote-debugging-address=$REMOTE_DEBUGGING_ADDRESS $APP_URL"
+ARGS="--use-fake-ui-for-media-stream --disable-gpu --remote-debugging-port=$REMOTE_DEBUGGING_PORT --remote-debugging-address=$REMOTE_DEBUGGING_ADDRESS $APP_URL"
 
 MACOS_CHROME=/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 

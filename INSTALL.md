@@ -36,6 +36,55 @@ Run the `deployment/provision` script from the command line.
 
     curl -sS get.pimoroni.com/phatdac | bash
 
+## USB Microphone
+
+These steps may vary based on your audio set-up. If you use a USB microphone:
+
+1. Plug it in
+2. You need to set it as the default audio input so run `arecord -L` to list all the possible capture aliases:
+
+```
+pi@raspberrypi:~ $ arecord -L
+null
+    Discard all samples (playback) or generate zero samples (capture)
+default
+sysdefault:CARD=Device
+    USB PnP Sound Device, USB Audio
+    Default Audio Device
+front:CARD=Device,DEV=0
+    USB PnP Sound Device, USB Audio
+    Front speakers
+... there are loads ...
+iec958:CARD=Device,DEV=0
+    USB PnP Sound Device, USB Audio
+    IEC958 (S/PDIF) Digital Audio Output
+dmix:CARD=Device,DEV=0
+    USB PnP Sound Device, USB Audio
+    Direct sample mixing device
+dsnoop:CARD=Device,DEV=0
+    USB PnP Sound Device, USB Audio
+    Direct sample snooping device
+hw:CARD=Device,DEV=0
+    USB PnP Sound Device, USB Audio
+    Direct hardware device without any conversions
+plughw:CARD=Device,DEV=0
+    USB PnP Sound Device, USB Audio
+    Hardware device with all software conversions
+```
+
+In this instance we'll choose the last one `plughw:CARD=Device,DEV=0`, the "USB PnP Sound Device, USB Audio".
+
+3. Create `/etc/asound.conf` with the following:
+
+```
+pcm.!default {
+  type asym
+  capture.pcm "plughw:CARD=Device,DEV=0"
+}
+```
+
+This sets the card as the default record device. [More info about this](https://superuser.com/questions/53957/what-do-alsa-devices-like-hw0-0-mean-how-do-i-figure-out-which-to-use#53977).
+
 ## Play some audio
 
 Go to http://raspberrypi.local:5000/radio/ and choose a file to play.

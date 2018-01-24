@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Microphone test</title>
+  <style>
+    .gain {
+      display: block;
+      height: 40px;
+      width: 500px;
+
+      background-color: #EEE;
+    }
+
+    .gain-value {
+      display: block;
+      height: 100%;
+      width: 0;
+
+      background-color: hotpink;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Microphone input</h1>
+  <h2 class="db"></h2>
+  <div class="gain">
+    <div class="gain-value"></div>
+  </div>
+
+  <canvas width="500" height="200" />
+  <script>
+
+    const gain = document.querySelector('.gain-value');
+    const db = document.querySelector('.db');
+
+    const canvas = document.querySelector('canvas');
+    const canvasWidth = canvas.width;
+    const canvasHeight = canvas.height;
+
+    const fftContext = canvas.getContext('2d');
+    let state = { fft: [], gain: 0, db: 0 };
+
+    // Connect to the WS and call `handler` every time we get data
+    function connect(handler) {
+      const ws = new WebSocket(`ws://${location.hostname}:8000`);
+      ws.onmessage = ({ data }) => {
+        const { topic, payload } = JSON.parse(data);
+        if (topic === 'MicrophoneFFT') {
+          handler(payload);
+        }
+      }
+    }
+
+    function drawFFT(values) {
+      fftContext.clearRect(0, 0, canvasWidth, canvasHeight);
+      const barWidth = canvasWidth / values.length;
+      for (let i = 0, len = values.length; i < len; i++) {
+        const x = canvasWidth * (i / len);
+        const y = (values[i] + 140) * 2;
+        fftContext.fillStyle = "rgba(0, 0, 0, " + i / len + ")";
+        fftContext.fillRect(x, canvasHeight - y, barWidth, canvasHeight);
+      }
+    }
+
+    function drawGain(value) {
+      gain.style.width = `${value * 100}%`;
+    }
+
+    // Render UI using the latest data in `state`
+    function renderLoop() {
+      drawFFT(state.fft);
+      drawGain(state.gain.toPrecision(2));
+      db.innerText = state.db.toPrecision(2);
+
+      requestAnimationFrame(renderLoop);
+    }
+
+    // Save the latest data to a variable
+    function acceptData(data) {
+      console.log(data);
+      state = data;
+    }
+
+    renderLoop();
+    connect(acceptData);
+  </script>
+</body>
+
+</html>
