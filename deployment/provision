@@ -9,11 +9,13 @@ echo "*** Updating Sources"
 apt-get update
 
 echo "*** Prerequisites"
-apt-get install git -y
+apt-get install git python3-pip -y
 # apt-get upgrade -y
 
 echo "*** Pulse Audio"
 apt-get install pulseaudio -y
+
+pip3 install git+https://github.com/GeorgeFilipkin/pulsemixer.git
 
 echo "*** Chrome"
 cd /tmp
