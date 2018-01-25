@@ -27,10 +27,20 @@ try {
 
 var uiConfig = require('../config/physical-config.json');
 
+function eachItem(config, cb) {
+  Object
+    .entries(config)
+    .forEach(
+      ([type, items = []]) => {
+        items.forEach(
+          item => cb(type, item)
+        )
+      }
+    )
+}
+
 module.exports.create = function (router) {
   const io = new IO({ enableSoftPwm: true });
-  // const msgClient = MessagingClient.create();
-  // const publisher = msgClient.Publisher.create();
 
   var board = new five.Board({
     io: io,
@@ -53,18 +63,19 @@ module.exports.create = function (router) {
   board.on('ready', function() {
     console.log('Board is ready');
 
-    types.forEach(function (type) {
-      var specs = uiConfig[type];
-      var factory = factories[type];
-      if (specs && factory) {
-        specs.forEach(function (spec) {
+    eachItem(
+      uiConfig, 
+      (type, spec) => {
+        const factory = factories[type];
+
+        if (spec && factory) {
           const routable = router.register(type, spec.id);
           instances[type][spec.id] = factory(spec, routable);
-        });
-      } else {
-        console.error("No config or factory for component type: ", type);
+        } else {
+          console.error("No config or factory for component type: ", type);
+        }
       }
-    })
+    );
 
     if (this.repl) {
       this.repl.inject(Object.assign(
