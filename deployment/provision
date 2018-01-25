@@ -12,6 +12,9 @@ echo "*** Prerequisites"
 apt-get install git -y
 # apt-get upgrade -y
 
+echo "*** Pulse Audio"
+apt-get install pulseaudio -y
+
 echo "*** Chrome"
 cd /tmp
 # https://launchpad.net/~osomon/+archive/ubuntu/chromium-dev/
