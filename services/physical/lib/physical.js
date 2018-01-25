@@ -39,8 +39,28 @@ function eachItem(config, cb) {
     )
 }
 
+
+function collectPinNumbers(config) {
+  const pins = [];
+
+  eachItem(config, (type, spec) => {
+    if (spec.config && spec.config.pin) {
+      pins.push(spec.config.pin);
+    } else if (spec.config && spec.config.pins) {
+      pins.push(...Object.values(spec.config.pins));
+    }
+  });
+
+  return pins;
+}
+
 module.exports.create = function (router) {
-  const io = new IO({ enableSoftPwm: true });
+  const io = new IO({
+    enableSoftPwm: true,
+    // Only enable pins used in the config
+    // to avoid clashing with other components
+    includePins: collectPinNumbers(uiConfig)
+  });
 
   var board = new five.Board({
     io: io,
