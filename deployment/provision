@@ -44,6 +44,9 @@ JOBS=MAX npm install --unsafe-perm --production # use all cores
 cd ..
 cd rfid
 JOBS=MAX npm install --unsafe-perm --production # use all cores
+cd ..
+cd debug
+JOBS=MAX npm install --unsafe-perm --production # use all cores
 cd ../..
 chown -R pi:pi /opt/radiodan
 cp deployment/systemd/* /etc/systemd/system/
@@ -54,6 +57,7 @@ systemctl enable manager-web-server
 # TODO: Investigate why this causes DAC to stop working
 # systemctl enable physical
 systemctl enable rfid
+systemctl enable debug
 
 echo "*** IPTables (Port forwarding)"
 DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages iptables-persistent
