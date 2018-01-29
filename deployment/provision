@@ -12,6 +12,33 @@ echo "*** Prerequisites"
 apt-get install git -y
 # apt-get upgrade -y
 
+echo "*** logrotate"
+
+/bin/cat <<EOF >/etc/logrotate.conf
+daily
+rotate 4
+create
+minsize 1k
+size 100M
+compress
+
+include /etc/logrotate.d
+
+/var/log/wtmp {
+    missingok
+    monthly
+    create 0664 root utmp
+    rotate 1
+}
+
+/var/log/btmp {
+    missingok
+    monthly
+    create 0660 root utmp
+    rotate 1
+}
+EOF
+
 echo "*** Chrome"
 cd /tmp
 # https://launchpad.net/~osomon/+archive/ubuntu/chromium-dev/
