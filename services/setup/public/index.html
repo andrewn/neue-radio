@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Radiodan Configuration</title>
+  <style>
+    button, label, span { display: block }
+    button { margin: 10px 0; width: 50% }
+    span { float: left; width: 50%; }
+  </style>
+</head>
+
+<body>
+<h1>Radiodan Configuration</h1>
+
+<h2>Services</h2>
+<form action="/services" method="POST" id="services-list">
+  <button type="submit">Update</button>
+</form>
+
+<script>
+  const app = async () => {
+    const form = document.getElementById('services-list');
+    const services = await fetch('/services').then(res => res.json());
+
+    services.forEach(({ name, active }) => {
+      const label = document.createElement('label');
+      const span = document.createElement('span');
+      span.innerText = name;
+
+      label.appendChild(span);
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.name = 'services[]';
+      checkbox.value = name;
+
+      if(active) {
+        checkbox.checked = 'checked';
+      }
+
+      label.appendChild(checkbox);
+
+      form.prepend(label);
+    });
+  }
+
+  app();
+</script>
+
+</body>
+
+</html>
