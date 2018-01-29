@@ -1,4 +1,5 @@
 var five = require('johnny-five');
+var pigpio = require('pigpio');
 var EchoIO = require('./echo-io');
 
 var IO = null;
@@ -54,7 +55,13 @@ function collectPinNumbers(config) {
   return pins;
 }
 
+
 module.exports.create = function (router) {
+  // Tells the underlying gpio library to use the
+  // PWM pin as a clock source, rather than the PCM
+  // pin that provides I2S audio to DACs
+  pigpio.configureClock(5 /* pigpio's default duty cycle */, pigpio.CLOCK_PWM);
+
   const io = new IO({
     enableSoftPwm: true,
     // Only enable pins used in the config
