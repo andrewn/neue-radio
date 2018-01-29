@@ -1,5 +1,6 @@
 [Unit]
 Description=YouTube Downloader
+ConditionPathExists=/opt/radiodan/processes/services/downloader
 
 [Service]
 WorkingDirectory=/opt/radiodan/rde/services/downloader

@@ -1,5 +1,6 @@
 [Unit]
 Description=Physical interface
+ConditionPathExists=/opt/radiodan/processes/services/physical
 
 [Service]
 WorkingDirectory=/opt/radiodan/rde/services/physical

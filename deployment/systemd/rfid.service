@@ -1,5 +1,6 @@
 [Unit]
 Description=RFID reader on SPI Interface
+ConditionPathExists=/opt/radiodan/processes/services/rfid
 
 [Service]
 WorkingDirectory=/opt/radiodan/rde/services/rfid
