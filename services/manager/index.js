@@ -1,6 +1,6 @@
 const path = require('path');
 
-const findApps = require('./lib/apps');
+const { findApps, singleApp } = require('./lib/apps');
 const http = require('./lib/io/http');
 const mountWebSocket = require('./lib/io/ws');
 
@@ -11,7 +11,7 @@ const externalPort = process.env.EXTERNAL_PORT || 5000;
 const appPath = path.resolve(__dirname, '..', '..', 'apps');
 const managerPublicPath = path.join(__dirname, 'public');
 
-const apps = findApps(appPath);
+const apps = process.env.APP_PATH ? singleApp(process.env.APP_PATH) : findApps(appPath);
 
 http.mountExternal(apps, externalPort);
 http.mountInternal(apps, internalPort, managerPublicPath);
