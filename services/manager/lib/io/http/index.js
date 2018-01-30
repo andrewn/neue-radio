@@ -2,6 +2,8 @@ const express = require('express');
 const ip = require('ip');
 const pathLib = require('path');
 
+const logger = require('../logger');
+
 const mountApp = ({ server, name, path }) => {
   const mountAt = `/${name}`;
 
@@ -17,12 +19,12 @@ const mountAppList = (apps, server) => {
     })
   );
 
-  console.log('Mounted apps', appNames);
+  logger.log('http', 'Mounted apps', appNames);
 };
 
 const startServer = (server, port, name) => {
   server.listen(port, () => (
-    console.log(`${name} Server http://${ip.address()}:${port}`)
+    logger.log('http', `${name} Server http://${ip.address()}:${port}`)
   ));
 };
 
