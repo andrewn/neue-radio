@@ -2,16 +2,18 @@
 Description=Radio app manager web server
 
 [Service]
+EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
 WorkingDirectory=/opt/radiodan/rde/services/manager
-ExecStart=/opt/radiodan/rde/services/manager/start-server-environment.sh
+ExecStart=/usr/bin/env \
+          INTERNAL_PORT=${MANAGER_INTERNAL_PORT} \
+          EXTERNAL_PORT=${MANAGER_EXTERNAL_PORT} \
+          WEBSOCKET_PORT=${MANAGER_WEBSOCKET_PORT} \
+          npm start
 Restart=on-failure
 StandardOutput=syslog
 SyslogIdentifier=rde-server
 Type=idle
 User=pi
-Environment=INTERNAL_PORT=5001
-Environment=EXTERNAL_PORT=5000
-Environment=WEBSOCKET_PORT=8000
 
 [Install]
 WantedBy=multi-user.target

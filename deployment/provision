@@ -79,7 +79,7 @@ cd debug
 JOBS=MAX npm install --unsafe-perm --production # use all cores
 cd ../..
 chown -R pi:pi /opt/radiodan
-cp deployment/systemd/* /etc/systemd/system/
+cp deployment/systemd/*.service /etc/systemd/system/
 systemctl daemon-reload
 systemctl start manager
 systemctl enable manager
