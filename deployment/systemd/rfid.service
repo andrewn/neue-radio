@@ -3,8 +3,9 @@ Description=RFID reader on SPI Interface
 ConditionPathExists=/opt/radiodan/processes/services/rfid
 
 [Service]
+EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
 WorkingDirectory=/opt/radiodan/rde/services/rfid
-ExecStart=/usr/local/bin/npm start
+ExecStart=/usr/bin/env PORT=${RFID_PORT} npm start
 Restart=on-failure
 StandardOutput=syslog
 SyslogIdentifier=rde-rfid
