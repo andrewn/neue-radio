@@ -1,10 +1,8 @@
 #!/bin/bash
 
-INTERNAL_PORT=5001
-REMOTE_DEBUGGING_PORT=9222
 REMOTE_DEBUGGING_ADDRESS=0.0.0.0
-APP_URL=http://localhost:$INTERNAL_PORT/
-ARGS="--disable-gpu --use-fake-ui-for-media-stream --remote-debugging-port=$REMOTE_DEBUGGING_PORT --remote-debugging-address=$REMOTE_DEBUGGING_ADDRESS $APP_URL"
+APP_URL=http://localhost:${INTERNAL_PORT}/
+ARGS="--disable-gpu --use-fake-ui-for-media-stream --remote-debugging-port=${REMOTE_DEBUGGING_PORT} --remote-debugging-address=${REMOTE_DEBUGGING_ADDRESS} $APP_URL"
 
 MACOS_CHROME=/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome
 
