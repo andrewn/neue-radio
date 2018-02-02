@@ -22,6 +22,10 @@ const apps = ({ path, available }) => {
   };
 
   const set = async app => {
+    if(app == '') {
+      return await writeFile(path, '');
+    }
+
     const appPath = join(path, app);
     await writeFile(path, `APP_PATH=${appPath}`);
   };
