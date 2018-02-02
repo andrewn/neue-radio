@@ -1,22 +1,41 @@
-const path = require('path');
-
 const http = require('./lib/http');
+const resolveRelative = require('./lib/resolve-relative')(__dirname);
+const pathsList = require('./lib/paths-list');
+
+const createApps = require('./lib/apps');
 const createServices = require('./lib/services');
-const createServicesList = require('./lib/services-list')
 
 const app = async () => {
-  const servicesList = await createServicesList(__dirname);
-
   const port = process.env.PORT || 3000;
 
-  const servicesRunPath = path.resolve(
-    __dirname,
-    process.env.SERVICES_PATH || './services',
+  const appsList = await pathsList({
+    rootPath: resolveRelative('../../apps'),
+  });
+
+  const servicesList = await pathsList({
+    rootPath: resolveRelative('..'),
+    ignore: ['manager', 'setup', 'debug'],
+  });
+
+  const appsPath = resolveRelative(
+    process.env.APPS_PATH || './tmp/apps',
   );
 
-  const services = createServices({ path: servicesRunPath, available: servicesList });
+  const servicesPath = resolveRelative(
+    process.env.SERVICES_PATH || './tmp/services',
+  );
 
-  http({ port, services });
+  const apps = createApps({
+    path: appsPath,
+    available: appsList,
+  });
+
+  const services = createServices({
+    path: servicesPath,
+    available: servicesList,
+  });
+
+  http({ port, apps, services });
 };
 
 app();
