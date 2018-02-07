@@ -12,7 +12,7 @@ const findApps = source => (
     .filter(isNotHiddenDirectory)
 );
 
-const knownApps = (appPath = []) => (
+const knownApps = appPath => (
   appPath
     .split(':')
     .map(a => ({ path: a, name: path.posix.basename(a) }))
