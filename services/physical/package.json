@@ -12,7 +12,9 @@
   "dependencies": {
     "board-io": "^3.0.5",
     "faye-websocket": "^0.11.0",
-    "johnny-five": "^0.13.0"
+    "ip": "^1.1.5",
+    "johnny-five": "^0.13.0",
+    "ws": "^4.0.0"
   },
   "optionalDependencies": {
     "raspi-rotary-encoder": "andrewn/raspi-rotary-encoder",

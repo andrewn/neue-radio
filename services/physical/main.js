@@ -1,8 +1,13 @@
+const ip = require('ip');
+const { URL } = require('url');
+
 const createPhysical = require('./lib/physical').create;
 const createHttpServer = require('./lib/http-server').create;
-const createWsServer = require('./lib/ws-server').create;
+const createWsClient = require('./lib/ws').create;
 const Router = require('./lib/router');
 const port = process.env.PORT || 5200;
+
+const host = new URL(`http://${ip.address()}`);
 
 // We use a router to connect the WebSockets with
 // the physical UI so they don't need to know
@@ -10,15 +15,12 @@ const port = process.env.PORT || 5200;
 // could be added.
 const router = new Router();
 
-// HTTP server listens on <port> for HTTP connections
-// It does nothing at the moment but is required
-// so that the WebSocket server can accept connections
+// Serve the demo page
 const httpServer = createHttpServer();
 
-// Upgrades HTTP connections to WebSockets
 // Allows the physical stuff to be controlled
 // by sending messages over a websocket connection
-createWsServer(httpServer, router);
+createWsClient(host, router);
 
 // Controls connected lights and buttons
 // It listens for `message` events from the wsServer
