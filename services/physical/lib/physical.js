@@ -26,8 +26,6 @@ try {
 }
 
 
-var uiConfig = require('../config/physical-config.json');
-
 function eachItem(config, cb) {
   Object
     .entries(config)
@@ -56,7 +54,7 @@ function collectPinNumbers(config) {
 }
 
 
-module.exports.create = function (router) {
+module.exports.create = function (router, uiConfig) {
   // Tells the underlying gpio library to use the
   // PWM pin as a clock source, rather than the PCM
   // pin that provides I2S audio to DACs
