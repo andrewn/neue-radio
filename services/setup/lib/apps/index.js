@@ -1,14 +1,21 @@
 const { basename, join } = require('path');
 const { readFile, writeFile } = require('../fs');
 
-const apps = ({ path, available }) => {
+const pathEnv = 'APP_PATH=';
+
+const apps = ({ path, rootPath, available }) => {
   const current = async () => {
     try {
       const buffer = await readFile(path);
-      return basename(buffer.toString('ascii'));
+
+      return buffer
+        .toString('ascii')
+        .replace(pathEnv, '')
+        .split(':')
+        .map(a => basename(a));
     } catch(err) {
       console.warn(err);
-      return '';
+      return [];
     }
   };
 
@@ -17,17 +24,18 @@ const apps = ({ path, available }) => {
 
     return available.map(a => ({
       name: a,
-      active: a == active,
+      active: active.includes(a),
     }))
   };
 
-  const set = async app => {
-    if(app == '') {
+  const set = async (apps=[]) => {
+    if(apps.length == 0) {
       return await writeFile(path, '');
     }
 
-    const appPath = join(path, app);
-    await writeFile(path, `APP_PATH=${appPath}`);
+    const appPaths = apps.map(app => join(rootPath, app));
+
+    await writeFile(path, pathEnv + appPaths.join(':'));
   };
 
   return { status, set };

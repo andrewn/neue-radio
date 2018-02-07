@@ -12,11 +12,13 @@ const findApps = source => (
     .filter(isNotHiddenDirectory)
 );
 
-const singleApp = appPath => (
-  [{ path: appPath, name: path.posix.basename(appPath) }]
+const knownApps = (appPath = []) => (
+  appPath
+    .split(':')
+    .map(a => ({ path: a, name: path.posix.basename(a) }))
     .filter(isDirectory)
     .filter(isNotHiddenDirectory)
 );
 
 module.exports.findApps = findApps;
-module.exports.singleApp = singleApp;
+module.exports.knownApps = knownApps;

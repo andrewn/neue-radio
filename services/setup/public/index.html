@@ -17,10 +17,6 @@
 
 <h2>Application</h2>
 <form action="/apps" method="POST" id="apps-list">
-  <label>
-    <span>All Apps</span>
-    <input type="radio" name="apps" value="" checked="checked" />
-  </label>
   <button type="submit">Update</button>
 </form>
 
@@ -42,13 +38,14 @@
 
       label.appendChild(span);
 
-      const radio = document.createElement('input');
-      radio.type = 'radio';
-      radio.name = 'apps';
-      radio.value = name;
-      radio.checked = active;
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.name = 'apps[]';
+      checkbox.value = name;
+      checkbox.checked = active;
 
-      label.appendChild(radio);
+      label.appendChild(checkbox);
+
       selection.appendChild(label);
     });
 
@@ -71,10 +68,7 @@
       checkbox.type = 'checkbox';
       checkbox.name = 'services[]';
       checkbox.value = name;
-
-      if(active) {
-        checkbox.checked = 'checked';
-      }
+      checkbox.checked = active;
 
       label.appendChild(checkbox);
 

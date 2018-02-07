@@ -8,8 +8,10 @@ const createServices = require('./lib/services');
 const app = async () => {
   const port = process.env.PORT || 3000;
 
+  const appsRoot = resolveRelative('../../apps');
+
   const appsList = await pathsList({
-    rootPath: resolveRelative('../../apps'),
+    rootPath: appsRoot,
   });
 
   const servicesList = await pathsList({
@@ -27,6 +29,7 @@ const app = async () => {
 
   const apps = createApps({
     path: appsPath,
+    rootPath: appsRoot,
     available: appsList,
   });
 
