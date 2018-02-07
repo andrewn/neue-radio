@@ -6,6 +6,9 @@ const createHttpServer = require('./lib/http-server').create;
 const createWsClient = require('./lib/ws').create;
 const Router = require('./lib/router');
 const port = process.env.PORT || 5200;
+const configPath = process.env.CONFIG_PATH || './config/physical-config.json';
+
+const config = require(configPath);
 
 const host = new URL(`http://${ip.address()}`);
 
@@ -25,7 +28,7 @@ createWsClient(host, router);
 // Controls connected lights and buttons
 // It listens for `message` events from the wsServer
 // and publishes new messages back over the connection
-createPhysical(router);
+createPhysical(router, config);
 
 // Start listening
 httpServer.listen(port, function() {
