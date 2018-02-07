@@ -86,7 +86,7 @@ module.exports.create = function (router, uiConfig) {
     'Button': createButtonInstance,
     'Led.RGB': createLedRGBInstance,
     'Encoder': createEncoderInstance,
-    'Cap': createCapInstance
+    'Capacitive': createCapInstance
   };
 
   var types = Object.keys(factories);
