@@ -4,6 +4,7 @@ var EchoIO = require('./echo-io');
 
 var IO = null;
 var RotaryEncoder;
+var connectRaspiCap;
 
 try {
   IO = require('raspi-io');
@@ -25,6 +26,15 @@ try {
   };
 }
 
+try {
+  connectRaspiCap = require('raspi-cap').connect;
+} catch(err) {
+  console.error('raspi-cap not found, falling back to mock');
+  console.error(err);
+  connectRaspiCap = function () {
+    return new Promise.resolve({ on: () => {} });
+  };
+}
 
 function eachItem(config, cb) {
   Object
@@ -72,7 +82,7 @@ module.exports.create = function (router, uiConfig) {
     repl: false
   });
 
-  var types = ['Button', 'Led.RGB', 'Encoder'];
+  var types = ['Button', 'Led.RGB', 'Encoder', 'Cap'];
 
   var instances = {};
   types.forEach(function (type) {
@@ -82,7 +92,8 @@ module.exports.create = function (router, uiConfig) {
   var factories = {
     'Button': createButtonInstance,
     'Led.RGB': createLedRGBInstance,
-    'Encoder': createEncoderInstance
+    'Encoder': createEncoderInstance,
+    'Cap': createCapInstance
   };
 
   board.on('ready', function() {
@@ -204,4 +215,16 @@ function createEncoderInstance(spec, routable) {
   encoder.on('change', function (evt) {
     routable.publish('turn', evt);
   });
+}
+
+function createCapInstance(spec, routable) {
+  console.log('pre cap setup');
+  connectRaspiCap().then(
+    cap => {
+      console.log('cap connected');
+      cap.on('change', function (evt) {
+        routable.publish('change', evt);
+      });
+    }
+  );
 }
