@@ -82,19 +82,19 @@ module.exports.create = function (router, uiConfig) {
     repl: false
   });
 
-  var types = ['Button', 'Led.RGB', 'Encoder', 'Cap'];
-
-  var instances = {};
-  types.forEach(function (type) {
-    instances[type] = {};
-  });
-
   var factories = {
     'Button': createButtonInstance,
     'Led.RGB': createLedRGBInstance,
     'Encoder': createEncoderInstance,
     'Cap': createCapInstance
   };
+
+  var types = Object.keys(factories);
+
+  var instances = {};
+  types.forEach(function (type) {
+    instances[type] = {};
+  });
 
   board.on('ready', function() {
     console.log('Board is ready');
