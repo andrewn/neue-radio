@@ -1,17 +1,24 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <title>Radiodan Configuration</title>
   <style>
+    .hidden { display: none; }
     button, label, span { display: block }
     button { margin: 10px 0; width: 50% }
     span { float: left; width: 50%; }
   </style>
 </head>
-
 <body>
 <h1>Radiodan Configuration</h1>
+<p id="notification" class="hidden">
+  Changes have been saved, please reboot your Pi for them to take effect.
+</p>
+
+<h2>Application</h2>
+<form action="/apps" method="POST" id="apps-list">
+  <button type="submit">Update</button>
+</form>
 
 <h2>Services</h2>
 <form action="/services" method="POST" id="services-list">
@@ -19,8 +26,35 @@
 </form>
 
 <script>
-  const app = async () => {
+  const buildApps = async () => {
+    const form = document.getElementById('apps-list');
+    const selection = document.createElement('div');
+    const apps = await fetch('/apps').then(res => res.json());
+
+    apps.forEach(({ name, active }) => {
+      const label = document.createElement('label');
+      const span = document.createElement('span');
+      span.innerText = name;
+
+      label.appendChild(span);
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.name = 'apps[]';
+      checkbox.value = name;
+      checkbox.checked = active;
+
+      label.appendChild(checkbox);
+
+      selection.appendChild(label);
+    });
+
+    form.prepend(selection);
+  };
+
+  const buildServices = async () => {
     const form = document.getElementById('services-list');
+    const selection = document.createElement('div');
     const services = await fetch('/services').then(res => res.json());
 
     services.forEach(({ name, active }) => {
@@ -34,20 +68,29 @@
       checkbox.type = 'checkbox';
       checkbox.name = 'services[]';
       checkbox.value = name;
-
-      if(active) {
-        checkbox.checked = 'checked';
-      }
+      checkbox.checked = active;
 
       label.appendChild(checkbox);
 
-      form.prepend(label);
+      selection.appendChild(label);
     });
+
+    form.prepend(selection);
+  };
+
+  const app = async () => {
+    const params = new URLSearchParams(document.location.search.substring(1));
+
+    if(params.get('update')) {
+      const notification = document.getElementById('notification');
+      notification.classList.remove('hidden');
+    }
+
+    await buildApps();
+    await buildServices();
   }
 
   app();
 </script>
-
 </body>
-
 </html>

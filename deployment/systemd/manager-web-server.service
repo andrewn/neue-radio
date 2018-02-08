@@ -3,6 +3,8 @@ Description=Radio app manager web server
 
 [Service]
 EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
+# The leading underscore means that this file is optional
+EnvironmentFile=-/opt/radiodan/rde/services/setup/tmp/apps
 WorkingDirectory=/opt/radiodan/rde/services/manager
 ExecStart=/usr/bin/env \
           INTERNAL_PORT=${MANAGER_INTERNAL_PORT} \
