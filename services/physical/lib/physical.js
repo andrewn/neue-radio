@@ -211,6 +211,19 @@ function createCapInstance(spec, routable) {
       }
     });
 
+    routable.on("statusRequest", function() {
+      routable.publish("status", { sensitivty: cap.getSensitivity() });
+    });
+
+    routable.on("sensitivity", function(req) {
+      try {
+        cap.setSensitivity(req.params.level);
+        routable.publish("status", { sensitivty: cap.getSensitivity() });
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
     cap.on("reset", function() {
       routable.publish("reset", {});
     });
