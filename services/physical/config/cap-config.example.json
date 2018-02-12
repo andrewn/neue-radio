@@ -2,7 +2,9 @@
   "Capacitive": [
     {
       "id": "cap",
-      "config": {}
+      "config": {
+        "resetPin": 0
+      }
     }
   ]
 }

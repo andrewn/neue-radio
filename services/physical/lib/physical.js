@@ -201,7 +201,20 @@ function createEncoderInstance(spec, routable) {
 }
 
 function createCapInstance(spec, routable) {
-  connectRaspiCap().then(cap => {
+  connectRaspiCap({ resetPin: spec.config.resetPin }).then(cap => {
+    // Listen for messages from clients
+    routable.on("resetRequest", function() {
+      try {
+        cap.reset();
+      } catch (e) {
+        console.error(e);
+      }
+    });
+
+    cap.on("reset", function() {
+      routable.publish("reset", {});
+    });
+
     cap.on("change", function(evt) {
       routable.publish("change", evt);
     });
