@@ -4,6 +4,7 @@ var EchoIO = require('./echo-io');
 
 var IO = null;
 var RotaryEncoder;
+var connectRaspiCap;
 
 try {
   IO = require('raspi-io');
@@ -25,8 +26,15 @@ try {
   };
 }
 
-
-var uiConfig = require('../config/physical-config.json');
+try {
+  connectRaspiCap = require('raspi-cap').connect;
+} catch(err) {
+  console.error('raspi-cap not found, falling back to mock');
+  console.error(err);
+  connectRaspiCap = function () {
+    return new Promise.resolve({ on: () => {} });
+  };
+}
 
 function eachItem(config, cb) {
   Object
@@ -56,7 +64,7 @@ function collectPinNumbers(config) {
 }
 
 
-module.exports.create = function (router) {
+module.exports.create = function (router, uiConfig) {
   // Tells the underlying gpio library to use the
   // PWM pin as a clock source, rather than the PCM
   // pin that provides I2S audio to DACs
@@ -74,18 +82,19 @@ module.exports.create = function (router) {
     repl: false
   });
 
-  var types = ['Button', 'Led.RGB', 'Encoder'];
+  var factories = {
+    'Button': createButtonInstance,
+    'Led.RGB': createLedRGBInstance,
+    'Encoder': createEncoderInstance,
+    'Capacitive': createCapInstance
+  };
+
+  var types = Object.keys(factories);
 
   var instances = {};
   types.forEach(function (type) {
     instances[type] = {};
   });
-
-  var factories = {
-    'Button': createButtonInstance,
-    'Led.RGB': createLedRGBInstance,
-    'Encoder': createEncoderInstance
-  };
 
   board.on('ready', function() {
     console.log('Board is ready');
@@ -206,4 +215,16 @@ function createEncoderInstance(spec, routable) {
   encoder.on('change', function (evt) {
     routable.publish('turn', evt);
   });
+}
+
+function createCapInstance(spec, routable) {
+  console.log('pre cap setup');
+  connectRaspiCap().then(
+    cap => {
+      console.log('cap connected');
+      cap.on('change', function (evt) {
+        routable.publish('change', evt);
+      });
+    }
+  );
 }
