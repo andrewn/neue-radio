@@ -201,9 +201,7 @@ function createEncoderInstance(spec, routable) {
 }
 
 function createCapInstance(spec, routable) {
-  console.log("pre cap setup");
   connectRaspiCap().then(cap => {
-    console.log("cap connected");
     cap.on("change", function(evt) {
       routable.publish("change", evt);
     });
