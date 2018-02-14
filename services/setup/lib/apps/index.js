@@ -3,7 +3,7 @@ const { readFile, writeFile } = require('../fs');
 
 const pathEnv = 'APP_PATH=';
 
-const apps = ({ path, rootPath, available }) => {
+const apps = ({ path, rootPath, available, alwaysMount }) => {
   const current = async () => {
     try {
       const buffer = await readFile(path);
@@ -33,7 +33,9 @@ const apps = ({ path, rootPath, available }) => {
       return await writeFile(path, '');
     }
 
-    const appPaths = apps.map(app => join(rootPath, app));
+    const appSet = [...alwaysMount, ...apps];
+
+    const appPaths = appSet.map(app => join(rootPath, app));
 
     await writeFile(path, pathEnv + appPaths.join(':'));
   };
