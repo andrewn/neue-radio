@@ -7,7 +7,12 @@ const logger = require('../logger');
 const mountApp = ({ server, name, path }) => {
   const mountAt = `/${name}`;
 
-  server.use(mountAt, express.static(path));
+  const serveStatic = express.static(
+    path,
+    { index: ['index.html', 'index.htm', 'index.js'] }
+  );
+
+  server.use(mountAt, serveStatic);
 };
 
 const mountAppList = (apps, server) => {
