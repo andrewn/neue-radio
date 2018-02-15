@@ -4,6 +4,17 @@ const createSubscriptions = (log) => {
   const isGroup = obj => (obj instanceof RegExp);
   const subscriptions = { single: new Map(), group: new Map() };
 
+  const set = (map, topic, callback) => {
+    const keys = Array.from(map.keys())
+      .map(k => k.toString());
+
+    if (keys.includes(topic.toString())) {
+      throw new Error(`Already subscribed to ${topic}`);
+    }
+
+    map.set(topic, callback);
+  };
+
   const matching = (topic) => {
     const groupMatches = Array.from(subscriptions.group.entries())
       .filter(([t, _]) => { return t.test(topic) })
@@ -34,11 +45,11 @@ const createSubscriptions = (log) => {
     log(`Subscribing ${topic}`);
 
     if (isGroup(topic)) {
-      return subscriptions.group.set(topic, callback);
+      return set(subscriptions.group, topic, callback);
     }
 
     if (validTopic(topic)) {
-      subscriptions.single.set(topic, callback);
+      set(subscriptions.single, topic, callback);
     }
   };
 
