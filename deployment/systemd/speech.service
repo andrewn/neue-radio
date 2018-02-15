@@ -1,0 +1,15 @@
+[Unit]
+Description=speechd to WebSocket bridge
+ConditionPathExists=/opt/radiodan/processes/services/speech
+
+[Service]
+EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
+WorkingDirectory=/opt/radiodan/rde/services/speech
+ExecStart=/usr/bin/env WS_PORT=${MANAGER_WEBSOCKET_PORT} python3 main.py
+Restart=on-failure
+StandardOutput=syslog
+SyslogIdentifier=rde-speechd
+Type=idle
+
+[Install]
+WantedBy=multi-user.target

@@ -59,6 +59,9 @@ ln -sf /opt/node/bin/node /usr/local/bin/node
 ln -sf /opt/node/bin/npm /usr/local/bin/npm
 /opt/node/bin/npm config set prefix /usr/local
 
+echo "*** Speech"
+apt-get install flite speech-dispatcher python3-speechd python3-websockets
+
 echo "*** Radiodan"
 mkdir -p /opt/radiodan
 mkdir -p /opt/radiodan/processes/services
@@ -91,6 +94,7 @@ systemctl enable manager-web-server
 # systemctl enable physical
 systemctl enable rfid
 systemctl enable debug
+systemctl enable speech
 
 echo "*** IPTables (Port forwarding)"
 DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages iptables-persistent
