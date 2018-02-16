@@ -1,0 +1,16 @@
+{
+  "name": "speechd-bridge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "debug": "^3.1.0",
+    "ws": "^4.0.0"
+  }
+}

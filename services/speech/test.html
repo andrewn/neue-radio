@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test speechd-service</title>
+</head>
+
+<body>
+  <input type="text" placeholder="Say something" />
+  <button>Speak!</button>
+  <script>
+    function wsUrl(search = window.location.search) {
+      const params = new URLSearchParams(search);
+      const host = params.get('host') || window.location.hostname;
+      const port = params.get('port') || window.location.port;
+
+      return `ws://${host}:${port}`;
+    }
+
+    function connect(url) {
+      const ws = new WebSocket(url);
+      ws.onopen = () => console.log('WS opened');
+      ws.onclose = () => console.warn('WS closed');
+      ws.onmessage = (evt) => console.info('> ', evt.data);
+
+      return {
+        send: (topic, payload) => ws.send(JSON.stringify({ topic, payload }))
+      };
+    }
+
+    const send = connect(wsUrl()).send;
+
+    const speak = function () {
+      const utterance = document.querySelector('input').value;
+      send('speech.command.speak', { utterance });
+    }
+
+    document.querySelector('button').addEventListener(
+      'click',
+      speak
+    );
+
+    document.querySelector('input').addEventListener(
+      'keyup',
+      function (evt) {
+        if (evt.keyCode === 13 /* ENTER */) {
+          speak();
+        }
+      }
+    );
+  </script>
+</body>
+
+</html>
