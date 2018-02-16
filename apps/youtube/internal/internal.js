@@ -1,42 +1,33 @@
+import createWebsocket from '/websocket';
+
 const DEBUG =
   new URL(window.location.href).searchParams.get('debug') === 'true';
 
 const createComms = async handler => {
-  const ws = new WebSocket('ws://' + location.hostname + ':8000');
+  const ws = createWebsocket();
 
-  const send = (topic, payload) => {
-    ws.send(
-      JSON.stringify({
-        topic,
-        payload
-      })
-    );
+  const send = (topic, payload = {}) => {
+    ws.publish({ topic, payload });
   };
 
   const instance = {
     downloadMedia: url => {
       DEBUG
-        ? handler({ topic: 'mediaAvailable', payload: { url } })
-        : send('mediaRequest', { url });
+        ? handler({ topic: 'downloader/event/available', payload: { url } })
+        : send('downloader/command/request', { url });
     },
     playing: url => {
-      send('playing', { url });
+      send('youtube/event/playing', { url });
     },
     stopped: () => {
-      send('stopped', {});
+      send('youtube/event/stopped');
     }
   };
 
-  ws.addEventListener('message', function(evt) {
-    const msg = JSON.parse(evt.data);
-    handler(msg);
-  });
+  ws.subscribe(new RegExp('youtube/command/.*'), handler);
+  ws.subscribe('downloader/event/available', handler);
 
-  return new Promise(resolve => {
-    ws.addEventListener('open', function() {
-      resolve(instance);
-    });
-  });
+  return ws.ready.then(() => (instance));
 };
 
 const playMedia = url => {
@@ -61,7 +52,7 @@ const stopYouTube = () => youtube.stop();
 const handleMessage = comms => ({ topic, payload }) => {
   console.log(topic, payload);
   switch (topic) {
-    case 'requestPlay':
+    case 'youtube/command/play':
       if (payload.type === 'download') {
         comms.downloadMedia(payload.url);
       } else if (payload.type === 'direct') {
@@ -69,11 +60,11 @@ const handleMessage = comms => ({ topic, payload }) => {
         comms.playing();
       }
       break;
-    case 'requestStop':
+    case 'youtube/command/stop':
       stopAll();
       comms.stopped();
       break;
-    case 'mediaAvailable':
+    case 'downloader/event/available':
       playMedia(payload.url);
       comms.playing(payload.sourceUrl);
       break;

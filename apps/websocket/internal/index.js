@@ -9,7 +9,9 @@ const logger = debug => (...args) => {
   }
 };
 
-const createWebsocket = ({ url = defaultURL, debug = false }) => {
+const createWebsocket = (opts = {}) => {
+  const { url = defaultURL, debug = false } = opts;
+
   const ws = new WebSocket(url);
   const log = logger(debug);
 
@@ -38,10 +40,13 @@ const createWebsocket = ({ url = defaultURL, debug = false }) => {
     }
   };
 
-  ws.addEventListener('open', onOpen);
+  const ready = new Promise(resolve => {
+    ws.addEventListener('open', resolve);
+  });
+
   ws.addEventListener('message', onMessage);
 
-  return { publish, subscribe, unsubscribe };
+  return { publish, subscribe, ready };
 };
 
 export default createWebsocket;

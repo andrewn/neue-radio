@@ -1,30 +1,22 @@
-const createComms = async handler => {
-  const ws = new WebSocket('ws://' + location.hostname + ':8000');
+import createWebsocket from '/websocket';
 
-  const send = (topic, payload) => {
-    ws.send(
-      JSON.stringify({
-        topic,
-        payload
-      })
-    );
+const createComms = async handler => {
+  const ws = createWebsocket();
+
+  const send = (topic, payload = {}) => {
+    ws.publish({ topic: `youtube/command/${topic}`, payload });
   };
 
   const instance = {
-    requestPlay: (url, type) => send('requestPlay', { url, type }),
-    requestStop: () => send('requestStop', {})
+    requestPlay: (url, type) => send('play', { url, type }),
+    requestStop: () => send('stop')
   };
 
-  ws.addEventListener('message', function(evt) {
-    const msg = JSON.parse(evt.data);
+  ws.subscribe(new RegExp('youtube/event/.*'), (msg) => {
     handler(msg);
   });
 
-  return new Promise(resolve => {
-    ws.addEventListener('open', function() {
-      resolve(instance);
-    });
-  });
+  return ws.ready.then(() => (instance));
 };
 
 const setState = id => {
@@ -56,12 +48,11 @@ const onStopClick = handler => {
 };
 
 const handleMessage = ({ topic }) => {
-  console.log('incoming message', topic);
   switch (topic) {
-    case 'playing':
+    case 'youtube/event/playing':
       setState('playing');
       break;
-    case 'stopped':
+    case 'youtube/event/stopped':
       setState('ready');
       break;
   }
