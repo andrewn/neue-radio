@@ -9,7 +9,8 @@
 
 <body>
   <input type="text" placeholder="Say something" />
-  <button>Speak!</button>
+  <button id="speak">Speak!</button>
+  <button id="list-voices">List voices</button>
   <script>
     function wsUrl(search = window.location.search) {
       const params = new URLSearchParams(search);
@@ -37,7 +38,11 @@
       send('speech.command.speak', { utterance });
     }
 
-    document.querySelector('button').addEventListener(
+    const listVoices = function () {
+      send('speech.command.list-voices');
+    }
+
+    document.querySelector('#speak').addEventListener(
       'click',
       speak
     );
@@ -49,6 +54,11 @@
           speak();
         }
       }
+    );
+
+    document.querySelector('#list-voices').addEventListener(
+      'click',
+      listVoices
     );
   </script>
 </body>
