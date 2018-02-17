@@ -1,11 +1,20 @@
-const exec = require("child_process").exec;
+const { promisify } = require("util");
+const exec = promisify(require("child_process").exec);
 
-const getExecutablePath = async () =>
-  new Promise((resolve, reject) => {
-    exec(`which speech-dispatcher`, (error, stdout) => {
-      error ? reject(error) : resolve(stdout);
-    });
-  });
+const { ExecutableNotFoundError } = require("./errors");
+
+const getExecutablePath = async () => {
+  try {
+    const { stdout } = await exec(`which speech-dispatcher`);
+    return stdout.trim();
+  } catch (e) {
+    if (e.code === 1) {
+      throw new ExecutableNotFoundError();
+    } else {
+      throw e;
+    }
+  }
+};
 
 const getSocketPath = () =>
   `${process.env.XDG_RUNTIME_DIR}/speech-dispatcher/speechd.sock`;

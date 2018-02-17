@@ -4,6 +4,15 @@ class ConnectionError extends Error {
   }
 }
 
+class ExecutableNotFoundError extends Error {
+  constructor() {
+    super("speech-dispatcher not found on PATH");
+    this.message =
+      "The command 'which speech-dispatcher' did not return the executable";
+  }
+}
+
 module.exports = {
-  ConnectionError
+  ConnectionError,
+  ExecutableNotFoundError
 };
