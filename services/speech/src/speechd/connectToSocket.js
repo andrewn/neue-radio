@@ -1,5 +1,6 @@
 const net = require("net");
 const debug = require("debug");
+const { EventEmitter } = require("events");
 
 const log = {
   send: debug("speechd:socket:send"),
@@ -9,16 +10,17 @@ const log = {
 const { getSocketPath } = require("./environment");
 
 module.exports = ({ socketPath = getSocketPath() } = {}) => {
+  const api = new EventEmitter();
   const socket = net.createConnection(socketPath);
 
-  // TODO: Handle events and responses from the connection
-  socket.on("data", data => log.receive(data.toString()));
+  socket.on("data", data => {
+    log.receive(data.toString());
+    api.emit("message", data.toString());
+  });
 
-  const api = {
-    send: (...params) => {
-      log.send(...params);
-      socket.write(...params);
-    }
+  api.send = (...params) => {
+    log.send(...params);
+    socket.write(...params);
   };
 
   return new Promise((resolve, reject) => {
