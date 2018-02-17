@@ -25,8 +25,7 @@ const main = async () => {
 
     speech.speak("Hello");
   } catch (e) {
-    console.log("Error:");
-    console.error(e);
+    console.log("Error:", e);
   }
 };
 
