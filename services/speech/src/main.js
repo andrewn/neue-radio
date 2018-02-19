@@ -1,26 +1,9 @@
 const connectToSpeechd = require("./speechd");
 const connectToBroker = require("./ws");
+const handleMessage = require("./handleMessage");
 
 const WS_HOST = process.env.WS_HOST;
 const WS_PORT = process.env.WS_PORT;
-
-const handleMessage = (speech, broker) => async (topic, payload) => {
-  try {
-    switch (topic) {
-      case "speech.command.speak":
-        if (payload.voiceType) {
-          await speech.setVoiceType(payload.voiceType);
-        }
-        speech.speak(payload.utterance);
-        break;
-      case "speech.command.list-voices":
-        broker.send("speech.event.available-voices", await speech.listVoices());
-        break;
-    }
-  } catch (e) {
-    console.log("Error handling action", e);
-  }
-};
 
 const main = async () => {
   try {
