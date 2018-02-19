@@ -2,6 +2,8 @@ const net = require("net");
 const debug = require("debug");
 const { EventEmitter } = require("events");
 
+const { ConnectionError } = require("./errors");
+
 const log = {
   send: debug("speechd:socket:send"),
   receive: debug("speechd:socket:receive")
@@ -28,8 +30,10 @@ module.exports = ({ socketPath = getSocketPath() } = {}) => {
       resolve(api);
     });
 
-    socket.on("error", err => {
-      reject(err);
+    socket.on("error", e => {
+      const isConnectionError = ["ENOENT", "ECONNREFUSED"].includes(e.code);
+      const error = isConnectionError ? new ConnectionError() : e;
+      reject(error);
     });
   });
 };

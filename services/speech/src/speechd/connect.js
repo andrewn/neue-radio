@@ -4,29 +4,22 @@ const connectToSocket = require("./connectToSocket");
 const spawnServer = require("./spawnServer");
 const { ConnectionError } = require("./errors");
 
-const connectToSocketOrNull = async params => {
+const connect = async ({ autoSpawn = true, ...params } = {}) => {
+  let connection = null;
+
   try {
-    return await connectToSocket(params);
+    connection = await connectToSocket(params);
   } catch (e) {
-    const isConnectionError = ["ENOENT", "ECONNREFUSED"].includes(e.code);
-    if (isConnectionError) {
-      return null;
+    if (e instanceof ConnectionError) {
+      connection = null;
     } else {
       throw e;
     }
   }
-};
-
-const connect = async ({ autoSpawn = true, ...params } = {}) => {
-  let connection = await connectToSocketOrNull(params);
 
   if (connection == null && autoSpawn) {
     await spawnServer();
-    connection = await connectToSocketOrNull(params);
-  }
-
-  if (connection == null) {
-    throw new ConnectionError();
+    connection = await connectToSocket(params);
   }
 
   return connection;
