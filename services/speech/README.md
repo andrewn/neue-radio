@@ -32,6 +32,6 @@ To log out debugging information, set the `DEBUG` environment variable i.e.
 
 | topic                      | payload                                                                                |
 | -------------------------- | -------------------------------------------------------------------------------------- |
-| speech.command.speak       | { utterance: 'Hello, world!' } <br /> Optionally, voiceType: 'ID' can change the voice |
-| speech.event.spoken        | { utterance: 'Hello, world!' }                                                         |
-| speech.command.list-voices | { voices: ['MALE1', 'FEMALE1'] }                                                       |
+| speech/command/speak       | { utterance: 'Hello, world!' } <br /> Optionally, voiceType: 'ID' can change the voice |
+| speech/event/spoken        | { utterance: 'Hello, world!' }                                                         |
+| speech/command/list-voices | { voices: ['MALE1', 'FEMALE1'] }                                                       |
