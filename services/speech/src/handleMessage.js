@@ -9,9 +9,29 @@ module.exports = (speech, broker) => async ({ topic, payload }) => {
         break;
       case "speech/command/listvoices":
         broker.publish({
-          topic: "speech/event/availablevoices",
+          topic: "speech/event/voices",
           payload: {
-            voices: await speech.listVoices()
+            available: await speech.listVoices(),
+            current: await speech.getVoiceType()
+          }
+        });
+        break;
+      case "speech/command/listoutputmodules":
+        broker.publish({
+          topic: "speech/event/outputmodules",
+          payload: {
+            available: await speech.listOutputModules(),
+            current: await speech.getOutputModule()
+          }
+        });
+        break;
+      case "speech/command/outputmodule":
+        speech.setOutputModule(payload.outputModule);
+        broker.publish({
+          topic: "speech/event/outputmodules",
+          payload: {
+            available: await speech.listOutputModules(),
+            current: await speech.getOutputModule()
           }
         });
         break;

@@ -38,6 +38,21 @@ class Protocol {
     return response.lines[0].content;
   }
 
+  async listOutputModules() {
+    const response = await this.send("LIST OUTPUT_MODULES");
+    return response.lines.map(({ content }) => content);
+  }
+
+  async setOutputModule(id) {
+    const response = await this.send(`SET SELF OUTPUT_MODULE ${id}`);
+    return response.result.content;
+  }
+
+  async getOutputModule() {
+    const response = await this.send("GET OUTPUT_MODULE");
+    return response.lines[0].content;
+  }
+
   async speak(utterance) {
     await this.send("SPEAK");
     this.send(utterance);
