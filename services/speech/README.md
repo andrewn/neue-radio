@@ -20,9 +20,18 @@ Then:
 
 `WS_PORT` is mandatory. The host IP is used if `WS_HOST` is not supplied.
 
+## Debugging
+
+To log out debugging information, set the `DEBUG` environment variable i.e.
+
+    WS_PORT=8000 DEBUG=* node src/main
+
+[debug](https://github.com/visionmedia/debug) is used for debugging.
+
 ## Protocol
 
-| topic                | payload                        |
-| -------------------- | ------------------------------ |
-| speech.command.speak | { utterance: 'Hello, world!' } |
-| speech.event.spoken  | { utterance: 'Hello, world!' } |
+| topic                      | payload                                                                                |
+| -------------------------- | -------------------------------------------------------------------------------------- |
+| speech.command.speak       | { utterance: 'Hello, world!' } <br /> Optionally, voiceType: 'ID' can change the voice |
+| speech.event.spoken        | { utterance: 'Hello, world!' }                                                         |
+| speech.command.list-voices | { voices: ['MALE1', 'FEMALE1'] }                                                       |
