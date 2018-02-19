@@ -1,4 +1,4 @@
-const createWebsocket = require('websocket');
+const createWebsocket = require('websocket').default;
 
 const webSocket = (router) => {
   const ws = createWebsocket();
