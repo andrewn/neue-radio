@@ -8,10 +8,12 @@ const createServices = require('./lib/services');
 const app = async () => {
   const port = process.env.PORT || 3000;
 
+  const sharedApps = ['websocket'];
   const appsRoot = resolveRelative('../../apps');
 
   const appsList = await pathsList({
     rootPath: appsRoot,
+    ignore: sharedApps,
   });
 
   const servicesList = await pathsList({
@@ -31,6 +33,7 @@ const app = async () => {
     path: appsPath,
     rootPath: appsRoot,
     available: appsList,
+    alwaysMount: sharedApps,
   });
 
   const services = createServices({

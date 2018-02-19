@@ -7,7 +7,12 @@ const logger = require('../logger');
 const mountApp = ({ server, name, path }) => {
   const mountAt = `/${name}`;
 
-  server.use(mountAt, express.static(path));
+  const serveStatic = express.static(
+    path,
+    { index: ['index.html', 'index.htm', 'index.js'] }
+  );
+
+  server.use(mountAt, serveStatic);
 };
 
 const mountAppList = (apps, server) => {
@@ -28,12 +33,20 @@ const startServer = (server, port, name) => {
   ));
 };
 
-const mountExternal = (apps, port, index) => {
+const mountWebsocket = server => {
+  const path = pathLib.dirname(require.resolve('websocket'));
+
+  mountApp({ server, name: 'websocket', path });
+};
+
+const mountExternal = (apps, port) => {
   const server = express();
 
   apps.map(({ name, path }) => {
     mountApp({ server, name, path: pathLib.join(path, 'external') })
   });
+
+  mountWebsocket(server);
 
   startServer(server, port, 'Public');
 };
@@ -46,6 +59,8 @@ const mountInternal = (apps, port, publicPath) => {
   apps.map(({ name, path }) => (
     mountApp({ server, name, path: pathLib.join(path, 'internal') })
   ));
+
+  mountWebsocket(server);
 
   server.use(
     express.static(publicPath)

@@ -3,6 +3,7 @@
 <head>
   <script src="lib/hls.min.js" charset="utf-8"></script>
   <script src="lib/Tone.js" charset="utf-8"></script>
+  <script src="/websocket" charset="utf-8"></script>
 </head>
 <body>
   <h1>This is the part of the radio app that runs in the radio itself</h1>
@@ -11,8 +12,7 @@
   <audio id="media"></audio>
   <script>
     const stream = "http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/llnw/bbc_radio_one.m3u8";
-  </script>
-  <script>
+
     function playHlsStream() {
       if(Hls.isSupported()) {
         var media = document.getElementById('media');
@@ -34,35 +34,34 @@
     }
 
     function stopChord() {
-      polySynth.triggerRelease(['C4', 'E4', 'G4', 'B4']) 
+      polySynth.triggerRelease(['C4', 'E4', 'G4', 'B4'])
     }
 
     console.log('%cHello!', 'color:blue;font-weight:bold', 'messages from the server');
-    const ws = new WebSocket('ws://' + location.hostname + ':8000');
-    ws.addEventListener('open', function (evt) {
-      console.log('connected');
-    });
-    ws.addEventListener('message', function (evt) {
-      const msg = JSON.parse(evt.data);
-      console.log('message', msg);
-      console.log('message key', msg.key);
-      if(msg.key == "play"){
-         var audio_file = msg.data.params.file;
+
+    const ws = createWebsocket({ debug: true });
+
+    ws.subscribe(new RegExp('radio/command/.*'), ({ topic, payload }) => {
+      console.log(topic, payload);
+
+      if(topic.includes("play")){
+         var audio_file = payload.params.file;
          console.log("setting attribute to "+audio_file);
          var a  = document.querySelector("#audio");
-         a.setAttribute("src",audio_file);         
-         a.setAttribute("autoplay","autoplay");         
-      } else if (msg.key === "hls") {
+         a.setAttribute("src",audio_file);
+         a.setAttribute("autoplay","autoplay");
+      } else if (topic.includes("hls")) {
         playHlsStream();
-      } else if (msg.key === "chord") {
+      } else if (topic.includes("chord")) {
         playChord();
       }
     });
+
     function send(key, data) {
-      ws.send(JSON.stringify({
-        key: key,
-        data: data
-      }));
+      ws.publish({
+        topic: key.replace('command', 'event'),
+        payload: data
+      });
     }
   </script>
 </body>

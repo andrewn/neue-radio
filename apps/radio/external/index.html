@@ -1,33 +1,47 @@
 <!DOCTYPE html>
 <html>
-<head></head>
+<head>
+  <script src="/websocket"></script>
+</head>
 <body>
   <h1>This is the public part of the radio app</h1>
   <p>Useful for remote controls etc</p>
-  <button onClick="send('play', { params: { file: 'audio/Birdsong-Collared_Dove.mp3' }})">Play birdsong - collared dove</button>
-  <button onClick="send('play', { params: { file: 'audio/Birdsong-Blue_Tit.mp3' }})">Play birdsong - blue tit</button>
-  <button onClick="send('hls', {})">Play HLS stream</button>
-  <button onClick="send('chord', {})">Generate Web Audio chord</button>
-
+  <button id="dove">Play birdsong - collared dove</button>
+  <button id="tit">Play birdsong - blue tit</button>
+  <button id="hls">Play HLS stream</button>
+  <button id="chord">Generate Web Audio chord</button>
   <script>
+    const ws = createWebsocket({ debug: true });
     console.log('%cHello - really!', 'color:blue;font-weight:bold', 'messages from the server');
-    const ws = new WebSocket('ws://' + location.hostname + ':8000');
-    ws.addEventListener('open', function (evt) {
-      console.log('connected');
+    ws.subscribe('radio/command/chord', function ({ topic, payload }) {
+      console.log('chord', payload);
     });
-    ws.addEventListener('message', function (evt) {
-      console.log("hello");
-      console.log(evt);
-      const msg = JSON.parse(evt.data);
-      console.log('message', msg);
-    });
-    function send(key, data) {
-      ws.send(JSON.stringify({
-        key: key,
-        data: data
-      }));
-    }
-  </script>
 
+    ws.subscribe(/.*/, function ({ topic, payload }) {
+      console.log('subscribe');
+      console.log(topic);
+      console.log(payload);
+    });
+
+    const send = (topic, payload={}) => {
+      ws.publish({ topic: `radio/command/${topic}`, payload });
+    };
+
+    document.getElementById('dove').addEventListener('click', () => (
+      send('play', { params: { file: 'audio/Birdsong-Collared_Dove.mp3' } })
+    ));
+
+    document.getElementById('tit').addEventListener('click', () => (
+      send('play', { params: { file: 'audio/Birdsong-Blue_Tit.mp3' } })
+    ));
+
+    document.getElementById('hls').addEventListener('click', () => (
+      send('hls')
+    ));
+
+    document.getElementById('chord').addEventListener('click', () => (
+      send('chord')
+    ));
+  </script>
 </body>
 </html>

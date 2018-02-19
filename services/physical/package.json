@@ -15,7 +15,7 @@
     "ip": "^1.1.5",
     "johnny-five": "^0.13.0",
     "raspi-cap": "github:andrewn/raspi-cap#0.0.2",
-    "ws": "^4.0.0"
+    "websocket": "../../shared/websocket"
   },
   "optionalDependencies": {
     "raspi-rotary-encoder": "^0.4.0",

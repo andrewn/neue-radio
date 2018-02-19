@@ -10,8 +10,6 @@ const configPath = process.env.CONFIG_PATH || './config/physical-config.json';
 
 const config = require(configPath);
 
-const host = new URL(`http://${ip.address()}`);
-
 // We use a router to connect the WebSockets with
 // the physical UI so they don't need to know
 // about each other. Later, other types of connection
@@ -23,7 +21,7 @@ const httpServer = createHttpServer();
 
 // Allows the physical stuff to be controlled
 // by sending messages over a websocket connection
-createWsClient(host, router);
+createWsClient(router);
 
 // Controls connected lights and buttons
 // It listens for `message` events from the wsServer
