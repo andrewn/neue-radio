@@ -35,11 +35,11 @@
 
     const speak = function () {
       const utterance = document.querySelector('input').value;
-      send('speech.command.speak', { utterance });
+      send('speech/command/speak', { utterance });
     }
 
     const listVoices = function () {
-      send('speech.command.list-voices');
+      send('speech/command/list-voices');
     }
 
     document.querySelector('#speak').addEventListener(
