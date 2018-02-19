@@ -1,4 +1,4 @@
-module.exports = (speech, broker) => async (topic, payload) => {
+module.exports = (speech, broker) => async ({ topic, payload }) => {
   try {
     switch (topic) {
       case "speech/command/speak":
@@ -7,9 +7,12 @@ module.exports = (speech, broker) => async (topic, payload) => {
         }
         speech.speak(payload.utterance);
         break;
-      case "speech/command/list-voices":
-        broker.send("speech/event/available-voices", {
-          voices: await speech.listVoices()
+      case "speech/command/listvoices":
+        broker.publish({
+          topic: "speech/event/availablevoices",
+          payload: {
+            voices: await speech.listVoices()
+          }
         });
         break;
     }
