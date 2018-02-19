@@ -1,6 +1,6 @@
-const presentedTopic = 'rfidPresented';
-const removedTopic = 'rfidRemoved';
-const errorTopic = 'rfidError';
+const presentedTopic = 'rfid/event/presented';
+const removedTopic = 'rfid/event/removed';
+const errorTopic = 'rfid/event/error';
 
 module.exports = send => {
   return {

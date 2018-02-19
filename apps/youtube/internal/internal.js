@@ -1,5 +1,3 @@
-import createWebsocket from '/websocket';
-
 const DEBUG =
   new URL(window.location.href).searchParams.get('debug') === 'true';
 

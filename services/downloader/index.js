@@ -5,7 +5,7 @@ const { URL } = require('url');
 const createDownloader = require('./lib/downloader');
 const http = require('./lib/io/http');
 const logger = require('./lib/logger')('index');
-const ws  = require('./lib/io/ws');
+const ws = require('./lib/io/ws');
 
 const port = process.env.PORT || 5002;
 const host = new URL(`http://${ip.address()}:${port}`);

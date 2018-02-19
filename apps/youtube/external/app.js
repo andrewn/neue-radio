@@ -1,5 +1,3 @@
-import createWebsocket from '/websocket';
-
 const createComms = async handler => {
   const ws = createWebsocket();
 

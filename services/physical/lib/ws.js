@@ -1,26 +1,17 @@
-const WebSocket = require('ws');
+const createWebsocket = require('websocket');
 
-const webSocket = (host, router) => {
-  const wsPath = `ws://${host.hostname}:8000`;
-  const ws = new WebSocket(wsPath);
-  const handlePublish = sendMessage(ws);
+const webSocket = (router) => {
+  const ws = createWebsocket();
 
-  ws.on('open', () => console.info(`Listening to web socket ${wsPath}`));
+  ws.ready.then(() => console.info('Listening to web socket'));
 
-  ws.addEventListener('message', function(evt) {
-    const message = JSON.parse(evt.data);
-    if (message.topic) {
-      router.route(message.topic, message.payload);
-    }
+  ws.subscribe(new RegExp('.*'), ({ topic, payload }) => {
+    router.route(topic, payload);
   });
 
-  router.on('publish', handlePublish);
+  router.on('publish', ws => ({ topic, payload }) => (
+    ws.publish({ topic, payload })
+  ));
 };
-
-const sendMessage = ws => ({ topic, payload }) => (
-  ws.send(
-    JSON.stringify({ topic, payload })
-  )
-);
 
 module.exports.create = webSocket;

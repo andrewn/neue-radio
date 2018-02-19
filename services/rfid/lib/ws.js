@@ -1,22 +1,18 @@
 /*
   Emits on WebSocket when an RFID is presented/removed
 */
-const WebSocket = require('ws');
+const createWebsocket = require('websocket');
 
 const webSocket = ({ host }) => {
-  const wsPath = `ws://${host.hostname}:8000`;
-  const ws = new WebSocket(wsPath);
+  const ws = createWebsocket();
 
-  ws.on('open', () => console.log(`Listening to web socket ${wsPath}`));
+  ws.ready.then(() => console.log('Listening to web socket'));
 
-  const send = sendMessage(ws);
+  const send = (topic, payload) => ws.publish({ topic, payload });
 
   return {
     send
   };
 };
-
-const sendMessage = ws => (topic, payload) =>
-  ws.send(JSON.stringify({ topic, payload }));
 
 module.exports = webSocket;

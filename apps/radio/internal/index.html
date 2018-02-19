@@ -3,13 +3,14 @@
 <head>
   <script src="lib/hls.min.js" charset="utf-8"></script>
   <script src="lib/Tone.js" charset="utf-8"></script>
+  <script src="/websocket" charset="utf-8"></script>
 </head>
 <body>
   <h1>This is the part of the radio app that runs in the radio itself</h1>
   <p>Users never see this page</p>
   <audio id="audio"></audio>
   <audio id="media"></audio>
-  <script type="module">
+  <script>
     const stream = "http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/llnw/bbc_radio_one.m3u8";
 
     function playHlsStream() {
@@ -38,7 +39,6 @@
 
     console.log('%cHello!', 'color:blue;font-weight:bold', 'messages from the server');
 
-    import createWebsocket from '/websocket';
     const ws = createWebsocket({ debug: true });
 
     ws.subscribe(new RegExp('radio/command/.*'), ({ topic, payload }) => {

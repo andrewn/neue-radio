@@ -1,9 +1,16 @@
 <!DOCTYPE html>
 <html>
-<head></head>
+<head>
+  <script src="/websocket"></script>
+</head>
 <body>
-  <script type="module">
-    import createWebsocket from '/websocket';
+  <h1>This is the public part of the radio app</h1>
+  <p>Useful for remote controls etc</p>
+  <button id="dove">Play birdsong - collared dove</button>
+  <button id="tit">Play birdsong - blue tit</button>
+  <button id="hls">Play HLS stream</button>
+  <button id="chord">Generate Web Audio chord</button>
+  <script>
     const ws = createWebsocket({ debug: true });
     console.log('%cHello - really!', 'color:blue;font-weight:bold', 'messages from the server');
     ws.subscribe('radio/command/chord', function ({ topic, payload }) {
@@ -36,11 +43,5 @@
       send('chord')
     ));
   </script>
-  <h1>This is the public part of the radio app</h1>
-  <p>Useful for remote controls etc</p>
-  <button id="dove">Play birdsong - collared dove</button>
-  <button id="tit">Play birdsong - blue tit</button>
-  <button id="hls">Play HLS stream</button>
-  <button id="chord">Generate Web Audio chord</button>
 </body>
 </html>
