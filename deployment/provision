@@ -66,7 +66,10 @@ touch /opt/radiodan/processes/services/{downloader,rfid,physical}
 
 cd /opt/radiodan
 git clone https://github.com/andrewn/neue-radio rde
-cd rde/services/manager
+cd rde/shared/websocket
+npm install --production
+cd ../..
+cd services/manager
 npm install --unsafe-perm --production
 cd ..
 cd physical
