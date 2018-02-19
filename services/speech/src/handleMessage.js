@@ -8,7 +8,9 @@ module.exports = (speech, broker) => async (topic, payload) => {
         speech.speak(payload.utterance);
         break;
       case "speech.command.list-voices":
-        broker.send("speech.event.available-voices", await speech.listVoices());
+        broker.send("speech.event.available-voices", {
+          voices: await speech.listVoices()
+        });
         break;
     }
   } catch (e) {
