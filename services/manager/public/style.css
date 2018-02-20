@@ -1,0 +1,52 @@
+body {
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+#apps {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.app {
+  width: 350px;
+  margin: 0.5rem;
+  padding: 1rem;
+
+  background: #dfa7a7;
+  border-radius: 3px;
+}
+
+.app.is-loaded {
+  background: #c2eaf7;
+}
+
+.meta {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.id {
+  font-weight: bold;
+}
+
+.reload {
+  margin-left: auto;
+  border: none;
+  border-radius: 3px;
+
+  color: #fff;
+  background: #40c8f5;
+
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.reload:hover {
+}
+
+.instance {
+  width: 100%;
+  border: 3px solid #eee;
+  background: #fff;
+  border-radius: 3px;
+}
