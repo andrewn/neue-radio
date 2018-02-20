@@ -77,17 +77,21 @@ const logger = debug => (...args) => {
 const createWebsocket = (opts = {}) => {
   const { url = defaultURL, debug = false } = opts;
 
-  const ws = new WebSocket(url);
+  let ws;
+
   const log = logger(debug);
 
   const subscriptions = createSubscriptions(log);
-
-  const onOpen = (event) => log('connected', event);
 
   const onMessage = (event) => {
     const { topic, payload } = JSON.parse(event.data);
 
     subscriptions.matching(topic).forEach(cb => cb({ topic, payload }));
+  };
+
+  const onClose = (err) => {
+    log('Websocket disconnected', err);
+    setTimeout(connect, 500);
   };
 
   const subscribe = (topic, cb) => {
@@ -100,18 +104,30 @@ const createWebsocket = (opts = {}) => {
 
   const publish = ({ topic, payload = {} }) => {
     if (validTopic(topic)) {
-      log(`Publishing to ${topic}`, payload);
-      ws.send(JSON.stringify({ topic, payload }));
+      ready.then(() => {
+        log(`Publishing to ${topic}`, payload);
+        ws.send(JSON.stringify({ topic, payload }));
+      });
     }
   };
 
-  const ready = new Promise(resolve => {
-    ws.addEventListener('open', resolve);
-  });
+  let ready;
 
-  ws.addEventListener('message', onMessage);
+  const connect = () => {
+    log(`Connecting to ${url}`);
 
-  return { publish, subscribe, ready };
+    ws = new WebSocket(url);
+    ws.addEventListener('message', onMessage);
+    ws.addEventListener('close', onClose);
+
+    ready = new Promise(resolve => {
+      ws.addEventListener('open', resolve);
+    }).then(() => (log(`Connected to ${url}`)));
+  };
+
+  connect();
+
+  return { publish, subscribe, unsubscribe, ready };
 };
 
 
