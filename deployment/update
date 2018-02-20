@@ -1,0 +1,55 @@
+#!/usr/bin/env node
+
+const { promisify } = require("util");
+const fs = require("fs");
+const exec = promisify(require("child_process").exec);
+const readdir = promisify(fs.readdir);
+const { join, resolve } = require("path");
+
+const log = {
+  error: message => console.error(`\x1b[31m${message}\x1b[0m`),
+  ok: message => console.log(`\x1b[32m${message}\x1b[0m`)
+};
+
+const isDirectory = ({ path }) => fs.statSync(path).isDirectory();
+
+const isNotHiddenDirectory = ({ path }) => path[0] !== ".";
+
+const hasPackageDotJson = ({ path }) =>
+  fs.existsSync(join(path, "package.json"));
+
+const pathForName = parent => name => ({ name, path: join(parent, name) });
+
+const services = async () => {
+  const servicesPath = resolve(join(__dirname, "..", "services"));
+  const paths = (await readdir(servicesPath)).map(pathForName(servicesPath));
+
+  return paths
+    .filter(isDirectory)
+    .filter(isNotHiddenDirectory)
+    .filter(hasPackageDotJson);
+};
+
+const install = async ({ name, path }) => {
+  try {
+    await exec(`npm install --production`, { cwd: path });
+    log.ok(`Completed ${name}`);
+  } catch (e) {
+    log.error(`Error installing/updating: ${name}`);
+    throw e;
+  }
+};
+
+const main = async () => {
+  const toInstall = await services();
+  const names = toInstall.map(({ name }) => name);
+
+  log.ok(`Update the following services: ${names.join(", ")}`);
+
+  Promise.all(toInstall.map(install)).then(
+    () => process.exit(0),
+    () => process.exit(1)
+  );
+};
+
+main();
