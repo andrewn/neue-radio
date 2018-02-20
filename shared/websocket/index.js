@@ -2,7 +2,7 @@ const WebSocket = (typeof window == 'undefined') ? require('ws') : window.WebSoc
 const hostname = (typeof window == 'undefined') ? '127.0.0.1' : window.location.hostname;
 
 const defaultURL = `ws://${hostname}:8000`;
-const topicRegexp = /^([a-z]+)\/(command|event)\/([a-z]+)$/;
+const topicRegexp = /^([a-z]+[a-z0-9-]*)\/(command|event)\/([a-z]+[a-z0-9-]*)$/;
 
 const validTopic = (topic) => {
   if (topicRegexp.test(topic)) {
