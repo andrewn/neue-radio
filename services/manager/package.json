@@ -13,7 +13,8 @@
     "chalk": "^2.3.0",
     "express": "^4.14.0",
     "ip": "^1.1.5",
-    "ws": "^1.1.1",
-    "websocket": "../../shared/websocket"
+    "serve-index": "^1.9.1",
+    "websocket": "../../shared/websocket",
+    "ws": "^1.1.1"
   }
 }
