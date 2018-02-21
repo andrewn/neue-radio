@@ -1,8 +1,17 @@
 const express = require('express');
 const ip = require('ip');
 const pathLib = require('path');
+const serveIndex = require('serve-index')
 
 const logger = require('../logger');
+
+const directoryListing = ({ fileList, directory }, callback) => {
+  const listing = fileList
+    .filter(({ name }) => (name[0] != '.'))
+    .map(({ name }) => (directory + name));
+
+  callback(false, JSON.stringify(listing));
+};
 
 const mountApp = ({ server, name, path }) => {
   const mountAt = `/${name}`;
@@ -12,7 +21,9 @@ const mountApp = ({ server, name, path }) => {
     { index: ['index.html', 'index.htm', 'index.js'] }
   );
 
-  server.use(mountAt, serveStatic);
+  const serveDirectory = serveIndex(path, { template: directoryListing });
+
+  server.use(mountAt, serveStatic, serveDirectory);
 };
 
 const mountAppList = (apps, server) => {
