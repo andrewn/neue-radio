@@ -5,9 +5,11 @@ const log = require("debug")("speechd:main");
 const connectToSpeechd = require("./speechd");
 const handleMessage = require("./handleMessage");
 
+const autoSpawn = !!process.env.NO_AUTO_SPAWN;
+
 const main = async () => {
   try {
-    const speech = await connectToSpeechd({ autoSpawn: true });
+    const speech = await connectToSpeechd({ autoSpawn: !autoSpawn });
     const broker = createWebSocket();
 
     await broker.ready;
