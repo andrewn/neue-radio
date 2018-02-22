@@ -5,7 +5,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Test speechd-service</title>
-  <script src="http://raspberrypi.local/websocket"></script>
+  <script async src="http://raspberrypi.local/websocket" onload="init()"></script>
+  <script async src="http://localhost:5000/websocket" onload="init()"></script>
 </head>
 
 <body>
@@ -13,45 +14,55 @@
   <button id="speak">Speak!</button>
   <button id="list-voices">List voices</button>
   <script>
-    const ws = createWebsocket({ url: wsUrl() });
+    let loaded = false;
 
-    ws.subscribe(new RegExp('speech/event/.*'), ({ topic, payload }) => console.log(topic, payload));
+    const init = () => {
+      if (loaded) { return; }
 
-    function wsUrl(search = window.location.search) {
-      const params = new URLSearchParams(search);
-      const host = params.get('host') || window.location.hostname;
-      const port = params.get('port') || window.location.port;
+      console.log('Init');
 
-      return `ws://${host}:${port}`;
-    }
+      loaded = true;
 
-    const speak = function () {
-      const utterance = document.querySelector('input').value;
-      ws.publish({ topic: 'speech/command/speak', payload: { utterance } });
-    }
+      const ws = createWebsocket({ url: wsUrl() });
 
-    const listVoices = function () {
-      ws.publish({ topic: 'speech/command/listvoices' });
-    }
+      ws.subscribe(new RegExp('speech/event/.*'), ({ topic, payload }) => console.log(topic, payload));
 
-    document.querySelector('#speak').addEventListener(
-      'click',
-      speak
-    );
+      function wsUrl(search = window.location.search) {
+        const params = new URLSearchParams(search);
+        const host = params.get('host') || window.location.hostname;
+        const port = params.get('port') || window.location.port;
 
-    document.querySelector('input').addEventListener(
-      'keyup',
-      function (evt) {
-        if (evt.keyCode === 13 /* ENTER */) {
-          speak();
-        }
+        return `ws://${host}:${port}`;
       }
-    );
 
-    document.querySelector('#list-voices').addEventListener(
-      'click',
-      listVoices
-    );
+      const speak = function () {
+        const utterance = document.querySelector('input').value;
+        ws.publish({ topic: 'speech/command/speak', payload: { utterance } });
+      }
+
+      const listVoices = function () {
+        ws.publish({ topic: 'speech/command/listvoices' });
+      }
+
+      document.querySelector('#speak').addEventListener(
+        'click',
+        speak
+      );
+
+      document.querySelector('input').addEventListener(
+        'keyup',
+        function (evt) {
+          if (evt.keyCode === 13 /* ENTER */) {
+            speak();
+          }
+        }
+      );
+
+      document.querySelector('#list-voices').addEventListener(
+        'click',
+        listVoices
+      );
+    }
   </script>
 </body>
 
