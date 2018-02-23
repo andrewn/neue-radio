@@ -52,7 +52,7 @@ const ws = createWebsocket({ url: 'ws://example.com:8080' );
 More debugging information is available, too:
 
 ```javascript
-const ws = createWebsocket({ debug: true );
+const ws = createWebsocket({ debug: true });
 ```
 
 ### Ready

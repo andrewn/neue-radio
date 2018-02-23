@@ -10,12 +10,12 @@ There are two forms of topics:
 
 ### Events
 
-These are expressions of information - something has changed in the state of the
-programme.
+These are expressions of information - something has changed in the state of
+your app or service.
 
 ### Commands
 
-Another programme wishes to make a change in the state of another.
+An app or service wishes to make a change in the state of another.
 
 The format of a topic is as follows:
 
