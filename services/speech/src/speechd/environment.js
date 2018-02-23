@@ -17,6 +17,7 @@ const getExecutablePath = async () => {
 };
 
 const getSocketPath = () =>
+  process.env.SOCKET_PATH ||
   `${process.env.XDG_RUNTIME_DIR}/speech-dispatcher/speechd.sock`;
 
 module.exports = {
