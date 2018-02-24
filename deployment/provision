@@ -90,8 +90,7 @@ systemctl daemon-reload
 systemctl start manager
 systemctl enable manager
 systemctl enable manager-web-server
-# TODO: Investigate why this causes DAC to stop working
-# systemctl enable physical
+systemctl enable physical
 systemctl enable rfid
 systemctl enable debug
 
