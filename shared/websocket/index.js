@@ -94,6 +94,10 @@ const createWebsocket = (opts = {}) => {
     setTimeout(connect, 500);
   };
 
+  const onError = (err) => {
+    log('Websocket error', err);
+  };
+
   const subscribe = (topic, cb) => {
     subscriptions.subscribe(topic, cb);
   };
@@ -119,6 +123,7 @@ const createWebsocket = (opts = {}) => {
     ws = new WebSocket(url);
     ws.addEventListener('message', onMessage);
     ws.addEventListener('close', onClose);
+    ws.addEventListener('error', onError);
 
     ready = new Promise(resolve => {
       ws.addEventListener('open', resolve);
