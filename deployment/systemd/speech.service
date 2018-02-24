@@ -1,0 +1,15 @@
+[Unit]
+Description=Speech service
+ConditionPathExists=/opt/radiodan/processes/services/speech
+
+[Service]
+EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
+WorkingDirectory=/opt/radiodan/rde/services/speech
+ExecStart=/usr/bin/env npm start
+Restart=on-failure
+StandardOutput=syslog
+SyslogIdentifier=rde-speech
+Type=idle
+
+[Install]
+WantedBy=multi-user.target

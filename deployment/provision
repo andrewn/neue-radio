@@ -83,6 +83,9 @@ JOBS=MAX npm install --unsafe-perm --production # use all cores
 cd ..
 cd setup
 JOBS=MAX npm install --unsafe-perm --production # use all cores
+cd ..
+cd speech
+JOBS=MAX npm install --unsafe-perm --production # use all cores
 cd ../..
 chown -R pi:pi /opt/radiodan
 cp deployment/systemd/*.service /etc/systemd/system/
@@ -93,6 +96,7 @@ systemctl enable manager-web-server
 systemctl enable physical
 systemctl enable rfid
 systemctl enable debug
+systemctl enable speech
 
 echo "*** IPTables (Port forwarding)"
 DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages iptables-persistent
