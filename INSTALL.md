@@ -1,3 +1,20 @@
+# Installation on a computer
+
+Tested on macOS 10.13.
+
+Clone this repo:
+
+    git clone https://github.com/andrewn/neue-radio
+
+Install dependencies:
+
+    cd neue-radio
+    npm install
+
+Run services:
+
+    npm start
+
 # Installation on a Pi
 
 ## Hardware

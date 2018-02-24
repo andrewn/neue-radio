@@ -1,10 +1,10 @@
 {
   "name": "neue-radio",
   "version": "0.1.0",
-  "description":
-    "Experiment for a new radio prototyping kit for the next radiodan.",
+  "description": "Experiment for a new radio prototyping kit for the next radiodan.",
   "main": "index.js",
   "scripts": {
+    "start": "nf start --procfile ./deployment/Procfile --env ./deployment/systemd/ports.env",
     "lint": "eslint **/*.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +19,8 @@
   },
   "homepage": "https://github.com/andrewn/neue-radio#readme",
   "devDependencies": {
-    "eslint": "^4.15.0"
+    "eslint": "^4.15.0",
+    "foreman": "https://github.com/pryv/node-foreman/archive/master.tar.gz",
+    "simon-say": "https://github.com/andrewn/simon-say/archive/master.tar.gz"
   }
 }
