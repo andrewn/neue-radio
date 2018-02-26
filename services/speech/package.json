@@ -4,6 +4,7 @@
   "description": "",
   "main": "src/main.js",
   "scripts": {
+    "start": "DEBUG=* node src/main",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

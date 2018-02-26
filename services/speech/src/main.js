@@ -12,8 +12,6 @@ const main = async () => {
     const speech = await connectToSpeechd({ autoSpawn: !autoSpawn });
     const broker = createWebSocket();
 
-    await broker.ready;
-
     log("Connected to WebSocket");
 
     broker.subscribe(new RegExp("speech/.*"), handleMessage(speech, broker));
