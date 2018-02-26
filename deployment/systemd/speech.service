@@ -5,11 +5,12 @@ ConditionPathExists=/opt/radiodan/processes/services/speech
 [Service]
 EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
 WorkingDirectory=/opt/radiodan/rde/services/speech
-ExecStart=/usr/bin/env npm start
+ExecStart=/usr/bin/env SPEECHD_PORT=${SPEECHD_PORT} npm start
 Restart=on-failure
 StandardOutput=syslog
 SyslogIdentifier=rde-speech
 Type=idle
+User=pi
 
 [Install]
 WantedBy=multi-user.target
