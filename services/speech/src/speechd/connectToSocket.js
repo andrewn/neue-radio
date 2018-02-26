@@ -5,15 +5,18 @@ const { EventEmitter } = require("events");
 const { ConnectionError } = require("./errors");
 
 const log = {
+  connect: debug("speechd:socket:connect"),
   send: debug("speechd:socket:send"),
   receive: debug("speechd:socket:receive")
 };
 
-const { getSocketPath } = require("./environment");
+const { getPort } = require("./environment");
 
-module.exports = ({ socketPath = getSocketPath() } = {}) => {
+module.exports = ({ host = null, port = getPort() } = {}) => {
   const api = new EventEmitter();
-  const socket = net.createConnection(socketPath);
+  const socket = net.createConnection({ host, port });
+
+  log.connect(`Connect to ${host}:${port}`);
 
   socket.on("data", data => {
     log.receive(data.toString());

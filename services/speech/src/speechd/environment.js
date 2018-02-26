@@ -16,11 +16,9 @@ const getExecutablePath = async () => {
   }
 };
 
-const getSocketPath = () =>
-  process.env.SOCKET_PATH ||
-  `${process.env.XDG_RUNTIME_DIR}/speech-dispatcher/speechd.sock`;
+const getPort = () => process.env.SPEECHD_PORT;
 
 module.exports = {
   getExecutablePath,
-  getSocketPath
+  getPort
 };

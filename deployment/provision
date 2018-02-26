@@ -52,6 +52,9 @@ DEBIAN_FRONTEND=noninteractive apt-get install rpi-chromium-mods -y
 echo "*** Enable SPI (RFID reader)"
 raspi-config nonint do_spi 0
 
+echo "*** speech-dispatcher and voices"
+apt-get install -y speech-dispatcher speech-dispatcher-festival
+
 echo "*** Node"
 mkdir -pv /opt/node
 curl -L https://nodejs.org/dist/v8.9.4/node-v8.9.4-linux-armv6l.tar.gz | tar xz --strip-components 1 -C /opt/node
@@ -83,6 +86,9 @@ JOBS=MAX npm install --unsafe-perm --production # use all cores
 cd ..
 cd setup
 JOBS=MAX npm install --unsafe-perm --production # use all cores
+cd ..
+cd speech
+JOBS=MAX npm install --unsafe-perm --production # use all cores
 cd ../..
 chown -R pi:pi /opt/radiodan
 cp deployment/systemd/*.service /etc/systemd/system/
@@ -93,6 +99,7 @@ systemctl enable manager-web-server
 systemctl enable physical
 systemctl enable rfid
 systemctl enable debug
+systemctl enable speech
 
 echo "*** IPTables (Port forwarding)"
 DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages iptables-persistent

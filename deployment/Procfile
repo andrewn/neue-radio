@@ -2,5 +2,5 @@ manager-web-server: INTERNAL_PORT=$MANAGER_INTERNAL_PORT EXTERNAL_PORT=$MANAGER_
 manager: INTERNAL_PORT=$MANAGER_INTERNAL_PORT REMOTE_DEBUGGING_PORT=$MANAGER_REMOTE_DEBUGGING_PORT ./services/manager/start-web-environment.sh
 debug: REMOTE_DEBUGGER_PORT=$MANAGER_REMOTE_DEBUGGING_PORT PORT=$DEBUG_PORT npm --prefix services/debug start
 downloader: PORT=$DOWNLOADER_PORT npm --prefix services/downloader start
-speech-server: SOCKET_PATH=/tmp/radiodan-speech.sock simon-say
-speech: NO_AUTO_SPAWN=yes SOCKET_PATH=/tmp/radiodan-speech.sock npm --prefix services/speech start
+speech-server: PORT=$SPEECHD_PORT simon-say
+speech: NO_AUTO_SPAWN=yes SPEECHD_PORT=$SPEECHD_PORT npm --prefix services/speech start
