@@ -10,7 +10,7 @@ if command -v chromium-browser; then
   sleep 5
   chromium-browser --headless $ARGS
 elif [ -f "$MACOS_CHROME" ]; then
-  "$MACOS_CHROME" $ARGS
+  "$MACOS_CHROME" --user-data-dir=/tmp $ARGS
 else
   echo "No chrome"
   exit 1
