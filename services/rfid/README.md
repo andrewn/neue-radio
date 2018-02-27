@@ -1,10 +1,10 @@
 # RFID Bridge
 
-Listens for a connected MFC522 card reader and publishes found cards across the WebSocket bridge using the `rfidPresented` topic.
+Listens for a connected MFC522 card reader and publishes found cards across the WebSocket bridge using the `presented` event.
 
 ```
 {
-  "topic": "rfidPresented",
+  "topic": "rfid/event/presented",
   payload: {
     card: {
       uid: "abc"

@@ -2,7 +2,7 @@
 
 Uses the `youtube-dl` command to download and then serve video files over HTTP.
 
-Listens to the mediaRequest event, and responds with a mediaAvailable event.
+Listens to the `downloader/command/request` command, and responds with a `downloader/event/available` event.
 
 ## Install
 
