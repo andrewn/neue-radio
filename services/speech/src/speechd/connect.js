@@ -10,7 +10,7 @@ const connect = async ({ autoSpawn = true, ...params } = {}) => {
   try {
     connection = await connectToSocket(params);
   } catch (e) {
-    if (e instanceof ConnectionError) {
+    if (e instanceof ConnectionError && autoSpawn) {
       connection = null;
     } else {
       throw e;
