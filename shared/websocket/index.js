@@ -6,12 +6,20 @@ const hostname =
 const defaultURL = `ws://${hostname}:8000`;
 const topicRegexp = /^([a-z]+[a-z0-9-]*)\/(command|event)\/([a-z]+[a-z0-9-]*)$/;
 
+class InvalidTopicError extends Error {
+  constructor(topic, topicRegexp) {
+    super(
+      `"${topic}" is not a valid topic. Topic names must match ${topicRegexp.toString()}`
+    );
+  }
+}
+
 const validTopic = topic => {
   if (topicRegexp.test(topic)) {
     return true;
   }
 
-  throw new Error(`${topic} is not a valid topic`);
+  throw new InvalidTopicError(topic, topicRegexp);
 };
 
 const createSubscriptions = log => {
