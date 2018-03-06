@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="lib/hls.min.js" charset="utf-8"></script>
-  <script src="lib/Tone.js" charset="utf-8"></script>
+  <script src="modules/hls.js/dist/hls.min.js" charset="utf-8"></script>
+  <script src="modules/tone/build/Tone.min.js" charset="utf-8"></script>
   <script src="/websocket" charset="utf-8"></script>
 </head>
 <body>
@@ -48,7 +48,7 @@
          var audio_file = payload.params.file;
          console.log("setting attribute to "+audio_file);
          var a  = document.querySelector("#audio");
-         a.setAttribute("src",audio_file);
+         a.setAttribute("src", "assets/audio/" + audio_file);
          a.setAttribute("autoplay","autoplay");
       } else if (topic.includes("hls")) {
         playHlsStream();
