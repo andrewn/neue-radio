@@ -13,17 +13,18 @@ const directoryListing = ({ fileList, directory }, callback) => {
   callback(false, JSON.stringify(listing));
 };
 
-const mountApp = ({ server, name, path }) => {
-  const mountAt = `/${name}`;
+const mountApp = ({ server, name, path, index }) => {
+  const httpPath = `/${name}`;
 
-  const serveStatic = express.static(
-    path,
-    { index: ['index.html', 'index.htm', 'index.js'] }
-  );
+  const serveStatic = express.static(pathLib.join(path, 'src'), { index });
+  server.use(httpPath, serveStatic);
 
-  const serveDirectory = serveIndex(path, { template: directoryListing });
+  const serveModules = express.static(pathLib.join(path, 'node_modules'));
+  server.use(pathLib.join(httpPath, 'modules'), serveModules);
 
-  server.use(mountAt, serveStatic, serveDirectory);
+  const serveAssets = express.static(pathLib.join(path, 'assets'));
+  const listAssets = serveIndex(pathLib.join(path, 'assets'), { template: directoryListing });
+  server.use(pathLib.join(httpPath, 'assets'), serveAssets, listAssets);
 };
 
 const mountAppList = (apps, server) => {
@@ -47,14 +48,22 @@ const startServer = (server, port, name) => {
 const mountWebsocket = server => {
   const path = pathLib.dirname(require.resolve('websocket'));
 
-  mountApp({ server, name: 'websocket', path });
+  const mountAt = '/websocket';
+  const index = 'index.js';
+
+  const serveStatic = express.static(
+    path,
+    { index }
+  );
+
+  server.use(mountAt, serveStatic);
 };
 
 const mountExternal = (apps, port) => {
   const server = express();
 
   apps.map(({ name, path }) => {
-    mountApp({ server, name, path: pathLib.join(path, 'external') })
+    mountApp({ server, name, path, index: 'external.html' })
   });
 
   mountWebsocket(server);
@@ -68,7 +77,7 @@ const mountInternal = (apps, port, publicPath) => {
   mountAppList(apps, server);
 
   apps.map(({ name, path }) => (
-    mountApp({ server, name, path: pathLib.join(path, 'internal') })
+    mountApp({ server, name, path, index: 'internal.html' })
   ));
 
   mountWebsocket(server);
