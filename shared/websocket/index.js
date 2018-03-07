@@ -1,24 +1,34 @@
-const WebSocket = (typeof window == 'undefined') ? require('ws') : window.WebSocket;
-const hostname = (typeof window == 'undefined') ? '127.0.0.1' : window.location.hostname;
+const WebSocket =
+  typeof window == "undefined" ? require("ws") : window.WebSocket;
+const hostname =
+  typeof window == "undefined" ? "127.0.0.1" : window.location.hostname;
 
 const defaultURL = `ws://${hostname}:8000`;
 const topicRegexp = /^([a-z]+[a-z0-9-]*)\/(command|event)\/([a-z]+[a-z0-9-]*)$/;
 
-const validTopic = (topic) => {
+class InvalidTopicError extends Error {
+  constructor(topic) {
+    super(
+      `"${topic}" is not a valid topic. For valid topic names, see the WebSocket guide: https://github.com/andrewn/neue-radio/blob/master/docs/WEBSOCKETS.md.
+`
+    );
+  }
+}
+
+const validTopic = topic => {
   if (topicRegexp.test(topic)) {
     return true;
   }
 
-  throw new Error(`${topic} is not a valid topic`);
+  throw new InvalidTopicError(topic);
 };
 
-const createSubscriptions = (log) => {
-  const isGroup = obj => (obj instanceof RegExp);
+const createSubscriptions = log => {
+  const isGroup = obj => obj instanceof RegExp;
   const subscriptions = { single: new Map(), group: new Map() };
 
   const set = (map, topic, callback) => {
-    const keys = Array.from(map.keys())
-      .map(k => k.toString());
+    const keys = Array.from(map.keys()).map(k => k.toString());
 
     if (keys.includes(topic.toString())) {
       throw new Error(`Already subscribed to ${topic}`);
@@ -27,10 +37,14 @@ const createSubscriptions = (log) => {
     map.set(topic, callback);
   };
 
-  const matching = (topic) => {
+  const matching = topic => {
     const groupMatches = Array.from(subscriptions.group.entries())
-      .filter(([t, _]) => { return t.test(topic) })
-      .map(([_, callback]) => { return callback });
+      .filter(([t, _]) => {
+        return t.test(topic);
+      })
+      .map(([_, callback]) => {
+        return callback;
+      });
 
     const singleMatch = subscriptions.single.get(topic);
 
@@ -43,7 +57,7 @@ const createSubscriptions = (log) => {
     return groupMatches;
   };
 
-  const unsubscribe = (topic) => {
+  const unsubscribe = topic => {
     log(`Unsubscribing ${topic}`);
 
     if (isGroup(topic)) {
@@ -83,26 +97,26 @@ const createWebsocket = (opts = {}) => {
 
   const subscriptions = createSubscriptions(log);
 
-  const onMessage = (event) => {
+  const onMessage = event => {
     const { topic, payload } = JSON.parse(event.data);
 
     subscriptions.matching(topic).forEach(cb => cb({ topic, payload }));
   };
 
-  const onClose = (err) => {
-    log('Websocket disconnected', err);
+  const onClose = err => {
+    log("Websocket disconnected", err);
     setTimeout(connect, 500);
   };
 
-  const onError = (err) => {
-    log('Websocket error', err);
+  const onError = err => {
+    log("Websocket error", err);
   };
 
   const subscribe = (topic, cb) => {
     subscriptions.subscribe(topic, cb);
   };
 
-  const unsubscribe = (topic) => {
+  const unsubscribe = topic => {
     subscriptions.unsubscribe(topic);
   };
 
@@ -121,13 +135,13 @@ const createWebsocket = (opts = {}) => {
     log(`Connecting to ${url}`);
 
     ws = new WebSocket(url);
-    ws.addEventListener('message', onMessage);
-    ws.addEventListener('close', onClose);
-    ws.addEventListener('error', onError);
+    ws.addEventListener("message", onMessage);
+    ws.addEventListener("close", onClose);
+    ws.addEventListener("error", onError);
 
     ready = new Promise(resolve => {
-      ws.addEventListener('open', resolve);
-    }).then(() => (log(`Connected to ${url}`)));
+      ws.addEventListener("open", resolve);
+    }).then(() => log(`Connected to ${url}`));
   };
 
   connect();
@@ -135,7 +149,6 @@ const createWebsocket = (opts = {}) => {
   return { publish, subscribe, unsubscribe, ready };
 };
 
-
 (function(exports) {
   exports.default = createWebsocket;
-})(typeof exports === 'undefined' ? this.share = {} : exports);
+})(typeof exports === "undefined" ? (this.share = {}) : exports);

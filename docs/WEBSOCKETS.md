@@ -6,7 +6,7 @@ short set of standards.
 
 ## Topics
 
-There are two forms of topics:
+There are two types of topics:
 
 ### Events
 
@@ -17,11 +17,21 @@ your app or service.
 
 An app or service wishes to make a change in the state of another.
 
-The format of a topic is as follows:
+### Valid topic names
+
+A topic must consist of three parts:
 
 `programme-name/command-or-event/topic-name`
 
-e.g. the topic required to command the `downloader` service to download a link
+`programme-name` and `topic-name` can be lowercase letters, numbers or hyphens but must start with a lowercase letter.
+
+`command-or-event` must be either `command` or `event`.
+
+The three parts of a topic must be separated by `/`.
+
+### Examples
+
+The topic required to command the `downloader` service to download a link
 would be: `downloader/command/request`. Once the file has been downloaded, the
 service would respond with a message on the topic `downloader/event/available`.
 
