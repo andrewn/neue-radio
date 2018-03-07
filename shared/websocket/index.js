@@ -7,9 +7,10 @@ const defaultURL = `ws://${hostname}:8000`;
 const topicRegexp = /^([a-z]+[a-z0-9-]*)\/(command|event)\/([a-z]+[a-z0-9-]*)$/;
 
 class InvalidTopicError extends Error {
-  constructor(topic, topicRegexp) {
+  constructor(topic) {
     super(
-      `"${topic}" is not a valid topic. Topic names must match ${topicRegexp.toString()}`
+      `"${topic}" is not a valid topic. For valid topic names, see the WebSocket guide: https://github.com/andrewn/neue-radio/blob/master/docs/WEBSOCKETS.md.
+`
     );
   }
 }
@@ -19,7 +20,7 @@ const validTopic = topic => {
     return true;
   }
 
-  throw new InvalidTopicError(topic, topicRegexp);
+  throw new InvalidTopicError(topic);
 };
 
 const createSubscriptions = log => {
