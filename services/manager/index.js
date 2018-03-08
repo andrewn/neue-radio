@@ -3,6 +3,7 @@ const path = require('path');
 const { findApps, knownApps } = require('./lib/apps');
 const http = require('./lib/io/http');
 const mountWebSocket = require('./lib/io/ws');
+const listenForRestart = require('./lib/restart');
 
 const webSocketPort = process.env.WEBSOCKET_PORT || 8000;
 const internalPort = process.env.INTERNAL_PORT || 5001;
@@ -17,3 +18,4 @@ http.mountExternal(apps, externalPort);
 http.mountInternal(apps, internalPort, managerPublicPath);
 
 mountWebSocket(webSocketPort);
+listenForRestart();
