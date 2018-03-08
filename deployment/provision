@@ -76,7 +76,7 @@ cd ../..
 for f in apps/* services/*; do
    if [ -d ${f} ]; then
       cd $f
-      npm install --unsafe-perm --production
+      JOBS=max npm install --unsafe-perm --production
       cd -
    fi
 done
