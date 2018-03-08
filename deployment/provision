@@ -72,24 +72,15 @@ git clone https://github.com/andrewn/neue-radio rde
 cd rde/shared/websocket
 npm install --production
 cd ../..
-cd services/manager
-npm install --unsafe-perm --production
-cd ..
-cd physical
-JOBS=MAX npm install --unsafe-perm --production # use all cores
-cd ..
-cd rfid
-JOBS=MAX npm install --unsafe-perm --production # use all cores
-cd ..
-cd debug
-JOBS=MAX npm install --unsafe-perm --production # use all cores
-cd ..
-cd setup
-JOBS=MAX npm install --unsafe-perm --production # use all cores
-cd ..
-cd speech
-JOBS=MAX npm install --unsafe-perm --production # use all cores
-cd ../..
+
+for f in apps/* services/*; do
+   if [ -d ${f} ]; then
+      cd $f
+      JOBS=max npm install --unsafe-perm --production
+      cd -
+   fi
+done
+
 chown -R pi:pi /opt/radiodan
 cp deployment/systemd/*.service /etc/systemd/system/
 systemctl daemon-reload

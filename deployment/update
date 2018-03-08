@@ -20,9 +20,9 @@ const hasPackageDotJson = ({ path }) =>
 
 const pathForName = parent => name => ({ name, path: join(parent, name) });
 
-const services = async () => {
-  const servicesPath = resolve(join(__dirname, "..", "services"));
-  const paths = (await readdir(servicesPath)).map(pathForName(servicesPath));
+const findApplicableDirectories = async (rootDir) => {
+  const fullPath = resolve(join(__dirname, "..", rootDir));
+  const paths = (await readdir(fullPath)).map(pathForName(fullPath));
 
   return paths
     .filter(isDirectory)
@@ -32,7 +32,10 @@ const services = async () => {
 
 const install = async ({ name, path }) => {
   try {
-    await exec(`npm install --production`, { cwd: path });
+    await exec(
+      `npm install --production`,
+      { cwd: path, env: { JOBS: 'max' } }
+    );
     log.ok(`Completed ${name}`);
   } catch (e) {
     log.error(`Error installing/updating: ${name}`);
@@ -41,10 +44,14 @@ const install = async ({ name, path }) => {
 };
 
 const main = async () => {
-  const toInstall = await services();
+  const services = await findApplicableDirectories('services');
+  const apps = await findApplicableDirectories('apps');
+
+  const toInstall = [...services, ...apps];
+
   const names = toInstall.map(({ name }) => name);
 
-  log.ok(`Update the following services: ${names.join(", ")}`);
+  log.ok(`Update the following: ${names.join(", ")}`);
 
   Promise.all(toInstall.map(install)).then(
     () => process.exit(0),
