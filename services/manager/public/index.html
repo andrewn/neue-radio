@@ -66,9 +66,11 @@
     }
 
     function listenForReload(websocket, instances) {
-      const reloadAll = () => { instances.forEach(({ reload }) => reload()); };
+      const reloadApps = () => { instances.forEach(({ reload }) => reload()); };
+      const reloadPage = () => { window.location.reload() };
 
-      websocket.subscribe('manager/command/reload', reloadAll);
+      websocket.subscribe('manager-web/command/reload', reloadApps);
+      websocket.subscribe('manager-web/command/restart', reloadPage);
     }
   </script>
 </body>
