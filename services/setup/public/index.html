@@ -2,18 +2,27 @@
 <html>
 <head>
   <title>Radiodan Configuration</title>
-  <style>
-    .hidden { display: none; }
-    button, label, span { display: block }
-    button { margin: 10px 0; width: 50% }
-    span { float: left; width: 50%; }
-  </style>
+  <script src="/websocket"></script>
+  <link rel="stylesheet" href="mini-default.min.css" />
 </head>
 <body>
+
 <h1>Radiodan Configuration</h1>
-<p id="notification" class="hidden">
-  Changes have been saved, please reboot your Pi for them to take effect.
-</p>
+
+<div id="notification">
+  <mark class="hidden inline-block" id="apps">
+    App changes have been saved. Restart the manager for changes to take effect.
+  </mark>
+  <mark class="hidden inline-block" id="services">
+    Service changes have been saved. Restart the device for changes to take effect.
+  </mark>
+  <mark class="hidden inline-block" id="reloaded">
+    Internal apps have been reloaded.
+  </mark>
+  <mark class="hidden inline-block" id="restarted">
+    Internal app manager has been restarted.
+  </mark>
+</div>
 
 <h2>Application</h2>
 <form action="/apps" method="POST" id="apps-list">
@@ -25,70 +34,102 @@
   <button type="submit">Update</button>
 </form>
 
+<div id="controls">
+  <h2>Controls</h2>
+  <div class="card" style="float: left">
+    <p>Reload the active apps currently running on this device</p>
+    <input type="button" class="primary" id="reload" value="Reload" />
+  </div>
+  <div class="card" style="float: left">
+    <p>Restart the manager to change the apps running on this device</p>
+    <input type="button" class="secondary" id="restart" value="Restart" />
+  </div>
+</div>
+
 <script>
-  const buildApps = async () => {
-    const form = document.getElementById('apps-list');
+  const buildForm = async (type) => {
+    const elements = await fetch(`/${type}`).then(res => res.json());
+
+    const form = document.getElementById(`${type}-list`);
     const selection = document.createElement('div');
-    const apps = await fetch('/apps').then(res => res.json());
+    const buildItemForm = buildFormElement(type);
 
-    apps.forEach(({ name, active }) => {
-      const label = document.createElement('label');
-      const span = document.createElement('span');
-      span.innerText = name;
-
-      label.appendChild(span);
-
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.name = 'apps[]';
-      checkbox.value = name;
-      checkbox.checked = active;
-
-      label.appendChild(checkbox);
-
-      selection.appendChild(label);
-    });
+    elements
+      .map(buildItemForm)
+      .map((child) => selection.appendChild(child));
 
     form.prepend(selection);
+
+    return form;
   };
 
-  const buildServices = async () => {
-    const form = document.getElementById('services-list');
-    const selection = document.createElement('div');
-    const services = await fetch('/services').then(res => res.json());
+  const buildFormElement = (type) => ({ name, active }) => {
+    const id = `${type}-${name}`;
 
-    services.forEach(({ name, active }) => {
-      const label = document.createElement('label');
-      const span = document.createElement('span');
-      span.innerText = name;
+    const container = document.createElement('div');
+    container.className = 'input-group';
 
-      label.appendChild(span);
+    const label = document.createElement('label');
+    label.setAttribute('for', id);
 
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.name = 'services[]';
-      checkbox.value = name;
-      checkbox.checked = active;
+    const span = document.createElement('span');
+    span.innerText = name;
 
-      label.appendChild(checkbox);
+    label.appendChild(span);
 
-      selection.appendChild(label);
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.name = `${type}[]`;
+    checkbox.id = id;
+    checkbox.value = name;
+    checkbox.checked = active;
+
+    container.appendChild(checkbox);
+    container.appendChild(label);
+
+    return container;
+  };
+
+  const showNotification = (updateType) => {
+    const notifications = document.getElementsByTagName('mark');
+
+    Array.prototype.forEach.call(notifications, (notification) => {
+      notification.id == updateType ?
+        notification.classList.remove('hidden') :
+        notification.classList.add('hidden');
     });
+  };
 
-    form.prepend(selection);
+  const buildControls = (publish) => {
+    document.getElementById('reload').onclick = () => {
+      publish('reload');
+      showNotification('reloaded');
+    };
+
+    document.getElementById('restart').onclick = () => {
+      publish('restart');
+      showNotification('restarted');
+    };
   };
 
   const app = async () => {
     const params = new URLSearchParams(document.location.search.substring(1));
+    const websocket = createWebsocket();
 
-    if(params.get('update')) {
-      const notification = document.getElementById('notification');
-      notification.classList.remove('hidden');
+    const publish = (topic) => {
+      websocket.ready.then(() => websocket.publish({ topic: `manager/command/${topic}` }))
+    };
+
+    const updateType = params.get('update');
+
+    if(updateType) {
+      showNotification(updateType);
     }
 
-    await buildApps();
-    await buildServices();
-  }
+    await buildForm('apps');
+    await buildForm('services');
+    buildControls(publish);
+  };
 
   app();
 </script>
