@@ -32,7 +32,10 @@ const findApplicableDirectories = async rootDir => {
 
 const install = async ({ name, path }) => {
   try {
-    await exec(`npm install --production`, { cwd: path, env: { JOBS: "max" } });
+    await exec(`npm install --production`, {
+      cwd: path,
+      env: { ...process.env, JOBS: "max" }
+    });
     log.ok(`Completed ${name}`);
   } catch (e) {
     log.error(`Error installing/updating: ${name}`);
