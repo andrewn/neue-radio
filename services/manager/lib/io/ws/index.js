@@ -13,7 +13,7 @@ const createWebsocket = port => {
     ws.on('message', function incoming(message) {
       logger.log('ws', `Received: ${message}`);
       logger.log('ws', `Sending to ${logger.bold(webSocketServer.clients.length)} clients`);
-  
+
       webSocketServer.clients.forEach(function each(client) {
         client.send(message);
       });

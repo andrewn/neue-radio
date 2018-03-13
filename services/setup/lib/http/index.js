@@ -1,11 +1,21 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const path = require('path');
+
+const mountWebsocket = (app) => {
+  const wsPath = path.dirname(require.resolve('websocket'));
+  const serveStatic = express.static(wsPath, { index: 'index.js' });
+
+  app.use('/websocket', serveStatic);
+};
 
 const http = ({ port, apps, services }) => {
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(express.static('public'));
+
+  mountWebsocket(app);
 
   app.get('/apps', async (req, res) => {
     const list = await apps.status();
@@ -14,7 +24,7 @@ const http = ({ port, apps, services }) => {
 
   app.post('/apps', async (req, res) => {
     await apps.set(req.body.apps);
-    res.redirect('/?update=true');
+    res.redirect('/?update=apps');
   });
 
   app.get('/services', async (req, res) => {
@@ -24,7 +34,7 @@ const http = ({ port, apps, services }) => {
 
   app.post('/services', async (req, res) => {
     await services.set(req.body.services);
-    res.redirect('/?update=true');
+    res.redirect('/?update=services');
   });
 
   app.listen(

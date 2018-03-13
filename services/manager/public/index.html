@@ -3,12 +3,14 @@
 
 <head>
   <link rel="stylesheet" href="style.css">
+  <script src="/websocket"></script>
 </head>
 
 <body>
   <h1>App manager (internal)</h1>
   <div id="apps"></div>
   <script>
+    const websocket = createWebsocket();
     let instances, apps;
 
     setTimeout(init, 3000);
@@ -17,6 +19,7 @@
       console.log('Create apps...');
       apps = await getApps();
       instances = openApps(apps);
+      websocket.ready.then(() => listenForReload(websocket, instances));
       console.log('...done');
     }
 
@@ -28,13 +31,12 @@
     function openApps(apps) {
       const rootElement = document.querySelector('#apps');
 
-      const instances = apps.map(function (app) {
+      return apps.map(function (app) {
         const url = new URL(window.location);
         url.pathname = app;
 
         return mountAppUrlAtRoot(app, url, rootElement);
       });
-      return instances;
     }
 
     function mountAppUrlAtRoot(id, url, rootElement) {
@@ -50,17 +52,25 @@
       `;
 
       const iframe = container.querySelector('iframe');
+      const reload = () => iframe.contentWindow.location.reload();
+
       iframe.addEventListener('load', () => {
         iframe.contentWindow.addEventListener('unload', () => container.classList.remove('is-loaded'))
         container.classList.add('is-loaded');
       });
 
-      container.querySelector('.reload').addEventListener('click', () => {
-        iframe.contentWindow.location.reload();
-      });
+      container.querySelector('.reload').addEventListener('click', reload);
 
       rootElement.appendChild(container);
-      return container;
+      return { container, reload };
+    }
+
+    function listenForReload(websocket, instances) {
+      const reloadApps = () => { instances.forEach(({ reload }) => reload()); };
+      const reloadPage = () => { window.location.reload() };
+
+      websocket.subscribe('manager-web/command/reload', reloadApps);
+      websocket.subscribe('manager-web/command/restart', reloadPage);
     }
   </script>
 </body>
