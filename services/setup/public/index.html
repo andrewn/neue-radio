@@ -93,7 +93,7 @@
   const showNotification = (updateType) => {
     const notifications = document.getElementsByTagName('mark');
 
-    Array.prototype.forEach.call(notifications, (notification) => {
+    Array.from(notifications).forEach((notification) => {
       notification.id == updateType ?
         notification.classList.remove('hidden') :
         notification.classList.add('hidden');
@@ -113,7 +113,7 @@
   };
 
   const app = async () => {
-    const params = new URLSearchParams(document.location.search.substring(1));
+    const params = new URLSearchParams(document.location.search);
     const websocket = createWebsocket();
 
     const publish = (topic) => {
