@@ -21,6 +21,6 @@
   "devDependencies": {
     "eslint": "^4.15.0",
     "foreman": "https://github.com/pryv/node-foreman/archive/master.tar.gz",
-    "simon-say": "https://github.com/andrewn/simon-say/archive/c5ba4ee.tar.gz"
+    "simon-say": "^0.0.2"
   }
 }
