@@ -91,6 +91,7 @@ systemctl enable physical
 systemctl enable rfid
 systemctl enable debug
 systemctl enable speech
+systemctl enable setup
 
 echo "*** IPTables (Port forwarding)"
 DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages iptables-persistent
