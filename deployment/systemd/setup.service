@@ -9,7 +9,8 @@ Restart=on-failure
 StandardOutput=syslog
 SyslogIdentifier=rde-debug
 Type=idle
-Environment=SERVICES_PATH="/opt/radiodan/processes/services"
+Environment=SERVICES_PATH=/opt/radiodan/processes/services
+Environment=APPS_PATH=/opt/radiodan/rde/services/setup/tmp/apps
 
 [Install]
 WantedBy=multi-user.target
