@@ -65,6 +65,7 @@ ln -sf /opt/node/bin/npm /usr/local/bin/npm
 echo "*** Radiodan"
 mkdir -p /opt/radiodan
 mkdir -p /opt/radiodan/processes/services
+touch /opt/radiodan/processes/services/{downloader,speech}
 
 cd /opt/radiodan
 git clone https://github.com/andrewn/neue-radio rde
