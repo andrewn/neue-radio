@@ -3,7 +3,7 @@ const { readFile, writeFile } = require('../fs');
 
 const pathEnv = 'APP_PATH=';
 
-const apps = ({ path, rootPath, available, alwaysMount }) => {
+const apps = ({ path, rootPath, available, alwaysMount = [] }) => {
   const current = async () => {
     try {
       const buffer = await readFile(path);
