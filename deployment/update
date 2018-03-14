@@ -20,7 +20,7 @@ const hasPackageDotJson = ({ path }) =>
 
 const pathForName = parent => name => ({ name, path: join(parent, name) });
 
-const findApplicableDirectories = async (rootDir) => {
+const findApplicableDirectories = async rootDir => {
   const fullPath = resolve(join(__dirname, "..", rootDir));
   const paths = (await readdir(fullPath)).map(pathForName(fullPath));
 
@@ -32,31 +32,39 @@ const findApplicableDirectories = async (rootDir) => {
 
 const install = async ({ name, path }) => {
   try {
-    await exec(
-      `npm install --production`,
-      { cwd: path, env: { JOBS: 'max' } }
-    );
-    log.ok(`Completed ${name}`);
-  } catch (e) {
+    await exec(`npm install --production`, {
+      cwd: path,
+      env: { ...process.env, JOBS: "max" }
+    });
+    log.ok(`Completed: ${name}`);
+    return { name, error: null };
+  } catch (error) {
     log.error(`Error installing/updating: ${name}`);
-    throw e;
+    return { name, error };
   }
 };
 
 const main = async () => {
-  const services = await findApplicableDirectories('services');
-  const apps = await findApplicableDirectories('apps');
+  const services = await findApplicableDirectories("services");
+  const apps = await findApplicableDirectories("apps");
 
   const toInstall = [...services, ...apps];
 
   const names = toInstall.map(({ name }) => name);
 
-  log.ok(`Update the following: ${names.join(", ")}`);
+  log.ok(`Update the following: ${names.join(", ")}\n`);
 
-  Promise.all(toInstall.map(install)).then(
-    () => process.exit(0),
-    () => process.exit(1)
-  );
+  const results = await Promise.all(toInstall.map(install));
+
+  const failed = results.filter(r => r.error);
+
+  if (failed.length > 0) {
+    log.error(`\n${failed.length} failure${failed.length == 1 ? "" : "s"}.`);
+  } else {
+    log.ok("\nAll updated");
+  }
+
+  process.exit(failed.length);
 };
 
 main();
