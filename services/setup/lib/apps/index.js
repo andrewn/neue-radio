@@ -14,7 +14,7 @@ const apps = ({ path, rootPath, available, alwaysMount }) => {
         .split(':')
         .map(a => basename(a));
     } catch(err) {
-      console.warn(err);
+      console.warn('File not found', err);
       return [];
     }
   };
