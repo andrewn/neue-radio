@@ -11,6 +11,10 @@ Install dependencies:
     cd neue-radio
     npm install
 
+Install dependencies for all apps and services:
+
+    npm run install-all
+
 Run services:
 
     npm start
