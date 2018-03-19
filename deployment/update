@@ -47,8 +47,9 @@ const install = async ({ name, path }) => {
 const main = async () => {
   const services = await findApplicableDirectories("services");
   const apps = await findApplicableDirectories("apps");
+  const shared = await findApplicableDirectories("shared");
 
-  const toInstall = [...services, ...apps];
+  const toInstall = [...services, ...apps, ...shared];
 
   const names = toInstall.map(({ name }) => name);
 
