@@ -101,4 +101,37 @@ iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 5000
 iptables -t nat -I OUTPUT -p tcp -o lo --dport 80 -j REDIRECT --to-ports 5000
 iptables-save > /etc/iptables/rules.v4
 
+echo "*** Samba"
+apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages samba
+
+/bin/cat <<EOF >/etc/samba/smb.conf
+[global]
+   workgroup = WORKGROUP
+   server string = radio neue (%h)
+   load printers = no
+   log file = /var/log/samba/%m.log
+   max log size = 50
+   dns proxy = no
+
+[apps]
+   path = /opt/radiodan/rde/apps
+   browsable = yes
+   public = yes
+   writable = yes
+   read only = no
+   force user = pi
+   force group = pi
+
+[services]
+   path = /opt/radiodan/rde/services
+   browsable = yes
+   public = yes
+   writable = yes
+   read only = no
+   force user = pi
+   force group = pi
+EOF
+
+/usr/bin/yes pi | smbpasswd -a -s pi
+
 echo "Update complete, please reboot to continue"
