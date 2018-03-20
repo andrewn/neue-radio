@@ -1,5 +1,5 @@
 const createWebsocket = require('websocket').default;
-const shutdown = () => process.exit(0);
+const shutdown = () => process.exit(1);
 
 const listenForRestart = () => {
   const ws = createWebsocket();
