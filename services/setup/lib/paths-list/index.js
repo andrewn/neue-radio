@@ -1,9 +1,20 @@
+const fs = require('fs');
 const { readDir } = require('../fs');
+const pathLib = require('path');
+
+const isDirectory = (rootPath) => (path) => (
+  fs.statSync(pathLib.join(rootPath, path)).isDirectory()
+);
+
+const isNotHidden = (path) => path[0] !== ".";
 
 const pathsList = async ({ rootPath, ignore = [] }) => {
   const paths = await readDir(rootPath);
 
-  return paths.filter(s => !ignore.includes(s));
+  return paths
+    .filter(isNotHidden)
+    .filter(isDirectory(rootPath))
+    .filter(s => !ignore.includes(s));
 };
 
 module.exports = pathsList;
