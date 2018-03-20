@@ -1,0 +1,9 @@
+[Unit]
+Description=PulseAudio system server
+
+[Service]
+ExecStart=/usr/bin/pulseaudio --system --disallow-exit --log-target=journal --disallow-module-loading --daemonize=no
+ExecReload=/bin/kill -HUP $MAINPID
+
+[Install]
+WantedBy=multi-user.target
