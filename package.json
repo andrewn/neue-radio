@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nf start --procfile ./deployment/Procfile --env ./deployment/systemd/ports.env",
+    "create-app": "node ./shared/create-new-app/index.js",
     "lint": "eslint **/*.js",
     "install-all": "./deployment/update",
     "test": "echo \"Error: no test specified\" && exit 1"
