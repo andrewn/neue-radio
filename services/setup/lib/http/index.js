@@ -9,7 +9,7 @@ const mountWebsocket = (app) => {
   app.use('/websocket', serveStatic);
 };
 
-const http = ({ port, apps, services }) => {
+const http = ({ port, apps, services, installer }) => {
   const app = express();
 
   app.use(bodyParser.urlencoded({ extended: true }));
@@ -35,6 +35,11 @@ const http = ({ port, apps, services }) => {
   app.post('/services', async (req, res) => {
     await services.set(req.body.services);
     res.redirect('/?update=services');
+  });
+
+  app.post('/dependencies', async (req, res) => {
+    const installText = await installer();
+    res.json(installText);
   });
 
   app.listen(
