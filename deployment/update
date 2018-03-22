@@ -6,10 +6,17 @@ const exec = promisify(require("child_process").exec);
 const readdir = promisify(fs.readdir);
 const { join, resolve } = require("path");
 
-const log = {
+const logColours = {
   error: message => console.error(`\x1b[31m${message}\x1b[0m`),
   ok: message => console.log(`\x1b[32m${message}\x1b[0m`)
 };
+
+const logPlain = {
+  error: message => console.error(message),
+  ok: message => console.log(message)
+};
+
+const log = process.env.PLAIN ? logPlain : logColours;
 
 const isDirectory = ({ path }) => fs.statSync(path).isDirectory();
 

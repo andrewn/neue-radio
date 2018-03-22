@@ -4,6 +4,11 @@
   <title>Radiodan Configuration</title>
   <script src="/websocket"></script>
   <link rel="stylesheet" href="mini-default.min.css" />
+  <style type="text/css">
+    #controls .card p {
+      min-height: 3em;
+    }
+  </style>
 </head>
 <body>
 
@@ -21,6 +26,12 @@
   </mark>
   <mark class="hidden inline-block" id="restarted">
     Internal app manager has been restarted.
+  </mark>
+  <mark class="hidden inline-block" id="installing">
+    Installing dependencies...
+  </mark>
+  <mark class="hidden inline-block" id="installed">
+    Installed.
   </mark>
 </div>
 
@@ -43,6 +54,10 @@
   <div class="card" style="float: left">
     <p>Restart the manager to change the apps running on this device</p>
     <input type="button" class="secondary" id="restart" value="Restart" />
+  </div>
+  <div class="card" style="float: left">
+    <p>Install all dependencies for apps and services</p>
+    <input type="button" class="tertiary" id="dependencies" value="Install" />
   </div>
 </div>
 
@@ -109,6 +124,17 @@
     document.getElementById('restart').onclick = () => {
       publish('manager/command/restart');
       showNotification('restarted');
+    };
+
+    document.getElementById('dependencies').onclick = () => {
+      showNotification('installing');
+
+      fetch('/dependencies', { method: 'post' })
+        .then((res) => res.json())
+        .then((status) => {
+          document.getElementById('installed').innerText = status;
+          showNotification('installed');
+        });
     };
   };
 

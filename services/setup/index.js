@@ -4,6 +4,7 @@ const pathsList = require('./lib/paths-list');
 
 const createApps = require('./lib/apps');
 const createServices = require('./lib/services');
+const installer = require('./lib/installer');
 
 const app = async () => {
   const port = process.env.PORT || 3000;
@@ -38,7 +39,7 @@ const app = async () => {
     available: servicesList,
   });
 
-  http({ port, apps, services });
+  http({ port, apps, services, installer });
 };
 
 app();
