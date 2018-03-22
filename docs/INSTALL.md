@@ -51,7 +51,7 @@ Connect an Ethernet cable or set-up wifi. Power as normal via it's power input.
 
 ## Steps for all Pis
 
-Run the `deployment/provision` script from the command line.
+    curl https://raw.githubusercontent.com/andrewn/neue-radio/master/deployment/provision | sudo bash
 
 ## Install pHat DAC if using
 
