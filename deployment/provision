@@ -69,17 +69,8 @@ touch /opt/radiodan/processes/services/{downloader,speech}
 
 cd /opt/radiodan
 git clone https://github.com/andrewn/neue-radio rde
-cd rde/shared/websocket
-npm install --production
-cd ../..
 
-for f in apps/* services/*; do
-   if [ -d ${f} ]; then
-      cd $f
-      JOBS=max npm install --unsafe-perm --production
-      cd -
-   fi
-done
+/opt/radiodan/rde/deployment/update
 
 chown -R pi:pi /opt/radiodan
 cp deployment/systemd/*.service /etc/systemd/system/
