@@ -5,6 +5,7 @@
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
+    "postinstall": "archpm",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Andrew Nicolaou <me@andrewnicolaou.co.uk>",
@@ -14,11 +15,12 @@
     "faye-websocket": "^0.11.0",
     "ip": "^1.1.5",
     "johnny-five": "^0.13.0",
-    "raspi-cap": "^0.0.5",
+    "npm-arch-dependencies": "^0.1.0",
     "websocket": "../../shared/websocket"
   },
-  "optionalDependencies": {
-    "raspi-rotary-encoder": "^0.4.0",
-    "raspi-io": "^8.0.1"
+  "armDependencies": {
+    "raspi-cap": "^0.0.5",
+    "raspi-io": "^8.0.1",
+    "raspi-rotary-encoder": "^0.4.0"
   }
 }
