@@ -8,7 +8,7 @@ const isDirectory = (rootPath) => (path) => (
 
 const isNotHidden = (path) => path[0] !== ".";
 
-const pathsList = async ({ rootPath, ignore = [] }) => {
+const pathsList = ({ rootPath, ignore = [] }) => async () => {
   const paths = await readDir(rootPath);
 
   return paths
