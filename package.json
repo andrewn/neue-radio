@@ -26,6 +26,13 @@
   "devDependencies": {
     "eslint": "^4.15.0",
     "foreman": "https://github.com/pryv/node-foreman/archive/master.tar.gz",
+    "husky": "^0.15.0-rc.13",
     "simon-say": "^0.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit":
+        "cd shared/websocket && npm run bundle && cd ../.. && git add shared/websocket/index.js"
+    }
   }
 }
