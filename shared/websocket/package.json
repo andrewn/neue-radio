@@ -6,8 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "bundle": "npm run bundle:umd",
-    "bundle:umd":
-      "rollup src/createWebsocket.js --output.format umd --output.file umd.js --output.name createWebsocket"
+    "bundle:umd": "rollup src/createWebsocket.js --output.format umd --output.file umd.js --output.name createWebsocket"
   },
   "author": "",
   "license": "ISC",
