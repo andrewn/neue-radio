@@ -1,7 +1,7 @@
 const WebSocket =
-  typeof window == "undefined" ? require("ws") : window.WebSocket;
+  typeof window == 'undefined' ? require('ws') : window.WebSocket;
 const hostname =
-  typeof window == "undefined" ? "127.0.0.1" : window.location.hostname;
+  typeof window == 'undefined' ? '127.0.0.1' : window.location.hostname;
 
 const defaultURL = `ws://${hostname}:8000`;
 const topicRegexp = /^([a-z]+[a-z0-9-]*)\/(command|event)\/([a-z]+[a-z0-9-]*)$/;
@@ -104,12 +104,12 @@ const createWebsocket = (opts = {}) => {
   };
 
   const onClose = err => {
-    log("Websocket disconnected", err);
+    log('Websocket disconnected', err);
     setTimeout(connect, 500);
   };
 
   const onError = err => {
-    log("Websocket error", err);
+    log('Websocket error', err);
   };
 
   const subscribe = (topic, cb) => {
@@ -135,12 +135,12 @@ const createWebsocket = (opts = {}) => {
     log(`Connecting to ${url}`);
 
     ws = new WebSocket(url);
-    ws.addEventListener("message", onMessage);
-    ws.addEventListener("close", onClose);
-    ws.addEventListener("error", onError);
+    ws.addEventListener('message', onMessage);
+    ws.addEventListener('close', onClose);
+    ws.addEventListener('error', onError);
 
     ready = new Promise(resolve => {
-      ws.addEventListener("open", resolve);
+      ws.addEventListener('open', resolve);
     }).then(() => log(`Connected to ${url}`));
   };
 
@@ -151,4 +151,4 @@ const createWebsocket = (opts = {}) => {
 
 (function(exports) {
   exports.default = createWebsocket;
-})(typeof exports === "undefined" ? (this.share = {}) : exports);
+})(typeof exports === 'undefined' ? (this.share = {}) : exports);

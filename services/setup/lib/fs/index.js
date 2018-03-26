@@ -12,5 +12,5 @@ module.exports = {
   readDir,
   readFile,
   unlink,
-  writeFile,
+  writeFile
 };

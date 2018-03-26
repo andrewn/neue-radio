@@ -21,10 +21,8 @@ const command = (downloadPath, url) => {
 };
 
 const parsedOutputPath = (downloadPath, output) => {
-  const videoPath = path.join(downloadPath, '([0-9a-z_\\-\\\/\.]+)');
-  const match = output.match(
-    new RegExp(`\[download\].*${videoPath}.*`, 'i')
-  );
+  const videoPath = path.join(downloadPath, '([0-9a-z_\\-\\/.]+)');
+  const match = output.match(new RegExp(`\[download\].*${videoPath}.*`, 'i'));
 
   logger.info(`Downloaded to ${match[1]}`);
   return match[1];

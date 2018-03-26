@@ -1,4 +1,4 @@
-const exec = require("child_process").exec;
+const exec = require('child_process').exec;
 const path = require('path');
 
 const updateBinaryPath = path.resolve(
@@ -6,7 +6,7 @@ const updateBinaryPath = path.resolve(
   path.join('..', '..', '..', '..', 'deployment', 'update')
 );
 
-const installer = () => (
+const installer = () =>
   new Promise((resolve, reject) => {
     exec(
       updateBinaryPath,
@@ -14,14 +14,13 @@ const installer = () => (
       (error, stdout, stderr) => {
         const response = stdout + stderr;
 
-        if(error && error.code > 1) {
+        if (error && error.code > 1) {
           reject(response);
         } else {
           resolve(response);
         }
       }
     );
-  })
-);
+  });
 
 module.exports = installer;

@@ -1,6 +1,6 @@
 const createWebsocket = require('websocket').default;
 
-const webSocket = (router) => {
+const webSocket = router => {
   const ws = createWebsocket();
 
   ws.ready.then(() => console.info('Listening to web socket'));
@@ -9,9 +9,9 @@ const webSocket = (router) => {
     router.route(topic, payload);
   });
 
-  router.on('publish', ws => ({ topic, payload }) => (
+  router.on('publish', ws => ({ topic, payload }) =>
     ws.publish({ topic, payload })
-  ));
+  );
 };
 
 module.exports.create = webSocket;

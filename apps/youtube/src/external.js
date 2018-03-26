@@ -10,11 +10,11 @@ const createComms = async handler => {
     requestStop: () => send('stop')
   };
 
-  ws.subscribe(new RegExp('youtube/event/.*'), (msg) => {
+  ws.subscribe(new RegExp('youtube/event/.*'), msg => {
     handler(msg);
   });
 
-  return ws.ready.then(() => (instance));
+  return ws.ready.then(() => instance);
 };
 
 const setState = id => {

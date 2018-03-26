@@ -1,23 +1,23 @@
-var five = require("johnny-five");
-var pigpio = require("pigpio");
-var EchoIO = require("./echo-io");
+var five = require('johnny-five');
+var pigpio = require('pigpio');
+var EchoIO = require('./echo-io');
 
 var IO = null;
 var RotaryEncoder;
 var connectRaspiCap;
 
 try {
-  IO = require("raspi-io");
+  IO = require('raspi-io');
 } catch (err) {
-  console.error("Raspi-io not found, falling back to EchoIO");
+  console.error('Raspi-io not found, falling back to EchoIO');
   console.error(err);
   IO = EchoIO;
 }
 
 try {
-  RotaryEncoder = require("raspi-rotary-encoder").RotaryEncoder;
+  RotaryEncoder = require('raspi-rotary-encoder').RotaryEncoder;
 } catch (err) {
-  console.error("raspi-rotary-encoder not found, falling back to mock");
+  console.error('raspi-rotary-encoder not found, falling back to mock');
   console.error(err);
   RotaryEncoder = function() {
     return {
@@ -27,9 +27,9 @@ try {
 }
 
 try {
-  connectRaspiCap = require("raspi-cap").connect;
+  connectRaspiCap = require('raspi-cap').connect;
 } catch (err) {
-  console.error("raspi-cap not found, falling back to mock");
+  console.error('raspi-cap not found, falling back to mock');
   console.error(err);
   connectRaspiCap = function() {
     return new Promise.resolve({ on: () => {} });
@@ -76,7 +76,7 @@ module.exports.create = function(router, uiConfig) {
 
   var factories = {
     Button: createButtonInstance,
-    "Led.RGB": createLedRGBInstance,
+    'Led.RGB': createLedRGBInstance,
     Encoder: createEncoderInstance,
     Capacitive: createCapInstance
   };
@@ -88,8 +88,8 @@ module.exports.create = function(router, uiConfig) {
     instances[type] = {};
   });
 
-  board.on("ready", function() {
-    console.log("Board is ready");
+  board.on('ready', function() {
+    console.log('Board is ready');
 
     eachItem(uiConfig, (type, spec) => {
       const factory = factories[type];
@@ -98,7 +98,7 @@ module.exports.create = function(router, uiConfig) {
         const routable = router.register(type, spec.id);
         instances[type][spec.id] = factory(spec, routable);
       } else {
-        console.error("No config or factory for component type: ", type);
+        console.error('No config or factory for component type: ', type);
       }
     });
 
@@ -114,19 +114,19 @@ function createButtonInstance(spec, routable) {
   // const topicKey = 'event.button.' + id;
   const button = new five.Button(Object.assign({ id: id }, config));
 
-  button.on("press", function() {
-    console.log(id + ": Button pressed");
-    routable.publish("press", { pressed: true });
+  button.on('press', function() {
+    console.log(id + ': Button pressed');
+    routable.publish('press', { pressed: true });
   });
 
-  button.on("hold", function() {
-    console.log(id + ": Button held");
-    routable.publish("hold", { pressed: true, durationMs: button.holdtime });
+  button.on('hold', function() {
+    console.log(id + ': Button held');
+    routable.publish('hold', { pressed: true, durationMs: button.holdtime });
   });
 
-  button.on("release", function() {
-    console.log(id + ": Button released");
-    routable.publish("release", { pressed: false });
+  button.on('release', function() {
+    console.log(id + ': Button released');
+    routable.publish('release', { pressed: false });
   });
 
   return button;
@@ -149,10 +149,10 @@ function createLedRGBInstance(spec, routable) {
   //
   // worker.ready();
 
-  routable.on("request", function(req) {
+  routable.on('request', function(req) {
     var stateChangePromise;
 
-    console.log("RGBLED request", req);
+    console.log('RGBLED request', req);
 
     switch (req.command) {
       // case 'change':
@@ -165,7 +165,7 @@ function createLedRGBInstance(spec, routable) {
       //     })
       //   );
       //   break;
-      case "status":
+      case 'status':
         stateChangePromise = Promise.resolve({ color: rgb.color() });
         break;
       default:
@@ -195,15 +195,15 @@ function createEncoderInstance(spec, routable) {
   const encoder = new RotaryEncoder(Object.assign({ id: id }, config));
 
   // the encoder will try to work out where in the loop you are
-  encoder.on("change", function(evt) {
-    routable.publish("turn", evt);
+  encoder.on('change', function(evt) {
+    routable.publish('turn', evt);
   });
 }
 
 function createCapInstance(spec, routable) {
   connectRaspiCap({ resetPin: spec.config.resetPin }).then(cap => {
     // Listen for messages from clients
-    routable.on("resetRequest", function() {
+    routable.on('resetRequest', function() {
       try {
         cap.reset();
       } catch (e) {
@@ -211,25 +211,25 @@ function createCapInstance(spec, routable) {
       }
     });
 
-    routable.on("statusRequest", function() {
-      routable.publish("status", { sensitivty: cap.getSensitivity() });
+    routable.on('statusRequest', function() {
+      routable.publish('status', { sensitivty: cap.getSensitivity() });
     });
 
-    routable.on("sensitivity", function(req) {
+    routable.on('sensitivity', function(req) {
       try {
         cap.setSensitivity(req.params.level);
-        routable.publish("status", { sensitivty: cap.getSensitivity() });
+        routable.publish('status', { sensitivty: cap.getSensitivity() });
       } catch (e) {
         console.error(e);
       }
     });
 
-    cap.on("reset", function() {
-      routable.publish("reset", {});
+    cap.on('reset', function() {
+      routable.publish('reset', {});
     });
 
-    cap.on("change", function(evt) {
-      routable.publish("change", evt);
+    cap.on('change', function(evt) {
+      routable.publish('change', evt);
     });
   });
 }

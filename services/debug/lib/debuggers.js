@@ -2,9 +2,8 @@ const ip = require('ip');
 const http = require('http');
 const assert = require('assert');
 
-const getDeviceListUrl = (defaultIp, defaultPort) => (currentIp) => (
-  `http://${defaultIp || currentIp}:${defaultPort}/json/list`
-);
+const getDeviceListUrl = (defaultIp, defaultPort) => currentIp =>
+  `http://${defaultIp || currentIp}:${defaultPort}/json/list`;
 
 const get = ({ debuggerHost = false, debuggerPort }) => {
   assert(debuggerPort, 'debuggerPort required');

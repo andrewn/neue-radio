@@ -2,7 +2,7 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const path = require('path');
 
-const mountWebsocket = (app) => {
+const mountWebsocket = app => {
   const wsPath = path.dirname(require.resolve('websocket'));
   const serveStatic = express.static(wsPath, { index: 'index.js' });
 
@@ -42,9 +42,8 @@ const http = ({ port, apps, services, installer }) => {
     res.json(installText);
   });
 
-  app.listen(
-    port,
-    () => console.log(`Radiodan setup app listening on port ${port}!`)
+  app.listen(port, () =>
+    console.log(`Radiodan setup app listening on port ${port}!`)
   );
 };
 

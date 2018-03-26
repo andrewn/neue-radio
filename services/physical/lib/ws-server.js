@@ -10,16 +10,18 @@ module.exports.create = function(server, router) {
 
       // connections.push(ws);
 
-      const handlePublish = function (evt) {
+      const handlePublish = function(evt) {
         ws.send(JSON.stringify(evt));
       };
 
       // On connection, send the currently registered
       // devices
-      ws.send(JSON.stringify({
-        key: 'physical/registered',
-        data: router.registered()
-      }));
+      ws.send(
+        JSON.stringify({
+          key: 'physical/registered',
+          data: router.registered()
+        })
+      );
 
       // We expect incoming messages to have the shape:
       // {
