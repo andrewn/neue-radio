@@ -5,6 +5,8 @@ const serveIndex = require('serve-index');
 
 const logger = require('../logger');
 
+const mountHomepage = require('./homepage');
+
 const directoryListing = ({ fileList, directory }, callback) => {
   const listing = fileList
     .filter(({ name }) => name[0] != '.')
@@ -27,18 +29,6 @@ const mountApp = ({ server, name, path, index }) => {
     template: directoryListing
   });
   server.use(pathLib.join(httpPath, 'assets'), serveAssets, listAssets);
-};
-
-const mountAppList = (apps, server) => {
-  const appNames = apps.map(a => a.name);
-
-  server.get('/apps', (req, res) =>
-    res.json({
-      apps: appNames
-    })
-  );
-
-  logger.log('http', 'Mounted apps', appNames);
 };
 
 const startServer = (server, port, name) => {
@@ -65,6 +55,8 @@ const mountExternal = (apps, port) => {
     mountApp({ server, name, path, index: 'external.html' });
   });
 
+  mountAppList(apps, server);
+  mountHomepage(apps, server);
   mountWebsocket(server);
 
   startServer(server, port, 'Public');
@@ -73,13 +65,14 @@ const mountExternal = (apps, port) => {
 const mountInternal = (apps, port, publicPath) => {
   const server = express();
 
-  mountAppList(apps, server);
+  logger.log('http', 'Mounted apps', apps.map( a => a.name ));
 
   apps.map(({ name, path }) =>
     mountApp({ server, name, path, index: 'internal.html' })
   );
 
   mountWebsocket(server);
+  mountAppList(apps, server);
 
   server.use(express.static(publicPath));
 

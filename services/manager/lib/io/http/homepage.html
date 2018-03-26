@@ -1,0 +1,29 @@
+<html>
+  <head><title>Radio Neue</title></head>
+  <body>
+    <h1>Homepage</h1>
+
+    <ul id="apps">
+    </ul>
+    <script>
+      const list = document.getElementById('apps');
+
+      fetch('/apps')
+        .then((res) => res.json())
+        .then((apps) => {
+          apps.forEach((a) => {
+            list.appendChild(buildItem(a));
+          });
+        });
+
+      const buildItem = (app) => {
+        const template = document.createElement('template');
+        const url = `//${window.location.hostname}:${app.port}${app.path || '/'}`;
+
+        template.innerHTML = `<li><a href="${url}">${app.name}</a></li>`;
+
+        return template.content.firstChild;
+      };
+    </script>
+  </body>
+</html>
