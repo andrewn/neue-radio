@@ -2,11 +2,12 @@
   "name": "websocket",
   "version": "2.0.0",
   "description": "",
-  "main": "umd.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "bundle": "npm run bundle:umd",
-    "bundle:umd": "rollup src/createWebsocket.js --output.format umd --output.file umd.js --output.name createWebsocket"
+    "bundle:umd":
+      "rollup es.js --output.format umd --output.file index.js --output.name createWebsocket"
   },
   "author": "",
   "license": "ISC",
