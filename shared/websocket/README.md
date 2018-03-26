@@ -29,7 +29,7 @@ Add this to your `package.json`:
 The `createWebsocket` function is available as:
 
 ```javascript
-const createWebsocket = require('websocket').default;
+const createWebsocket = require('websocket');
 ```
 
 ## Usage

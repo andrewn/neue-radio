@@ -1,4 +1,4 @@
-const createWebSocket = require('websocket').default;
+const createWebSocket = require('websocket');
 
 const log = require('debug')('speechd:main');
 

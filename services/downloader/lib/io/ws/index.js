@@ -1,5 +1,5 @@
 const { URL } = require('url');
-const createWebsocket = require('websocket').default;
+const createWebsocket = require('websocket');
 
 const logger = require('../../logger')('ws');
 
