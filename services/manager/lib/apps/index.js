@@ -11,16 +11,18 @@ const findApps = rootPath => source => {
     .readdirSync(fullPath)
     .map(name => ({ path: path.join(fullPath, name), name }))
     .filter(isDirectory)
-    .filter(isNotHiddenDirectory)
+    .filter(isNotHiddenDirectory);
 };
 
-const knownApps = rootPath => appPath => (
+const knownApps = rootPath => appPath =>
   appPath
     .split(':')
-    .map(a => ({ path: path.resolve(rootPath, a), name: path.posix.basename(a) }))
+    .map(a => ({
+      path: path.resolve(rootPath, a),
+      name: path.posix.basename(a)
+    }))
     .filter(isDirectory)
-    .filter(isNotHiddenDirectory)
-);
+    .filter(isNotHiddenDirectory);
 
 module.exports.findApps = findApps;
 module.exports.knownApps = knownApps;

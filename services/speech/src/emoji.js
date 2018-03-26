@@ -1,3 +1,3 @@
-const replaceEmojiWithDescriptions = require("emoji-describe");
+const replaceEmojiWithDescriptions = require('emoji-describe');
 
-module.exports = (str = "") => replaceEmojiWithDescriptions(str);
+module.exports = (str = '') => replaceEmojiWithDescriptions(str);

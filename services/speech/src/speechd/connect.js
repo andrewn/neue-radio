@@ -1,8 +1,8 @@
-const net = require("net");
+const net = require('net');
 
-const connectToSocket = require("./connectToSocket");
-const spawnServer = require("./spawnServer");
-const { ConnectionError } = require("./errors");
+const connectToSocket = require('./connectToSocket');
+const spawnServer = require('./spawnServer');
+const { ConnectionError } = require('./errors');
 
 const connect = async ({ autoSpawn = true, ...params } = {}) => {
   let connection = null;
