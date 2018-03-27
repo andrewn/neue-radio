@@ -11,7 +11,7 @@ reconnected automatically on disconnect.
 Import this from any of your JS modules:
 
 ```javascript
-import createWebsocket from '/websocket';
+import createWebsocket from '/websocket/module.js';
 ```
 
 You may name `createWebsocket` whatever you want.
@@ -21,7 +21,7 @@ You may name `createWebsocket` whatever you want.
 Add this to your `index.html`:
 
 ```javascript
-<script src="/websocket/umd.js" />
+<script src="/websocket" />
 ```
 
 The `createWebsocket` function is available globally.
