@@ -4,3 +4,4 @@ debug: REMOTE_DEBUGGER_PORT=$MANAGER_REMOTE_DEBUGGING_PORT PORT=$DEBUG_PORT npm 
 downloader: PORT=$DOWNLOADER_PORT npm --prefix services/downloader start
 speech-server: PORT=$SPEECHD_PORT simon-say
 speech: NO_AUTO_SPAWN=yes SPEECHD_PORT=$SPEECHD_PORT npm --prefix services/speech start
+serial: npm --prefix services/serial start
