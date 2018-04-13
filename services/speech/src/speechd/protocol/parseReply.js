@@ -13,7 +13,7 @@ module.exports = lineEnding =>
 
         if (matches) {
           const [_, statusCode, replyOrResult, content] = matches;
-          const isResult = replyOrResult === " ";
+          const isResult = replyOrResult === ' ';
 
           const obj = {
             code: statusCode,

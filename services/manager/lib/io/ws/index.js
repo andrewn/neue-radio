@@ -12,7 +12,10 @@ const createWebsocket = port => {
   webSocketServer.on('connection', function connection(ws) {
     ws.on('message', function incoming(message) {
       logger.log('ws', `Received: ${message}`);
-      logger.log('ws', `Sending to ${logger.bold(webSocketServer.clients.length)} clients`);
+      logger.log(
+        'ws',
+        `Sending to ${logger.bold(webSocketServer.clients.length)} clients`
+      );
 
       webSocketServer.clients.forEach(function each(client) {
         client.send(message);
@@ -20,9 +23,9 @@ const createWebsocket = port => {
     });
   });
 
-  httpServer.listen(port, () => (
+  httpServer.listen(port, () =>
     logger.log('ws', `WebSockets Server http://${ip.address()}:${port}`)
-  ));
+  );
 };
 
 module.exports = createWebsocket;

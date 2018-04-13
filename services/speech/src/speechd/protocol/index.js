@@ -1,6 +1,6 @@
-const parseReply = require("./parseReply");
+const parseReply = require('./parseReply');
 
-const LINE_ENDING = "\r\n";
+const LINE_ENDING = '\r\n';
 
 class Protocol {
   constructor(connection) {
@@ -15,7 +15,7 @@ class Protocol {
         const response = this._parser(message);
         resolve(response);
       };
-      this._connection.once("message", handleResponse);
+      this._connection.once('message', handleResponse);
 
       // Send command and resolve returned promise with
       // the response
@@ -24,7 +24,7 @@ class Protocol {
   }
 
   async listVoices() {
-    const response = await this.send("LIST VOICES");
+    const response = await this.send('LIST VOICES');
     return response.lines.map(({ content }) => content);
   }
 
@@ -34,14 +34,14 @@ class Protocol {
   }
 
   async getVoiceType() {
-    const response = await this.send("GET VOICE_TYPE");
+    const response = await this.send('GET VOICE_TYPE');
     return response.lines[0].content;
   }
 
   async speak(utterance) {
-    await this.send("SPEAK");
+    await this.send('SPEAK');
     this.send(utterance);
-    this.send(".");
+    this.send('.');
   }
 }
 

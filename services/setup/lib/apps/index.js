@@ -13,7 +13,7 @@ const apps = ({ path, rootPath, available, alwaysMount = [] }) => {
         .replace(pathEnv, '')
         .split(':')
         .map(a => basename(a));
-    } catch(err) {
+    } catch (err) {
       console.warn('File not found', err);
       return [];
     }
@@ -26,11 +26,11 @@ const apps = ({ path, rootPath, available, alwaysMount = [] }) => {
     return availableApps.map(a => ({
       name: a,
       active: activeApps.includes(a),
-    }))
+    }));
   };
 
-  const set = async (apps=[]) => {
-    if(apps.length == 0) {
+  const set = async (apps = []) => {
+    if (apps.length == 0) {
       return await writeFile(path, '');
     }
 

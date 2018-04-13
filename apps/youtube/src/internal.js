@@ -25,7 +25,7 @@ const createComms = async handler => {
   ws.subscribe(new RegExp('youtube/command/.*'), handler);
   ws.subscribe('downloader/event/available', handler);
 
-  return ws.ready.then(() => (instance));
+  return ws.ready.then(() => instance);
 };
 
 const playMedia = url => {

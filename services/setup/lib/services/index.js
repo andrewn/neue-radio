@@ -7,7 +7,7 @@ const services = ({ path, available }) => {
       const files = await fs.readDir(path);
 
       return files;
-    } catch(err) {
+    } catch (err) {
       console.error('services read error:', err);
 
       return [];
@@ -20,27 +20,23 @@ const services = ({ path, available }) => {
 
     return availableServices.map(p => ({
       name: p,
-      active: activeServices.includes(p),
+      active: activeServices.includes(p)
     }));
   };
 
   const set = async (paths = []) => {
     const existing = await current();
 
-    const pendingDelete = existing.filter(p => (
-      !paths.includes(p)
-    ));
+    const pendingDelete = existing.filter(p => !paths.includes(p));
 
-    const pendingCreate = paths.filter(p => (
-      !existing.includes(p)
-    ));
+    const pendingCreate = paths.filter(p => !existing.includes(p));
 
-    pendingDelete.forEach(async (p) => {
+    pendingDelete.forEach(async p => {
       const fullPath = join(path, p);
       await fs.unlink(fullPath);
     });
 
-    pendingCreate.forEach(async (p) => {
+    pendingCreate.forEach(async p => {
       const fullPath = join(path, p);
       await fs.open(fullPath, 'w');
     });

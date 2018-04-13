@@ -1,14 +1,20 @@
 {
   "name": "websocket",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle": "npm run bundle:umd",
+    "bundle:umd":
+      "rollup es.js --output.format umd --output.file index.js --output.name createWebsocket"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "ws": "^4.0.0"
+  },
+  "devDependencies": {
+    "rollup": "^0.57.1"
   }
 }

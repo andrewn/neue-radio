@@ -1,14 +1,14 @@
 const express = require('express');
 const ip = require('ip');
 const pathLib = require('path');
-const serveIndex = require('serve-index')
+const serveIndex = require('serve-index');
 
 const logger = require('../logger');
 
 const directoryListing = ({ fileList, directory }, callback) => {
   const listing = fileList
-    .filter(({ name }) => (name[0] != '.'))
-    .map(({ name }) => (directory + name));
+    .filter(({ name }) => name[0] != '.')
+    .map(({ name }) => directory + name);
 
   callback(false, JSON.stringify(listing));
 };
@@ -23,16 +23,18 @@ const mountApp = ({ server, name, path, index }) => {
   server.use(pathLib.join(httpPath, 'modules'), serveModules);
 
   const serveAssets = express.static(pathLib.join(path, 'assets'));
-  const listAssets = serveIndex(pathLib.join(path, 'assets'), { template: directoryListing });
+  const listAssets = serveIndex(pathLib.join(path, 'assets'), {
+    template: directoryListing
+  });
   server.use(pathLib.join(httpPath, 'assets'), serveAssets, listAssets);
 };
 
 const mountAppList = (apps, server) => {
-  const appNames = apps.map( a => a.name );
+  const appNames = apps.map(a => a.name);
 
   server.get('/apps', (req, res) =>
     res.json({
-      apps: appNames,
+      apps: appNames
     })
   );
 
@@ -40,9 +42,9 @@ const mountAppList = (apps, server) => {
 };
 
 const startServer = (server, port, name) => {
-  server.listen(port, () => (
+  server.listen(port, () =>
     logger.log('http', `${name} Server http://${ip.address()}:${port}`)
-  ));
+  );
 };
 
 const mountWebsocket = server => {
@@ -51,10 +53,7 @@ const mountWebsocket = server => {
   const mountAt = '/websocket';
   const index = 'index.js';
 
-  const serveStatic = express.static(
-    path,
-    { index }
-  );
+  const serveStatic = express.static(path, { index });
 
   server.use(mountAt, serveStatic);
 };
@@ -63,7 +62,7 @@ const mountExternal = (apps, port) => {
   const server = express();
 
   apps.map(({ name, path }) => {
-    mountApp({ server, name, path, index: 'external.html' })
+    mountApp({ server, name, path, index: 'external.html' });
   });
 
   mountWebsocket(server);
@@ -76,15 +75,13 @@ const mountInternal = (apps, port, publicPath) => {
 
   mountAppList(apps, server);
 
-  apps.map(({ name, path }) => (
+  apps.map(({ name, path }) =>
     mountApp({ server, name, path, index: 'internal.html' })
-  ));
+  );
 
   mountWebsocket(server);
 
-  server.use(
-    express.static(publicPath)
-  );
+  server.use(express.static(publicPath));
 
   startServer(server, port, 'Private');
 };

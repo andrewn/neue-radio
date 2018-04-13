@@ -1,5 +1,5 @@
 const { URL } = require('url');
-const createWebsocket = require('websocket').default;
+const createWebsocket = require('websocket');
 
 const logger = require('../../logger')('ws');
 
@@ -14,19 +14,17 @@ const webSocket = ({ host, downloader }) => {
   ws.subscribe(subscribedTopic, handler);
 };
 
-const sendMessage = ws => (topic, payload) => (
-  ws.publish({ topic, payload })
-);
+const sendMessage = ws => (topic, payload) => ws.publish({ topic, payload });
 
-const handleMessage = ({ host, downloader, callback }) => async ({ payload }) => {
+const handleMessage = ({ host, downloader, callback }) => async ({
+  payload
+}) => {
   const { url: sourceUrl } = payload;
 
   const videoPath = await downloader(sourceUrl);
   const url = new URL(videoPath, host);
 
-  callback(
-    publishTopic, { url, sourceUrl }
-  );
+  callback(publishTopic, { url, sourceUrl });
 };
 
 module.exports = webSocket;

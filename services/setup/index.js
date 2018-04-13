@@ -12,31 +12,29 @@ const app = async () => {
   const appsRoot = resolveRelative('../../apps');
 
   const appsList = await pathsList({
-    rootPath: appsRoot,
+    rootPath: appsRoot
   });
 
   const servicesList = await pathsList({
     rootPath: resolveRelative('..'),
-    ignore: ['manager', 'setup', 'debug'],
+    ignore: ['manager', 'setup', 'debug']
   });
 
-  const appsPath = resolveRelative(
-    process.env.APPS_PATH || './tmp/apps',
-  );
+  const appsPath = resolveRelative(process.env.APPS_PATH || './tmp/apps');
 
   const servicesPath = resolveRelative(
-    process.env.SERVICES_PATH || './tmp/services',
+    process.env.SERVICES_PATH || './tmp/services'
   );
 
   const apps = createApps({
     path: appsPath,
     rootPath: appsRoot,
-    available: appsList,
+    available: appsList
   });
 
   const services = createServices({
     path: servicesPath,
-    available: servicesList,
+    available: servicesList
   });
 
   http({ port, apps, services, installer });

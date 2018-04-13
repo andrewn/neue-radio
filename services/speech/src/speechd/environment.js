@@ -1,7 +1,7 @@
-const { promisify } = require("util");
-const exec = promisify(require("child_process").exec);
+const { promisify } = require('util');
+const exec = promisify(require('child_process').exec);
 
-const { ExecutableNotFoundError } = require("./errors");
+const { ExecutableNotFoundError } = require('./errors');
 
 const getExecutablePath = async () => {
   try {

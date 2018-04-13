@@ -6,12 +6,22 @@ reconnected automatically on disconnect.
 
 ## Setup
 
-### Apps
+### Apps (ES modules)
+
+Import this from any of your JS modules:
+
+```javascript
+import createWebsocket from '/websocket/module.js';
+```
+
+You may name `createWebsocket` whatever you want.
+
+### Apps (script tag)
 
 Add this to your `index.html`:
 
 ```javascript
-<script src="/websocket"></script>
+<script src="/websocket" />
 ```
 
 The `createWebsocket` function is available globally.
@@ -29,7 +39,7 @@ Add this to your `package.json`:
 The `createWebsocket` function is available as:
 
 ```javascript
-const createWebsocket = require('websocket').default;
+const createWebsocket = require('websocket');
 ```
 
 ## Usage
@@ -78,6 +88,7 @@ ws.publish({
 #### Subscribe
 
 #### Subscription to a single topic
+
 ```javascript
 ws.subscribe('downloader/event/available', ({ topic, payload }) => {
   // do something with payload object
