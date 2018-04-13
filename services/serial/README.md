@@ -14,13 +14,13 @@ The service can be installed on any system supported by [node-serialport](https:
 
 ## Running
 
-    node src/main
+    npm start
 
 ## Debugging
 
 To log out debugging information, set the `DEBUG` environment variable i.e.
 
-    DEBUG=* node src/main
+    DEBUG=* npm start
 
 [debug](https://github.com/visionmedia/debug) is used for debugging.
 
