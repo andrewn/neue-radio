@@ -33,18 +33,20 @@ To send or receive data from a serial port, it must be opened. Each port on the 
 To list the available serial ports on the system:
 
     {
-      topic: 'serial/command/list',
+      topic: "serial/command/list",
       payload: {}
     }
 
-The `'serial/command/list'` will be emitted containing a list of ports. The `path` attribute is the only on that will definitely be returned. It is used to identify a port.
+`serial/event/list` will be emitted containing a list of ports. The `path` attribute is the only on that will definitely be returned and it is used to identify a port.
 
 Example:
 
     {
       "topic": "serial/event/list",
       "payload": [
-        { "path": "/dev/tty.Bluetooth-Incoming-Port" },
+        {
+          "path": "/dev/tty.Bluetooth-Incoming-Port"
+        },
         {
           "locationId": "14100000",
           "vendorId": "1a86",
@@ -67,7 +69,7 @@ See [node-serialport `list` API docs for more info about what can be returned](h
 
 `serial/event/open` will be emitted containing the opened path and the baudRate the port is using.
 
-If there was an error, the error message
+If there was an error, the error message is returned.
 
 Example of success:
 
@@ -129,3 +131,90 @@ Any data received on an open port will be emitted via the `serial/event/receive`
         data: "Sensor:10",
       }
     }
+
+## Example
+
+1.  Open a page that has access to the WebSocket client e.g. `http://raspberrypi.local/radio`
+
+2.  Open the Web Inspector
+
+3.  Log any serial WebSocket events to the console
+
+```js
+ws.subscribe(new RegExp('serial/event/.*'), console.log);
+```
+
+2.  List available ports (make sure your device is plugged in)
+
+```js
+ws.publish({ topic: 'serial/command/list' });
+```
+
+You should see a response in a `list` event containing some info ahout available ports
+
+```
+serial/event/list
+{ path: "/dev/ttyAMA0" }
+{ manufacturer: "1a86", pnpId: "usb-1a86_USB2.0-Serial-if00-port0", vendorId: "1a86", productId: "7523", path: "/dev/ttyUSB0" }
+```
+
+3.  Open the serial port:
+
+```js
+ws.publish({
+  topic: 'serial/command/open',
+  payload: { path: '/dev/ttyUSB0', baudRate: 115200 }
+});
+```
+
+An event is returned with the port that was opened or an error:
+
+```js
+serial/command/open
+{ path: "/dev/ttyUSB0", baudRate: 115200 }
+```
+
+4.  Receive data
+
+Events will be raised with the info recieved:
+
+```
+serial/event/receive
+{ path: "/dev/ttyUSB0", data: "↵Cache-Control: no-cache↵Str" }
+```
+
+5.  Send data
+
+```js
+ws.publish({
+  topic: 'serial/command/send',
+  payload: { path: '/dev/ttyUSB0', data: 'HELO' }
+});
+```
+
+The `send` event indicates that it has been sent:
+
+```
+serial/event/send
+{ path: "/dev/ttyUSB0", data: "HELO" }
+```
+
+6.  Close the port
+
+When done, you should close the port.
+
+```js
+ws.publish({
+  topic: 'serial/command/close',
+  payload: { path: '/dev/ttyUSB0' }
+});
+```
+
+The `close` event will be emitted:
+
+```
+serial/command/close
+{ path: "/dev/ttyUSB0" }
+```
+
+This event is also emitted if the port is closed for any other reason.
