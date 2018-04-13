@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Radiodan Configuration</title>
+  <script src="/websocket"></script>
+  <link rel="stylesheet" href="mini-default.min.css" />
+  <style type="text/css">
+    #controls .card p {
+      min-height: 3em;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Radiodan Configuration</h1>
+
+<div id="notification">
+  <mark class="hidden inline-block" id="apps">
+    App changes have been saved. Restart the manager for changes to take effect.
+  </mark>
+  <mark class="hidden inline-block" id="services">
+    Service changes have been saved. Restart the device for changes to take effect.
+  </mark>
+  <mark class="hidden inline-block" id="reloaded">
+    Internal apps have been reloaded.
+  </mark>
+  <mark class="hidden inline-block" id="restarted">
+    Internal app manager has been restarted.
+  </mark>
+  <mark class="hidden inline-block" id="installing">
+    Installing dependencies...
+  </mark>
+  <mark class="hidden inline-block" id="installed">
+    Installed.
+  </mark>
+</div>
+
+<h2>Application</h2>
+<form action="/apps" method="POST" id="apps-list">
+  <button type="submit">Update</button>
+</form>
+
+<h2>Services</h2>
+<form action="/services" method="POST" id="services-list">
+  <button type="submit">Update</button>
+</form>
+
+<div id="controls">
+  <h2>Controls</h2>
+  <div class="card" style="float: left">
+    <p>Reload the active apps currently running on this device</p>
+    <input type="button" class="primary" id="reload" value="Reload" />
+  </div>
+  <div class="card" style="float: left">
+    <p>Restart the manager to change the apps running on this device</p>
+    <input type="button" class="secondary" id="restart" value="Restart" />
+  </div>
+  <div class="card" style="float: left">
+    <p>Install all dependencies for apps and services</p>
+    <input type="button" class="tertiary" id="dependencies" value="Install" />
+  </div>
+</div>
+
+<script>
+  const buildForm = async (type) => {
+    const elements = await fetch(`/${type}`).then(res => res.json());
+
+    const form = document.getElementById(`${type}-list`);
+    const selection = document.createElement('div');
+    const buildItemForm = buildFormElement(type);
+
+    elements
+      .map(buildItemForm)
+      .map((child) => selection.appendChild(child));
+
+    form.prepend(selection);
+
+    return form;
+  };
+
+  const buildFormElement = (type) => ({ name, active }) => {
+    const id = `${type}-${name}`;
+
+    const container = document.createElement('div');
+    container.className = 'input-group';
+
+    const label = document.createElement('label');
+    label.setAttribute('for', id);
+
+    const span = document.createElement('span');
+    span.innerText = name;
+
+    label.appendChild(span);
+
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.name = `${type}[]`;
+    checkbox.id = id;
+    checkbox.value = name;
+    checkbox.checked = active;
+
+    container.appendChild(checkbox);
+    container.appendChild(label);
+
+    return container;
+  };
+
+  const showNotification = (updateType) => {
+    const notifications = document.getElementsByTagName('mark');
+
+    Array.from(notifications).forEach((notification) => {
+      notification.id == updateType ?
+        notification.classList.remove('hidden') :
+        notification.classList.add('hidden');
+    });
+  };
+
+  const buildControls = (publish) => {
+    document.getElementById('reload').onclick = () => {
+      publish('manager-web/command/reload');
+      showNotification('reloaded');
+    };
+
+    document.getElementById('restart').onclick = () => {
+      publish('manager/command/restart');
+      showNotification('restarted');
+    };
+
+    document.getElementById('dependencies').onclick = () => {
+      showNotification('installing');
+
+      fetch('/dependencies', { method: 'post' })
+        .then((res) => res.json())
+        .then((status) => {
+          document.getElementById('installed').innerText = status;
+          showNotification('installed');
+        });
+    };
+  };
+
+  const app = async () => {
+    const params = new URLSearchParams(document.location.search);
+    const websocket = createWebsocket();
+
+    const publish = (topic) => {
+      websocket.ready.then(() => websocket.publish({ topic }))
+    };
+
+    const updateType = params.get('update');
+
+    if(updateType) {
+      showNotification(updateType);
+    }
+
+    await buildForm('apps');
+    await buildForm('services');
+    buildControls(publish);
+  };
+
+  app();
+</script>
+</body>
+</html>

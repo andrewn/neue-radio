@@ -5,8 +5,13 @@
     "Experiment for a new radio prototyping kit for the next radiodan.",
   "main": "index.js",
   "scripts": {
+    "start":
+      "nf start --procfile ./deployment/Procfile --env ./deployment/systemd/ports.env",
+    "create-app": "node ./shared/create-new-app/index.js",
     "lint": "eslint **/*.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install-all": "./deployment/update",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format-code": "prettier --write '{apps,services,shared}/**/*.js'"
   },
   "repository": {
     "type": "git",
@@ -19,6 +24,8 @@
   },
   "homepage": "https://github.com/andrewn/neue-radio#readme",
   "devDependencies": {
-    "eslint": "^4.15.0"
+    "eslint": "^4.15.0",
+    "foreman": "https://github.com/pryv/node-foreman/archive/master.tar.gz",
+    "simon-say": "^0.0.2"
   }
 }

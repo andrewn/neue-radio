@@ -1,0 +1,78 @@
+#!/usr/bin/env node
+
+const { promisify } = require("util");
+const fs = require("fs");
+const exec = promisify(require("child_process").exec);
+const readdir = promisify(fs.readdir);
+const { join, resolve } = require("path");
+
+const logColours = {
+  error: message => console.error(`\x1b[31m${message}\x1b[0m`),
+  ok: message => console.log(`\x1b[32m${message}\x1b[0m`)
+};
+
+const logPlain = {
+  error: message => console.error(message),
+  ok: message => console.log(message)
+};
+
+const log = process.env.PLAIN ? logPlain : logColours;
+
+const isDirectory = ({ path }) => fs.statSync(path).isDirectory();
+
+const isNotHiddenDirectory = ({ path }) => path[0] !== ".";
+
+const hasPackageDotJson = ({ path }) =>
+  fs.existsSync(join(path, "package.json"));
+
+const pathForName = parent => name => ({ name, path: join(parent, name) });
+
+const findApplicableDirectories = async rootDir => {
+  const fullPath = resolve(join(__dirname, "..", rootDir));
+  const paths = (await readdir(fullPath)).map(pathForName(fullPath));
+
+  return paths
+    .filter(isDirectory)
+    .filter(isNotHiddenDirectory)
+    .filter(hasPackageDotJson);
+};
+
+const install = async ({ name, path }) => {
+  try {
+    await exec(`npm install --production`, {
+      cwd: path,
+      env: { ...process.env, JOBS: "max" }
+    });
+    log.ok(`Completed: ${name}`);
+    return { name, error: null };
+  } catch (error) {
+    log.error(`Error installing/updating: ${name}`);
+    return { name, error };
+  }
+};
+
+const main = async () => {
+  const services = await findApplicableDirectories("services");
+  const apps = await findApplicableDirectories("apps");
+  const shared = await findApplicableDirectories("shared");
+
+  const toInstall = [...services, ...apps, ...shared];
+
+  const names = toInstall.map(({ name }) => name);
+
+  log.ok(`Update the following: ${names.join(", ")}\n`);
+
+  const results = await Promise.all(toInstall.map(install));
+
+  const failed = results.filter(r => r.error);
+
+  if (failed.length > 0) {
+    log.error(`\n${failed.length} failure${failed.length == 1 ? "" : "s"}.`);
+  } else {
+    log.ok("\nAll updated");
+  }
+
+  process.exit(failed.length);
+};
+
+main();

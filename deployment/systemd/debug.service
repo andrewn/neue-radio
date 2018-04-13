@@ -2,13 +2,16 @@
 Description=Web Inspector Debug URL
 
 [Service]
+EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
 WorkingDirectory=/opt/radiodan/rde/services/debug
-ExecStart=/usr/local/bin/npm start
+ExecStart=/usr/bin/env \
+  REMOTE_DEBUGGER_PORT=${MANAGER_REMOTE_DEBUGGING_PORT} \
+  PORT=${DEBUG_PORT} \
+  npm start
 Restart=on-failure
 StandardOutput=syslog
 SyslogIdentifier=rde-debug
 Type=idle
-Environment=PORT=5004
 
 [Install]
 WantedBy=multi-user.target

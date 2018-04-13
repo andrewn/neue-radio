@@ -1,0 +1,10 @@
+{
+  "Capacitive": [
+    {
+      "id": "cap",
+      "config": {
+        "resetPin": 0
+      }
+    }
+  ]
+}

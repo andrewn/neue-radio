@@ -1,14 +1,15 @@
 [Unit]
 Description=YouTube Downloader
+ConditionPathExists=/opt/radiodan/processes/services/downloader
 
 [Service]
+EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
 WorkingDirectory=/opt/radiodan/rde/services/downloader
-ExecStart=/usr/local/bin/npm start
+ExecStart=/usr/bin/env PORT=${DOWNLOADER_PORT} npm start
 Restart=on-failure
 StandardOutput=syslog
 SyslogIdentifier=rde-downloader
 Type=idle
-Environment=PORT=5002
 
 [Install]
 WantedBy=multi-user.target

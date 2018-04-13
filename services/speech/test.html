@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test speechd-service</title>
+  <script async src="http://raspberrypi.local/websocket" onload="init()"></script>
+  <script async src="http://localhost:5000/websocket" onload="init()"></script>
+</head>
+
+<body>
+  <input type="text" placeholder="Say something" />
+  <button id="speak">Speak!</button>
+  <button id="list-voices">List voices</button>
+  <script>
+    let loaded = false;
+
+    const init = () => {
+      if (loaded) { return; }
+
+      console.log('Init');
+
+      loaded = true;
+
+      const ws = createWebsocket({ url: wsUrl() });
+
+      ws.subscribe(new RegExp('speech/event/.*'), ({ topic, payload }) => console.log(topic, payload));
+
+      function wsUrl(search = window.location.search) {
+        const params = new URLSearchParams(search);
+        const host = params.get('host') || window.location.hostname;
+        const port = params.get('port') || window.location.port;
+
+        return `ws://${host}:${port}`;
+      }
+
+      const speak = function () {
+        const utterance = document.querySelector('input').value;
+        ws.publish({ topic: 'speech/command/speak', payload: { utterance } });
+      }
+
+      const listVoices = function () {
+        ws.publish({ topic: 'speech/command/listvoices' });
+      }
+
+      document.querySelector('#speak').addEventListener(
+        'click',
+        speak
+      );
+
+      document.querySelector('input').addEventListener(
+        'keyup',
+        function (evt) {
+          if (evt.keyCode === 13 /* ENTER */) {
+            speak();
+          }
+        }
+      );
+
+      document.querySelector('#list-voices').addEventListener(
+        'click',
+        listVoices
+      );
+    }
+  </script>
+</body>
+
+</html>

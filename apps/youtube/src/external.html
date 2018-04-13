@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouTube Player</title>
+
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="/websocket"></script>
+</head>
+
+<body>
+  <root data-state="loading">
+    <view class="control">
+      <h1>YouTube Player</h1>
+      <p>Paste a YouTube link in the box below and press play.</p>
+      <form>
+        <input class="url" type="search" placeholder="e.g. https://www.youtube.com/watch?v=NCvKXgp-Awo" value="https://www.youtube.com/watch?v=NCvKXgp-Awo"
+        />
+        <label>Download?
+          <input class="download" type="checkbox" value="Download" checked=checked />
+        </label>
+        <div class="row">
+          <button class="submit">▶️</button>
+          <button class="stop">⏹️</button>
+        </div>
+      </form>
+    </view>
+    <view class="loading">Loading</view>
+  </root>
+
+  <script src="external.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+{
+  "name": "radio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hls.js": "^0.8.9",
+    "tone": "^0.11.11"
+  }
+}

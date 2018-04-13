@@ -1,17 +1,20 @@
+const ip = require('ip');
 const http = require('http');
 const assert = require('assert');
 
-const get = ({ debuggerHost, debuggerPort }) => {
-  assert(debuggerHost, 'debuggerHost required');
+const getDeviceListUrl = (defaultIp, defaultPort) => currentIp =>
+  `http://${defaultIp || currentIp}:${defaultPort}/json/list`;
+
+const get = ({ debuggerHost = false, debuggerPort }) => {
   assert(debuggerPort, 'debuggerPort required');
 
-  const deviceListUrl = `http://${debuggerHost}:${debuggerPort}/json/list`;
+  const deviceListUrl = getDeviceListUrl(debuggerHost, debuggerPort);
 
   return () =>
     new Promise((resolve, reject) => {
       // Fetch a list of pages on the remote chrome instance
       http
-        .get(deviceListUrl, res => {
+        .get(deviceListUrl(ip.address()), res => {
           res.setEncoding('utf8');
           let rawData = '';
           res.on('data', chunk => {

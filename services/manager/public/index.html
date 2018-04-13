@@ -1,11 +1,16 @@
 <!DOCTYPE html>
 <html>
 
-<head></head>
+<head>
+  <link rel="stylesheet" href="style.css">
+  <script src="/websocket"></script>
+</head>
 
 <body>
   <h1>App manager (internal)</h1>
+  <div id="apps"></div>
   <script>
+    const websocket = createWebsocket();
     let instances, apps;
 
     setTimeout(init, 3000);
@@ -14,6 +19,7 @@
       console.log('Create apps...');
       apps = await getApps();
       instances = openApps(apps);
+      websocket.ready.then(() => listenForReload(websocket, instances));
       console.log('...done');
     }
 
@@ -23,23 +29,48 @@
     }
 
     function openApps(apps) {
-      const rootElement = document.body;
+      const rootElement = document.querySelector('#apps');
 
-      const instances = apps.map(function (app) {
+      return apps.map(function (app) {
         const url = new URL(window.location);
         url.pathname = app;
 
         return mountAppUrlAtRoot(app, url, rootElement);
       });
-      return instances;
     }
 
     function mountAppUrlAtRoot(id, url, rootElement) {
-      const frame = document.createElement('iframe');
-      frame.src = url;
-      frame.dataset.appId = id;
-      rootElement.appendChild(frame);
-      return frame;
+      const container = document.createElement('div');
+      container.classList.add('app');
+
+      container.innerHTML = `
+        <div class="meta">
+          <div class="id">${id}</div>
+          <button class="reload">Reload</button>
+        </div>
+        <iframe class="instance" src="${url}" data-app-id="${id}" />
+      `;
+
+      const iframe = container.querySelector('iframe');
+      const reload = () => iframe.contentWindow.location.reload();
+
+      iframe.addEventListener('load', () => {
+        iframe.contentWindow.addEventListener('unload', () => container.classList.remove('is-loaded'))
+        container.classList.add('is-loaded');
+      });
+
+      container.querySelector('.reload').addEventListener('click', reload);
+
+      rootElement.appendChild(container);
+      return { container, reload };
+    }
+
+    function listenForReload(websocket, instances) {
+      const reloadApps = () => { instances.forEach(({ reload }) => reload()); };
+      const reloadPage = () => { window.location.reload() };
+
+      websocket.subscribe('manager-web/command/reload', reloadApps);
+      websocket.subscribe('manager-web/command/restart', reloadPage);
     }
   </script>
 </body>

@@ -1,14 +1,15 @@
 [Unit]
 Description=Physical interface
+ConditionPathExists=/opt/radiodan/processes/services/physical
 
 [Service]
+EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
 WorkingDirectory=/opt/radiodan/rde/services/physical
-ExecStart=/usr/local/bin/npm start
+ExecStart=/usr/bin/env PORT=${PHYSICAL_PORT} npm start
 Restart=on-failure
 StandardOutput=syslog
 SyslogIdentifier=rde-physical
 Type=idle
-Environment=PORT=5100
 
 [Install]
 WantedBy=multi-user.target

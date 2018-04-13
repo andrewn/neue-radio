@@ -3,13 +3,13 @@ const util = require('util');
 
 const SEP = '/';
 
-const Router = function () {
+const Router = function() {
   this.types = {};
 };
 
 util.inherits(Router, EventEmitter);
 
-Router.prototype.register = function (type, id) {
+Router.prototype.register = function(type, id) {
   const self = this;
 
   if (this.types[type] == null) {
@@ -21,9 +21,9 @@ Router.prototype.register = function (type, id) {
   }
 
   const routable = new EventEmitter();
-  routable.publish = function (topic, data) {
+  routable.publish = function(topic, payload) {
     const path = type + SEP + id + SEP + topic;
-    self.emit('publish', { key: path, data: data });
+    self.emit('publish', { topic: path, payload });
   };
 
   console.log('Router#register: ', type + SEP + id);
@@ -35,7 +35,7 @@ Router.prototype.register = function (type, id) {
 
 // Takes a routing key of `<type>.<id>.<event>`
 // and fires the correct event on the routable
-Router.prototype.route = function (path, data) {
+Router.prototype.route = function(path, data) {
   const parts = path.split(SEP);
   const type = parts[0];
   const id = parts[1];
@@ -49,15 +49,16 @@ Router.prototype.route = function (path, data) {
 };
 
 // Returns the currently registered types
-Router.prototype.registered = function () {
+Router.prototype.registered = function() {
   const registered = {};
 
-  Object.keys(this.types).forEach(function (type) {
-    registered[type] = Object.keys(this.types[type]);
-  }.bind(this));
+  Object.keys(this.types).forEach(
+    function(type) {
+      registered[type] = Object.keys(this.types[type]);
+    }.bind(this)
+  );
 
   return registered;
-}
-
+};
 
 module.exports = Router;

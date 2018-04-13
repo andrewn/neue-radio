@@ -1,0 +1,16 @@
+[Unit]
+Description=Radioan Service Setup
+
+[Service]
+EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
+WorkingDirectory=/opt/radiodan/rde/services/setup
+ExecStart=/usr/bin/env PORT=${SETUP_PORT} npm start
+Restart=on-failure
+StandardOutput=syslog
+SyslogIdentifier=rde-debug
+Type=idle
+Environment=SERVICES_PATH=/opt/radiodan/processes/services
+Environment=APPS_PATH=/opt/radiodan/rde/services/setup/tmp/apps
+
+[Install]
+WantedBy=multi-user.target

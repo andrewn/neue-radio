@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="modules/hls.js/dist/hls.min.js" charset="utf-8"></script>
+  <script src="modules/tone/build/Tone.min.js" charset="utf-8"></script>
+  <script src="/websocket" charset="utf-8"></script>
+</head>
+<body>
+  <h1>This is the part of the radio app that runs in the radio itself</h1>
+  <p>Users never see this page</p>
+  <audio id="audio"></audio>
+  <audio id="media"></audio>
+  <script>
+    const stream = "http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/llnw/bbc_radio_one.m3u8";
+
+    function playHlsStream() {
+      if(Hls.isSupported()) {
+        var media = document.getElementById('media');
+        var hls = new Hls();
+        hls.loadSource(stream);
+        hls.attachMedia(media);
+        hls.on(Hls.Events.MANIFEST_PARSED,function() {
+          media.play();
+        });
+      }
+    }
+
+    const polySynth = new Tone.PolySynth(4, Tone.Synth).toMaster();
+
+    function playChord() {
+      polySynth.triggerAttack(['C4', 'E4', 'G4', 'B4']);
+
+      setTimeout(stopChord, 1000);
+    }
+
+    function stopChord() {
+      polySynth.triggerRelease(['C4', 'E4', 'G4', 'B4'])
+    }
+
+    console.log('%cHello!', 'color:blue;font-weight:bold', 'messages from the server');
+
+    const ws = createWebsocket({ debug: true });
+
+    ws.subscribe(new RegExp('radio/command/.*'), ({ topic, payload }) => {
+      console.log(topic, payload);
+
+      if(topic.includes("play")){
+         var audio_file = payload.params.file;
+         console.log("setting attribute to "+audio_file);
+         var a  = document.querySelector("#audio");
+         a.setAttribute("src", "assets/audio/" + audio_file);
+         a.setAttribute("autoplay","autoplay");
+      } else if (topic.includes("hls")) {
+        playHlsStream();
+      } else if (topic.includes("chord")) {
+        playChord();
+      }
+    });
+
+    function send(key, data) {
+      ws.publish({
+        topic: key.replace('command', 'event'),
+        payload: data
+      });
+    }
+  </script>
+</body>
+</html>

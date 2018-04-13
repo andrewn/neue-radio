@@ -12,6 +12,33 @@ echo "*** Prerequisites"
 apt-get install git -y
 # apt-get upgrade -y
 
+echo "*** logrotate"
+
+/bin/cat <<EOF >/etc/logrotate.conf
+daily
+rotate 4
+create
+minsize 1k
+size 100M
+compress
+
+include /etc/logrotate.d
+
+/var/log/wtmp {
+    missingok
+    monthly
+    create 0664 root utmp
+    rotate 1
+}
+
+/var/log/btmp {
+    missingok
+    monthly
+    create 0660 root utmp
+    rotate 1
+}
+EOF
+
 echo "*** Pulse Audio"
 apt-get install pulseaudio -y
 
@@ -28,6 +55,9 @@ DEBIAN_FRONTEND=noninteractive apt-get install rpi-chromium-mods -y
 echo "*** Enable SPI (RFID reader)"
 raspi-config nonint do_spi 0
 
+echo "*** speech-dispatcher and voices"
+apt-get install -y speech-dispatcher speech-dispatcher-festival
+
 echo "*** Node"
 mkdir -pv /opt/node
 curl -L https://nodejs.org/dist/v8.9.4/node-v8.9.4-linux-armv6l.tar.gz | tar xz --strip-components 1 -C /opt/node
@@ -37,26 +67,36 @@ ln -sf /opt/node/bin/npm /usr/local/bin/npm
 
 echo "*** Radiodan"
 mkdir -p /opt/radiodan
+mkdir -p /opt/radiodan/processes/services
+touch /opt/radiodan/processes/services/{downloader,speech}
+
 cd /opt/radiodan
 git clone https://github.com/andrewn/neue-radio rde
-cd rde/services/manager
-npm install --unsafe-perm --production
-cd ..
-cd physical
-JOBS=MAX npm install --unsafe-perm --production # use all cores
-cd ..
-cd rfid
-JOBS=MAX npm install --unsafe-perm --production # use all cores
-cd ../..
+
+/opt/radiodan/rde/deployment/update
+
 chown -R pi:pi /opt/radiodan
-cp deployment/systemd/* /etc/systemd/system/
+cp /opt/radiodan/rde/deployment/systemd/*.service /etc/systemd/system/
+
 systemctl daemon-reload
 systemctl start manager
 systemctl enable manager
 systemctl enable manager-web-server
-# TODO: Investigate why this causes DAC to stop working
-# systemctl enable physical
+systemctl enable physical
 systemctl enable rfid
+systemctl enable debug
+systemctl enable speech
+systemctl enable setup
+
+cd /opt/radiodan/rde
+echo "*** Pulse Audio system mode"
+adduser pi pulse
+sed -i '/load-module module-native-protocol-unix/c load-module\ module-native-protocol-unix auth-anonymous=1\ socket=/tmp/pulseaudio-system.sock\nload-module module-native-protocol-tcp auth-anonymous=1 auth-ip-acl=127.0.0.1;192.168.178.0/24' /etc/pulse/system.pa
+mkdir -p /home/pi/.config/pulse/
+echo "default-server = unix:/tmp/pulseaudio-system.sock" >> /home/pi/.config/pulse/client.conf
+chown -R pi:pi /home/pi/.config/pulse/
+cp deployment/systemd/pulseaudio.service /etc/systemd/system/
+systemctl enable pulseaudio
 
 echo "*** IPTables (Port forwarding)"
 DEBIAN_FRONTEND=noninteractive apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages iptables-persistent
@@ -65,5 +105,38 @@ mkdir -p /etc/iptables/
 iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-ports 5000
 iptables -t nat -I OUTPUT -p tcp -o lo --dport 80 -j REDIRECT --to-ports 5000
 iptables-save > /etc/iptables/rules.v4
+
+echo "*** Samba"
+apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-held-packages samba
+
+/bin/cat <<EOF >/etc/samba/smb.conf
+[global]
+   workgroup = WORKGROUP
+   server string = radio neue (%h)
+   load printers = no
+   log file = /var/log/samba/%m.log
+   max log size = 50
+   dns proxy = no
+
+[apps]
+   path = /opt/radiodan/rde/apps
+   browsable = yes
+   public = yes
+   writable = yes
+   read only = no
+   force user = pi
+   force group = pi
+
+[services]
+   path = /opt/radiodan/rde/services
+   browsable = yes
+   public = yes
+   writable = yes
+   read only = no
+   force user = pi
+   force group = pi
+EOF
+
+/usr/bin/yes pi | smbpasswd -a -s pi
 
 echo "Update complete, please reboot to continue"

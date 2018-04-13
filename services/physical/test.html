@@ -15,7 +15,7 @@
   <p>View <code>console</code> for incoming messages</p>
   <script>
     console.log('%cHello', 'color:blue;font-weight:bold', 'messages from the server');
-    const ws = new WebSocket('ws://' + window.location.host);
+    const ws = new WebSocket('ws://' + window.location.hostname + ':8000');
     ws.addEventListener('open', function (evt) {
       console.log('connected');
     });
@@ -26,8 +26,8 @@
 
     function send(key, data) {
       ws.send(JSON.stringify({
-        key: key,
-        data: data
+        topic: key,
+        payload: data
       }));
     }
   </script>
