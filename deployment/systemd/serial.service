@@ -1,0 +1,14 @@
+[Unit]
+Description=Serial
+ConditionPathExists=/opt/radiodan/processes/services/serial
+
+[Service]
+WorkingDirectory=/opt/radiodan/rde/services/serial
+ExecStart=/usr/bin/env npm start
+Restart=on-failure
+StandardOutput=syslog
+SyslogIdentifier=rde-serial
+Type=idle
+
+[Install]
+WantedBy=multi-user.target
