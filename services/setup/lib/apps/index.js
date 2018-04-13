@@ -20,11 +20,12 @@ const apps = ({ path, rootPath, available, alwaysMount = [] }) => {
   };
 
   const status = async () => {
-    const active = await current();
+    const activeApps = await current();
+    const availableApps = await available();
 
-    return available.map(a => ({
+    return availableApps.map(a => ({
       name: a,
-      active: active.includes(a)
+      active: activeApps.includes(a),
     }));
   };
 

@@ -15,11 +15,12 @@ const services = ({ path, available }) => {
   };
 
   const status = async () => {
-    const active = await current();
+    const activeServices = await current();
+    const availableServices = await available();
 
-    return available.map(p => ({
+    return availableServices.map(p => ({
       name: p,
-      active: active.includes(p)
+      active: activeServices.includes(p)
     }));
   };
 
