@@ -88,6 +88,9 @@ systemctl enable debug
 systemctl enable speech
 systemctl enable setup
 
+# Enable radio app only
+echo "APP_PATH=/opt/radiodan/rde/apps/radio" > /opt/radiodan/rde/services/setup/tmp/apps
+
 cd /opt/radiodan/rde
 echo "*** Pulse Audio system mode"
 adduser pi pulse

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <script src="./Tone.js"></script>
+  <script src="/websocket"></script>
+</head>
+
+<body>
+  <script>
+    const init = async () => {
+      const ws = createWebsocket();
+
+      const send = (payload) => ws.publish({
+        topic: 'microphone/event/fft',
+        payload,
+      });
+
+      const meter = new Tone.Meter();
+      const fft = new Tone.FFT(32);
+      const motu = new Tone.UserMedia();
+
+      // opening the input asks the user to activate their mic
+      // although we prevent this at the Chromium level
+      await motu.open();
+
+      // This is in the docs but doesn't seem to exist
+      if (motu.start) {
+        motu.start(10);
+      } else {
+        console.warn('No motu.start()');
+      }
+
+      // Connect to audio source to our FFT and Meter
+      // nodes. Not sure if this is the right way to do
+      // this.
+      motu.connect(fft);
+      motu.connect(meter);
+
+      // Begin the loop
+      loop(fft, meter, send);
+    }
+
+    // This loop grabs the current FFT values, 
+    // the decibels and the gain and sends over the WS
+    const loop = (fft, meter, send = console.log) => {
+      const fftValues = Object.values(fft.getValue());
+      const db = meter.getLevel();
+      const gain = Tone.dbToGain(db); // scaled level between 0 - 1
+      send({ fft: fftValues, db, gain });
+
+      // Schedule the next run of the loop
+      //
+      // The demo uses rAF but since we're sending over
+      // a WebSocket we opt for a slower interval of 1/2
+      // sec.
+      //
+      // requestAnimationFrame(loop.bind(null, fft, send));
+      setTimeout(
+        loop.bind(null, fft, meter, send),
+        500
+      );
+    }
+
+    init();
+  </script>
+</body>
+
+</html>
