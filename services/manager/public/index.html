@@ -24,8 +24,8 @@
     }
 
     async function getApps() {
-      const config = await fetch('/apps').then(res => res.json());
-      return config.apps;
+      const apps = await fetch('/apps').then(res => res.json());
+      return apps.filter(({ type }) => type === 'app');
     }
 
     function openApps(apps) {
@@ -33,7 +33,7 @@
 
       return apps.map(function (app) {
         const url = new URL(window.location);
-        url.pathname = app;
+        url.pathname = app.external.path;
 
         return mountAppUrlAtRoot(app, url, rootElement);
       });

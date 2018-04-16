@@ -5,6 +5,7 @@ const serveIndex = require('serve-index');
 
 const logger = require('../logger');
 
+const mountAppList = require('./list');
 const mountHomepage = require('./homepage');
 
 const directoryListing = ({ fileList, directory }, callback) => {
