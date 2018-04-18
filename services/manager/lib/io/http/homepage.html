@@ -18,7 +18,7 @@
 
       const buildItem = (app) => {
         const template = document.createElement('template');
-        const url = `//${window.location.hostname}:${app.port}${app.path || '/'}`;
+        const url = `//${window.location.hostname}:${app.external.port}${app.external.path || '/'}`;
 
         template.innerHTML = `<li><a href="${url}">${app.name}</a></li>`;
 
