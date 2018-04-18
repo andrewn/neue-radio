@@ -39,7 +39,7 @@ const findApplicableDirectories = async rootDir => {
 
 const install = async ({ name, path }) => {
   try {
-    await exec(`npm install --production`, {
+    await exec(`npm install --unsafe-perm --production`, {
       cwd: path,
       env: { ...process.env, JOBS: "max" }
     });
