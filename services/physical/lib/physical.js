@@ -1,10 +1,9 @@
 var five = require('johnny-five');
 var pigpio = require('pigpio');
 var EchoIO = require('./echo-io');
+var factories = require('./factories');
 
 var IO = null;
-var RotaryEncoder;
-var connectRaspiCap;
 
 try {
   IO = require('raspi-io');
@@ -12,28 +11,6 @@ try {
   console.error('Raspi-io not found, falling back to EchoIO');
   console.error(err);
   IO = EchoIO;
-}
-
-try {
-  RotaryEncoder = require('raspi-rotary-encoder').RotaryEncoder;
-} catch (err) {
-  console.error('raspi-rotary-encoder not found, falling back to mock');
-  console.error(err);
-  RotaryEncoder = function() {
-    return {
-      on: function() {}
-    };
-  };
-}
-
-try {
-  connectRaspiCap = require('raspi-cap').connect;
-} catch (err) {
-  console.error('raspi-cap not found, falling back to mock');
-  console.error(err);
-  connectRaspiCap = function() {
-    return new Promise.resolve({ on: () => {} });
-  };
 }
 
 function eachItem(config, cb) {
@@ -74,13 +51,6 @@ module.exports.create = function(router, uiConfig) {
     repl: false
   });
 
-  var factories = {
-    Button: createButtonInstance,
-    'Led.RGB': createLedRGBInstance,
-    Encoder: createEncoderInstance,
-    Capacitive: createCapInstance
-  };
-
   var types = Object.keys(factories);
 
   var instances = {};
@@ -107,129 +77,3 @@ module.exports.create = function(router, uiConfig) {
     }
   });
 };
-
-function createButtonInstance(spec, routable) {
-  const id = spec.id;
-  const config = spec.config;
-  // const topicKey = 'event.button.' + id;
-  const button = new five.Button(Object.assign({ id: id }, config));
-
-  button.on('press', function() {
-    console.log(id + ': Button pressed');
-    routable.publish('press', { pressed: true });
-  });
-
-  button.on('hold', function() {
-    console.log(id + ': Button held');
-    routable.publish('hold', { pressed: true, durationMs: button.holdtime });
-  });
-
-  button.on('release', function() {
-    console.log(id + ': Button released');
-    routable.publish('release', { pressed: false });
-  });
-
-  return button;
-}
-
-function createLedRGBInstance(spec, routable) {
-  const id = spec.id;
-  const config = spec.config;
-  // const topicKey = 'command.rgb-led.' + id;
-  // const workerId = 'radiodan-physical-ui-rgbled-' + id;
-
-  // const worker = msgClient.Worker.create(workerId);
-
-  const rgb = five.Led.RGB(Object.assign({ id: id }, config));
-
-  // worker.addService({
-  //   serviceType: 'rgb-led',
-  //   serviceInstances: [id]
-  // });
-  //
-  // worker.ready();
-
-  routable.on('request', function(req) {
-    var stateChangePromise;
-
-    console.log('RGBLED request', req);
-
-    switch (req.command) {
-      // case 'change':
-      //   req.params.queue = req.params.queue || [];
-      //
-      //   stateChangePromise = promise.all(
-      //     req.params.queue.map(function (params, index) {
-      //       params.chain = index > 0;
-      //       return changeRgbState(rgb, params);
-      //     })
-      //   );
-      //   break;
-      case 'status':
-        stateChangePromise = Promise.resolve({ color: rgb.color() });
-        break;
-      default:
-        if (req.params.color) {
-          rgb.color(req.params.color);
-        }
-        if (req.params.on != null) {
-          req.params.on === true ? rgb.on() : rgb.off();
-        }
-        stateChangePromise = Promise.resolve();
-    }
-
-    stateChangePromise.then(function() {
-      // TODO: Do we want to allow responses?
-      // worker.respond(req.sender, req.correlationId, {error: false});
-    });
-  });
-
-  return rgb;
-}
-
-function createEncoderInstance(spec, routable) {
-  const id = spec.id;
-  const config = spec.config;
-  // const topicKey = 'event.rotary-encoder.' + id + '.turn';
-
-  const encoder = new RotaryEncoder(Object.assign({ id: id }, config));
-
-  // the encoder will try to work out where in the loop you are
-  encoder.on('change', function(evt) {
-    routable.publish('turn', evt);
-  });
-}
-
-function createCapInstance(spec, routable) {
-  connectRaspiCap({ resetPin: spec.config.resetPin }).then(cap => {
-    // Listen for messages from clients
-    routable.on('resetRequest', function() {
-      try {
-        cap.reset();
-      } catch (e) {
-        console.error(e);
-      }
-    });
-
-    routable.on('statusRequest', function() {
-      routable.publish('status', { sensitivty: cap.getSensitivity() });
-    });
-
-    routable.on('sensitivity', function(req) {
-      try {
-        cap.setSensitivity(req.params.level);
-        routable.publish('status', { sensitivty: cap.getSensitivity() });
-      } catch (e) {
-        console.error(e);
-      }
-    });
-
-    cap.on('reset', function() {
-      routable.publish('reset', {});
-    });
-
-    cap.on('change', function(evt) {
-      routable.publish('change', evt);
-    });
-  });
-}
