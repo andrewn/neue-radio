@@ -73,9 +73,10 @@ touch /opt/radiodan/processes/services/{downloader,speech}
 cd /opt/radiodan
 git clone https://github.com/andrewn/neue-radio rde
 
+chown -R pi:pi /opt/radiodan
+
 /opt/radiodan/rde/deployment/update
 
-chown -R pi:pi /opt/radiodan
 cp /opt/radiodan/rde/deployment/systemd/*.service /etc/systemd/system/
 
 systemctl daemon-reload
