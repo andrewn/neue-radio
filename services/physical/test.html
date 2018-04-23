@@ -1,35 +1,79 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Physical UI test</title>
   <style type="text/css">
     body {
       font-family: --apple-system, sans-serif;
     }
+
+    .dial {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      position: relative;
+      border: 10px solid salmon;
+      border-radius: 100%;
+      width: 150px;
+      height: 150px;
+      margin: 10px;
+
+      font-size: 2rem;
+      color: salmon;
+    }
+
+    .dial:after {
+      display: inline-block;
+      content: '';
+      width: 10px;
+      height: 10px;
+
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+
+      background-color: hsl(6, 93%, 61%);
+      border-radius: 100%;
+    }
   </style>
+  <script src="//raspberrypi.local/websocket"></script>
 </head>
+
 <body>
   <h1>Physical interface server test</h1>
-  <button onClick="send('Led.RGB/magic/request', { params: { color: 'yellow' }})">Magic light yellow</button>
-  <button onClick="send('Led.RGB/magic/request', { params: { color: 'purple' }})">Magic light purple</button>
-  <p>View <code>console</code> for incoming messages</p>
+  <button onClick="send('ledrgb-power-change', { color: 'yellow'})">Magic light yellow</button>
+  <button onClick="send('ledrgb-power-change', { color: 'purple' })">Magic light purple</button>
+  <div class="dial">0</div>
+  <p>View
+    <code>console</code> for incoming messages</p>
   <script>
+    const ws = createWebsocket();
     console.log('%cHello', 'color:blue;font-weight:bold', 'messages from the server');
-    const ws = new WebSocket('ws://' + window.location.hostname + ':8000');
-    ws.addEventListener('open', function (evt) {
-      console.log('connected');
-    });
-    ws.addEventListener('message', function (evt) {
-      const msg = JSON.parse(evt.data);
-      console.log('message', msg);
+
+    ws.subscribe(new RegExp('physical\/event\/.*'), function (evt) {
+      console.log('Event: ', evt);
     });
 
-    function send(key, data) {
-      ws.send(JSON.stringify({
-        topic: key,
-        payload: data
-      }));
+    let encoderRotation = 0;
+    const dial = document.querySelector('.dial');
+    ws.subscribe('physical/event/encoder-power-turn', function (evt) {
+      encoderRotation = evt.payload.value;
+      dial.style.transform = `rotate(${encoderRotation}deg)`;
+      dial.innerHTML = encoderRotation;
+    });
+
+    function send(topic, payload) {
+      const message = {
+        topic: 'physical/command/' + topic,
+        payload
+      };
+      console.log('Publish:', message);
+      ws.publish(message);
     }
   </script>
 </body>
+
 </html>

@@ -33,7 +33,7 @@ function collectPinNumbers(config) {
   return pins;
 }
 
-module.exports.create = function(router, uiConfig) {
+module.exports.create = function(ws, uiConfig) {
   // Tells the underlying gpio library to use the
   // PWM pin as a clock source, rather than the PCM
   // pin that provides I2S audio to DACs
@@ -65,7 +65,22 @@ module.exports.create = function(router, uiConfig) {
       const factory = factories[type];
 
       if (spec && factory) {
-        const routable = router.register(type, spec.id);
+        const routable = {
+          publish: (event, payload = {}) => {
+            const message = {
+              topic: `physical/event/${type}-${spec.id}-${event}`,
+              payload
+            };
+            console.log('publish:', message);
+            ws.publish(message);
+          },
+          on: (event, handler) => {
+            const topic = `physical/command/${type}-${spec.id}-${event}`;
+            console.log('subscribe:', topic);
+            ws.subscribe(topic, ({ payload }) => handler(payload));
+          }
+        };
+
         instances[type][spec.id] = factory(spec, routable);
       } else {
         console.error('No config or factory for component type: ', type);

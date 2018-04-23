@@ -15,7 +15,6 @@ try {
 module.exports = function createEncoderInstance(spec, routable) {
   const id = spec.id;
   const config = spec.config;
-  // const topicKey = 'event.rotary-encoder.' + id + '.turn';
 
   const encoder = new RotaryEncoder(Object.assign({ id: id }, config));
 
