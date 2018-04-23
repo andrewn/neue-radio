@@ -1,6 +1,6 @@
 module.exports = {
-  Button: require('./Button'),
-  Capacitive: require('./Capacitive'),
-  Encoder: require('./Encoder'),
-  'Led.RGB': require('./Led.RGB')
+  button: require('./Button'),
+  capacitive: require('./Capacitive'),
+  encoder: require('./Encoder'),
+  ledrgb: require('./Led.RGB')
 };

@@ -6,38 +6,20 @@ module.exports = function createLedRGBInstance(spec, routable) {
 
   const rgb = five.Led.RGB(Object.assign({ id: id }, config));
 
-  routable.on('request', function(req) {
-    var stateChangePromise;
-
-    console.log('RGBLED request', req);
-
-    switch (req.command) {
-      // case 'change':
-      //   req.params.queue = req.params.queue || [];
-      //
-      //   stateChangePromise = promise.all(
-      //     req.params.queue.map(function (params, index) {
-      //       params.chain = index > 0;
-      //       return changeRgbState(rgb, params);
-      //     })
-      //   );
-      //   break;
-      case 'status':
-        stateChangePromise = Promise.resolve({ color: rgb.color() });
-        break;
-      default:
-        if (req.params.color) {
-          rgb.color(req.params.color);
-        }
-        if (req.params.on != null) {
-          req.params.on === true ? rgb.on() : rgb.off();
-        }
-        stateChangePromise = Promise.resolve();
+  routable.on('change', function(payload) {
+    if (payload.color) {
+      rgb.color(payload.color);
     }
 
-    stateChangePromise.then(function() {
-      // TODO: Do we want to allow responses?
-      // worker.respond(req.sender, req.correlationId, {error: false});
+    if (payload.isOn != null) {
+      payload.isOn === true ? rgb.on() : rgb.off();
+    }
+  });
+
+  routable.on('status', function() {
+    routable.publish('status', {
+      color: rgb.color(),
+      isOn: rgb.isOn()
     });
   });
 
