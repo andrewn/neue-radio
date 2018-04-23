@@ -6,7 +6,7 @@ module.exports = function(spec, routable) {
 
   const matrix = five.Led.Matrix(Object.assign({ id: id }, config));
 
-  routable.on('request', function(req) {
+  routable.on('draw', function(req) {
     if (req.data && Array.isArray(req.data)) {
       try {
         matrix.draw(req.data);
