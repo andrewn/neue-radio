@@ -13,6 +13,6 @@ module.exports = async () => {
     return JSON.parse(await readFile(configPath));
   } catch (error) {
     console.error('Error reading config: ', error);
-    return null;
+    return {};
   }
 };
