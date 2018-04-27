@@ -140,6 +140,15 @@ apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-he
    read only = no
    force user = pi
    force group = pi
+
+[config]
+   path = /opt/radiodan/config
+   browsable = yes
+   public = yes
+   writable = yes
+   read only = no
+   force user = pi
+   force group = pi
 EOF
 
 /usr/bin/yes pi | smbpasswd -a -s pi
