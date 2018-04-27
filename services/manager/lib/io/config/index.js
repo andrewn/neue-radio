@@ -1,10 +1,12 @@
-const { resolve } = require('path');
+const { join, resolve } = require('path');
 const { promisify } = require('util');
 const fs = require('fs');
 
 const readFile = promisify(fs.readFile);
 
-const configPath = resolve(process.env.CONFIG_PATH);
+const configPath = process.env.CONFIG_PATH
+  ? resolve(process.env.CONFIG_PATH)
+  : join(__dirname, '../../../../../env.json');
 
 module.exports = async () => {
   try {
