@@ -69,6 +69,8 @@ echo "*** Radiodan"
 mkdir -p /opt/radiodan
 mkdir -p /opt/radiodan/processes/services
 touch /opt/radiodan/processes/services/{downloader,speech}
+mkdir -p /opt/radiodan/config
+echo "{}" /opt/radiodan/config/env.json
 
 cd /opt/radiodan
 git clone https://github.com/andrewn/neue-radio rde
