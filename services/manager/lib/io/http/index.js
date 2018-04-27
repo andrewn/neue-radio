@@ -7,6 +7,7 @@ const logger = require('../logger');
 
 const mountAppList = require('./list');
 const mountHomepage = require('./homepage');
+const mountConfig = require('./config');
 
 const directoryListing = ({ fileList, directory }, callback) => {
   const listing = fileList
@@ -57,6 +58,7 @@ const mountExternal = (apps, port) => {
   });
 
   mountAppList(apps, server);
+  mountConfig(server);
   mountHomepage(apps, server);
   mountWebsocket(server);
 
@@ -66,14 +68,15 @@ const mountExternal = (apps, port) => {
 const mountInternal = (apps, port, publicPath) => {
   const server = express();
 
-  logger.log('http', 'Mounted apps', apps.map( a => a.name ));
+  logger.log('http', 'Mounted apps', apps.map(a => a.name));
 
   apps.map(({ name, path }) =>
     mountApp({ server, name, path, index: 'internal.html' })
   );
 
-  mountWebsocket(server);
   mountAppList(apps, server);
+  mountConfig(server);
+  mountWebsocket(server);
 
   server.use(express.static(publicPath));
 
