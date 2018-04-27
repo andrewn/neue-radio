@@ -5,8 +5,10 @@ Description=Radio app manager web server
 EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
 # The leading hyphen in the below path means that this file is optional
 EnvironmentFile=-/opt/radiodan/rde/services/setup/tmp/apps
+Environment=CONFIG_PATH=/opt/radiodan/config/env.json
 WorkingDirectory=/opt/radiodan/rde/services/manager
 ExecStart=/usr/bin/env \
+          CONFIG_PATH=${CONFIG_PATH}
           INTERNAL_PORT=${MANAGER_INTERNAL_PORT} \
           EXTERNAL_PORT=${MANAGER_EXTERNAL_PORT} \
           WEBSOCKET_PORT=${MANAGER_WEBSOCKET_PORT} \

@@ -69,6 +69,8 @@ echo "*** Radiodan"
 mkdir -p /opt/radiodan
 mkdir -p /opt/radiodan/processes/services
 touch /opt/radiodan/processes/services/{downloader,speech}
+mkdir -p /opt/radiodan/config
+echo "{}" /opt/radiodan/config/env.json
 
 cd /opt/radiodan
 git clone https://github.com/andrewn/neue-radio rde
@@ -132,6 +134,15 @@ apt-get install -y --allow-downgrades --allow-remove-essential --allow-change-he
 
 [services]
    path = /opt/radiodan/rde/services
+   browsable = yes
+   public = yes
+   writable = yes
+   read only = no
+   force user = pi
+   force group = pi
+
+[config]
+   path = /opt/radiodan/config
    browsable = yes
    public = yes
    writable = yes
