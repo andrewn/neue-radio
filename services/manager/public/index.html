@@ -35,7 +35,7 @@
         const url = new URL(window.location);
         url.pathname = app.external.path;
 
-        return mountAppUrlAtRoot(app, url, rootElement);
+        return mountAppUrlAtRoot(app.name, url, rootElement);
       });
     }
 
