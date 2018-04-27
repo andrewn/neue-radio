@@ -1,0 +1,14 @@
+{
+  "ledmatrix": [
+    {
+      "id": "1",
+      "config": {
+        "pins": {
+          "data": "GPIO20",
+          "clock": "GPIO21",
+          "cs": "GPIO16"
+        }
+      }
+    }
+  ]
+}
