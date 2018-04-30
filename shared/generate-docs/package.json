@@ -1,0 +1,21 @@
+{
+  "name": "generate-docs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "generate-docs.js",
+  "scripts": {
+    "build": "node generate-docs",
+    "deploy": "netlify deploy",
+    "serve": "http-server dist -c-1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "glob": "^7.1.2",
+    "hiq": "^2.3.0-beta",
+    "http-server": "^0.11.1",
+    "netlify-cli": "^1.2.2",
+    "showdown": "^1.8.6"
+  }
+}
