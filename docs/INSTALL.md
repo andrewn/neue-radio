@@ -56,9 +56,9 @@ contents:
      }
 
 
-### If using the Pi Zero
+## If using the Pi Zero
 
-[Follow these instrutions to make it connectable over USB](http://blog.gbaman.info/?p=791). You need to share your wifi over ethernet and "RNDIS / Ethernet Gadget" and connect to your laptop via its micro USB port (not its power port) using the cable.
+[Follow these instructions to make it connectable over USB](http://blog.gbaman.info/?p=791). You need to share your wifi over ethernet and "RNDIS / Ethernet Gadget" and connect to your laptop via its micro USB port (not its power port) using the cable.
 
 This will both power the pi zero and allow you to connect to it.
 
@@ -69,6 +69,8 @@ Connect an Ethernet cable or set-up wifi. Power as normal via its power input.
 ## Steps for all Pis
 
     curl https://raw.githubusercontent.com/andrewn/neue-radio/master/deployment/provision | sudo bash
+
+Then reboot.
 
 ## Install pHat DAC if using
 
