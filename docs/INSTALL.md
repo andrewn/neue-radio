@@ -39,6 +39,23 @@ When done but before ejecting
 
      touch /Volumes/boot/ssh
 
+Final step to enable wifi by setting a country and adding a network name:
+
+     nano /Volumes/boot/wpa_supplicant.conf
+
+contents:
+
+     country=GB
+     ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+     update_config=1
+
+     network={
+       ssid="AP_NAME"
+       psk="AP_PASSWORD"
+       key_mgmt=WPA-PSK
+     }
+
+
 ### If using the Pi Zero
 
 [Follow these instrutions to make it connectable over USB](http://blog.gbaman.info/?p=791). You need to share your wifi over ethernet and "RNDIS / Ethernet Gadget" and connect to your laptop via its micro USB port (not its power port) using the cable.
