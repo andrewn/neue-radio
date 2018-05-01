@@ -64,7 +64,7 @@ This will both power the pi zero and allow you to connect to it.
 
 ## If using another Pi
 
-Connect an Ethernet cable or set-up wifi. Power as normal via it's power input.
+Connect an Ethernet cable or set-up wifi. Power as normal via its power input.
 
 ## Steps for all Pis
 
