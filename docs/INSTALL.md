@@ -31,7 +31,7 @@ Run services:
 
 ## Image an SD card
 
-[Download latest "Raspbian Jessie with Pixel" or "Raspbian Jessie Lite"](https://www.raspberrypi.org/downloads/raspbian/).
+[Download latest "Raspbian Stretch with Pixel" or "Raspbian Stretch Lite"](https://www.raspberrypi.org/downloads/raspbian/).
 
 Use [Etcher](https://etcher.io/) to easily flash Jessie onto an SD card.
 
