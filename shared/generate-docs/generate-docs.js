@@ -4,6 +4,7 @@ const glob = promisify(require('glob'));
 const readFile = promisify(require('fs').readFile);
 const writeFile = promisify(require('fs').writeFile);
 const showdown = require('showdown');
+const groupBy = require('lodash/groupBy');
 
 const root = resolve(__dirname, '..', '..');
 const outputDir = join(__dirname, 'dist');
@@ -60,6 +61,7 @@ const genDoc = async function(path) {
   return {
     title,
     filename,
+    category: dir.split('/')[0],
     html: template({ title, html })
   };
 };
@@ -70,9 +72,25 @@ const outputFile = async function({ filename, html }) {
 };
 
 const createIndex = async function(contents) {
-  const pages = contents.map(
-    ({ filename, title }) => `<li><a href="${filename}">${title}</a></li>`
-  );
+  const byCategory = groupBy(contents, 'category');
+
+  const pages = Object.keys(byCategory)
+    .sort()
+    .map(category => {
+      const pagesInCategory = byCategory[category]
+        .map(
+          ({ filename, title }) => `<li><a href="${filename}">${title}</a></li>`
+        )
+        .join('\n');
+
+      return `
+        <h2>${category}</h2>
+        <ul>${pagesInCategory}</ul>
+      `;
+    });
+  // const pages = contents.map(
+  //   ({ filename, title }) => `<li><a href="${filename}">${title}</a></li>`
+  // );
 
   const title = 'Documentation';
 
