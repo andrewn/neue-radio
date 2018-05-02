@@ -17,9 +17,15 @@ Install dependencies for all apps and services:
 
     npm run install-all
 
-Run services:
+Run **all** apps and services:
 
     npm start
+
+To run a specific app only:
+
+    APP_PATH=~/path/to/app/dir npm start
+
+This will open a new instance of Chrome containing the Manager page. Leave this page open, and open new windows to run the external pages of the apps.
 
 # Installation on a Pi
 
