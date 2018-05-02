@@ -35,6 +35,8 @@ potential developer - you will not have to worry about or update. Having said
 that, it's useful to have an understanding of what they do and how they
 interact.
 
+![Architecture diagram](docs/architecture-structure.png)
+
 ### Apps
 
 Apps are the most visible section of the architecture - if you're developing
