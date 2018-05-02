@@ -1,3 +1,22 @@
 body {
+  padding: 0;
+}
+
+nav {
+  display: flex;
   padding: 1rem;
+  background-color: blanchedalmond;
+}
+
+nav .title {
+  margin-right: 2rem;
+}
+
+article {
+  padding: 1rem;
+}
+
+.index-item p {
+  padding-top: 0;
+  margin-top: 0;
 }

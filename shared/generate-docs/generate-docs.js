@@ -5,6 +5,7 @@ const readFile = promisify(require('fs').readFile);
 const writeFile = promisify(require('fs').writeFile);
 const showdown = require('showdown');
 const groupBy = require('lodash/groupBy');
+const startCase = require('lodash/startCase');
 
 const root = resolve(__dirname, '..', '..');
 const outputDir = join(__dirname, 'dist');
@@ -26,6 +27,13 @@ const scrapeTitle = function(content) {
   }
 };
 
+const scrapeSummary = function(content) {
+  const matches = /Summary: (.*)/g.exec(content);
+  if (matches) {
+    return matches[1];
+  }
+};
+
 const template = function({ title, html }) {
   return `
     <!DOCTYPE html>
@@ -39,9 +47,12 @@ const template = function({ title, html }) {
     </head>
     <body>
       <nav>
-        <a href="/">Index</a>
+        <b class="title">Documentation</b>
+        <a href="/"> Documentation Index</a>
       </nav>
+      <article>
       ${html}
+      </article>
     </body>
     </html>
     `;
@@ -52,15 +63,18 @@ const genDoc = async function(path) {
   const contents = await readFile(resolve(root, path));
 
   const titleFromFile = scrapeTitle(contents);
+  const summaryFromFile = scrapeSummary(contents);
 
   const title = titleFromFile || `${dir}${dir ? '→' : ''}${name}`;
   const filename = `${dir.replace(sep, '-')}${dir ? '-' : ''}${name}.html`;
+  const summary = summaryFromFile ? converter.makeHtml(summaryFromFile) : null;
 
   const html = converter.makeHtml(contents.toString());
 
   return {
     title,
     filename,
+    summary,
     category: dir.split('/')[0],
     html: template({ title, html })
   };
@@ -79,23 +93,24 @@ const createIndex = async function(contents) {
     .map(category => {
       const pagesInCategory = byCategory[category]
         .map(
-          ({ filename, title }) => `<li><a href="${filename}">${title}</a></li>`
+          ({ filename, summary, title }) => `<li class="index-item" >
+          <a href="${filename}">${title}</a>
+          ${summary ? `${summary}` : ''}
+          </li>`
         )
         .join('\n');
 
       return `
-        <h2>${category}</h2>
+        <h2>${startCase(category)}</h2>
         <ul>${pagesInCategory}</ul>
       `;
     });
-  // const pages = contents.map(
-  //   ({ filename, title }) => `<li><a href="${filename}">${title}</a></li>`
-  // );
 
-  const title = 'Documentation';
+  const title = '';
 
   const html = `
     <h1>${title}</h1>
+    <p>This is an automatically generated list of the documentation found in the <a href="https://github.com/andrewn/neue-radio">repository</a>.
     <ul>${pages.join('\n')}</ul>
   `;
 
