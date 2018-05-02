@@ -37,11 +37,11 @@ module.exports = (appObj, server) => {
     path: `/${a}`
   }));
 
-  const all = [
+  const all = process.platform == 'linux' ? [
     { name: 'Setup', external: { port: ports.SETUP_PORT }, type: 'service' },
     { name: 'Debug', external: { port: ports.DEBUG_PORT }, type: 'service' },
     ...list
-  ];
+  ] : [...list];
 
   server.get('/apps', (_req, res) => res.json(all));
 };
