@@ -2,6 +2,8 @@
 
 Tested on macOS 10.13.
 
+You'll need a recent Long Term Support (LTS) release of [node.js](https://nodejs.org/en/). Newer versions are likely to work but have not been tested. v8.9.4 and above should work.
+
 Clone this repo:
 
     git clone https://github.com/andrewn/neue-radio
