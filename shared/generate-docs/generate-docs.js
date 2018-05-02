@@ -93,7 +93,7 @@ const createIndex = async function(contents) {
 
   const categoriesInOrder = [
     ...categoryOrder,
-    difference(Object.keys(byCategory), categoryOrder).sort()
+    ...difference(Object.keys(byCategory), categoryOrder).sort()
   ];
 
   const pages = categoriesInOrder.map(category => {
