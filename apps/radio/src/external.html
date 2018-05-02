@@ -1,47 +1,93 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+  <title>Radio: External page</title>
   <script src="/websocket"></script>
+  <link rel="stylesheet" href="assets/hiq.css">
+  <style>
+    body {
+      margin: 1rem;
+    }
+
+    section {
+      margin: 1rem 0;
+    }
+  </style>
 </head>
+
 <body>
-  <h1>This is the public part of the radio app</h1>
-  <p>Useful for remote controls etc</p>
-  <button id="dove">Play birdsong - collared dove</button>
-  <button id="tit">Play birdsong - blue tit</button>
-  <button id="hls">Play HLS stream</button>
-  <button id="chord">Generate Web Audio chord</button>
+  <div class="container">
+    <h1>Radio</h1>
+    <p>This is the external part of the radio app</p>
+    <p>It's useful for presenting a user interface to the user that runs on a phone or desktop browser.</p>
+    <h2>Actions</h2>
+    <p>These buttons demonstrate different types of audio output. Pressing a button sends a WebSocket command to this app's
+      <code>internal</code> page that effects the command.</p>
+
+    <section>
+      <h3>Play local audio</h3>
+      <p>Plays an MP3 file stored on the device. These share an
+        <code>&lt;audio&gt;</code> element and so only one plays at a time.</p>
+      <button id="dove">Play birdsong - collared dove</button>
+      <button id="tit">Play birdsong - blue tit</button>
+    </section>
+
+    <section>
+      <h3>Play HLS stream</h3>
+      <p>Uses the
+        <a href="https://github.com/video-dev/hls.js">HLS.js library</a> to play a live HLS stream.</p>
+      <button id="hls">Play HLS stream</button>
+    </section>
+
+    <section>
+      <h3>Generate audio</h3>
+      <p>Uses
+        <a href="https://tonejs.github.io/">Tone.js library</a> to generate audio in the browser.</p>
+      <button id="chord">Generate Web Audio chord</button>
+    </section>
+
+    <section>
+      <h3>Stop all audio</h3>
+      <button id="stop" style="border-color: transparent; background-color:indianred">Stop all</button>
+    </section>
+  </div>
+
   <script>
     const ws = createWebsocket({ debug: true });
-    console.log('%cHello - really!', 'color:blue;font-weight:bold', 'messages from the server');
-    ws.subscribe('radio/command/chord', function ({ topic, payload }) {
-      console.log('chord', payload);
-    });
+    console.log('%cHello!', 'color:blue;font-weight:bold');
 
+    // Subscrive to all websocket events, from everyting
     ws.subscribe(/.*/, function ({ topic, payload }) {
-      console.log('subscribe');
-      console.log(topic);
-      console.log(payload);
+      console.log('Received a WebSocket message', { topic, payload });
     });
 
-    const send = (topic, payload={}) => {
+    // Helper to send a WebSocket command to the internal page
+    // for this app
+    const sendCommand = (topic, payload = {}) => {
       ws.publish({ topic: `radio/command/${topic}`, payload });
     };
 
     document.getElementById('dove').addEventListener('click', () => (
-      send('play', { params: { file: 'Birdsong-Collared_Dove.mp3' } })
+      sendCommand('play', { params: { file: 'Birdsong-Collared_Dove.mp3' } })
     ));
 
     document.getElementById('tit').addEventListener('click', () => (
-      send('play', { params: { file: 'Birdsong-Blue_Tit.mp3' } })
+      sendCommand('play', { params: { file: 'Birdsong-Blue_Tit.mp3' } })
     ));
 
     document.getElementById('hls').addEventListener('click', () => (
-      send('hls')
+      sendCommand('hls')
     ));
 
     document.getElementById('chord').addEventListener('click', () => (
-      send('chord')
+      sendCommand('chord')
+    ));
+
+    document.getElementById('stop').addEventListener('click', () => (
+      sendCommand('stop')
     ));
   </script>
 </body>
+
 </html>
