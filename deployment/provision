@@ -58,6 +58,9 @@ raspi-config nonint do_spi 0
 echo "*** speech-dispatcher and voices"
 apt-get install -y speech-dispatcher speech-dispatcher-festival
 
+echo "*** youtube-dl"
+apt-get install -y youtube-dl
+
 echo "*** Node"
 mkdir -pv /opt/node
 curl -L https://nodejs.org/dist/v8.9.4/node-v8.9.4-linux-armv6l.tar.gz | tar xz --strip-components 1 -C /opt/node
