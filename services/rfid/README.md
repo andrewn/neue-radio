@@ -1,5 +1,7 @@
 # RFID Bridge
 
+Summary: Connects to an RFID reader
+
 Listens for a connected MFC522 card reader and publishes found cards across the WebSocket bridge using the `presented` event.
 
 ```

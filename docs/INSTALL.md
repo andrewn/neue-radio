@@ -1,4 +1,8 @@
-# Installation on a computer
+# Installation
+
+Summary: Installating this system on a desktop or Raspberry Pi.
+
+## Installation on a computer
 
 Tested on macOS 10.13.
 
@@ -27,9 +31,9 @@ To run a specific app only:
 
 This will open a new instance of Chrome containing the Manager page. Leave this page open, and open new windows to run the external pages of the apps.
 
-# Installation on a Pi
+## Installation on a Pi
 
-## Hardware
+### Hardware
 
 * Raspberry Pi (tested on Zero and Pi 3)
 * 8GB SD card
@@ -37,7 +41,7 @@ This will open a new instance of Chrome containing the Manager page. Leave this 
 * soldered phat dac or USB audio card
 * 3.5m jack headphones or mini speaker
 
-## Image an SD card
+### Image an SD card
 
 [Download latest "Raspbian Stretch with Pixel" or "Raspbian Stretch Lite"](https://www.raspberrypi.org/downloads/raspbian/). We'd recommend "Raspbian Stretch Lite" as it's smaller.
 
@@ -63,17 +67,17 @@ contents:
     key_mgmt=WPA-PSK
     }
 
-## If using the Pi Zero
+### If using the Pi Zero
 
 [Follow these instructions to make it connectable over USB](http://blog.gbaman.info/?p=791). You need to share your wifi over ethernet and "RNDIS / Ethernet Gadget" and connect to your laptop via its micro USB port (not its power port) using the cable.
 
 This will both power the pi zero and allow you to connect to it.
 
-## If using another Pi
+### If using another Pi
 
 Connect an Ethernet cable or set-up wifi. Power as normal via its power input.
 
-## Steps for all Pis
+### Steps for all Pis
 
 Run the provisioning script which will install all required dependencies and code.
 
@@ -85,6 +89,6 @@ Then reboot.
 
 Read the [audio guide](AUDIO.md) to set-up the audio hardware.
 
-## Play some audio
+### Play some audio
 
 Go to http://raspberrypi.local:5000/radio/ and choose a file to play.

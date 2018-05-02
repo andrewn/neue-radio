@@ -1,6 +1,16 @@
 # Speech Dispatcher Service
 
+Summary: Text-to-speech
+
 A tiny service that can speak under WebSocket control. This communicates using a [`speech-dispatcher`](https://devel.freebsoft.org/doc/speechd/speech-dispatcher.html) instance using the SSIP protocol.
+
+## Protocol
+
+| topic                      | payload                                                                                |
+| -------------------------- | -------------------------------------------------------------------------------------- |
+| speech/command/speak       | { utterance: 'Hello, world!' } <br /> Optionally, voiceType: 'ID' can change the voice |
+| speech/event/spoken        | { utterance: 'Hello, world!' }                                                         |
+| speech/command/list-voices | { voices: ['MALE1', 'FEMALE1'] }                                                       |
 
 ## Installation
 
@@ -27,11 +37,3 @@ To log out debugging information, set the `DEBUG` environment variable i.e.
     WS_PORT=8000 DEBUG=* node src/main
 
 [debug](https://github.com/visionmedia/debug) is used for debugging.
-
-## Protocol
-
-| topic                      | payload                                                                                |
-| -------------------------- | -------------------------------------------------------------------------------------- |
-| speech/command/speak       | { utterance: 'Hello, world!' } <br /> Optionally, voiceType: 'ID' can change the voice |
-| speech/event/spoken        | { utterance: 'Hello, world!' }                                                         |
-| speech/command/list-voices | { voices: ['MALE1', 'FEMALE1'] }                                                       |

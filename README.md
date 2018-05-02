@@ -1,4 +1,6 @@
-# Radiodan Neue
+# Neue Radio
+
+Summary: An introduction to the architecture, available apps and services and useful debugging info.
 
 ## What is this?
 
