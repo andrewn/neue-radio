@@ -88,6 +88,7 @@ systemctl enable physical
 systemctl enable rfid
 systemctl enable debug
 systemctl enable speech
+systemctl enable serial
 systemctl enable setup
 
 # Enable radio app only
