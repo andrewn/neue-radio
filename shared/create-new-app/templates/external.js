@@ -1,8 +1,7 @@
 const appName = window.location.pathname.replace(/\//g, '');
+const websocket = createWebsocket();
 
 const main = async () => {
-  const websocket = createWebsocket();
-
   websocket.ready.then(() => {
     console.log('Websocket connected');
 
