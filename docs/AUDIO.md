@@ -1,6 +1,8 @@
 # Configuring audio on the Pi
 
-Linux audio configuration can be very challenging. The base system uses Pulse Audio in System mode. This forces a single instance of the Pulse Audio server to run and all applications connect to it. This is constrasted with the default set-up
+Summary: Linux audio configuration can be very challenging. This guide contains instructions for configuring a variety of audio hardware.
+
+The base system uses Pulse Audio in System mode. This forces a single instance of the Pulse Audio server to run and all applications connect to it.
 
 This document assumes that you have Pulse Audio running in system mode.
 

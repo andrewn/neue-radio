@@ -1,6 +1,8 @@
 # WebSockets
 
-All apps and services in this archetecture use WebSockets to communicate between
+Summary: How to name your WebSocket messages
+
+All apps and services in this architecture use WebSockets to communicate between
 each other. In order for a easy level of interoperability, we've come up with a
 short set of standards.
 

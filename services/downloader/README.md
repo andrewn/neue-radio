@@ -1,6 +1,8 @@
 # Downloader Service
 
-Uses the `youtube-dl` command to download and then serve video files over HTTP.
+Summary: Uses the `youtube-dl` command to download and then serve video files over HTTP.
+
+## Protocol
 
 Listens to the `downloader/command/request` command, and responds with a `downloader/event/available` event.
 
@@ -10,6 +12,7 @@ Listens to the `downloader/command/request` command, and responds with a `downlo
 `npm i`
 
 ## Running
+
 `npm start`
 
 Ensure the manager is running in order to communicate over web sockets.

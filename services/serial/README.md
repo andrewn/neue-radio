@@ -1,28 +1,8 @@
-# serial service
+# Serial Service
 
-The serial service allows serial port connections to be opened and data read and written.
+Summary: The serial service allows serial port connections to be opened and data read and written.
 
 The service listens on a shared WebSocket connection.
-
-## Installation
-
-Requires node.js LTS.
-
-The service can be installed on any system supported by [node-serialport](https://github.com/node-serialport/node-serialport#platform-support).
-
-    npm install --production
-
-## Running
-
-    npm start
-
-## Debugging
-
-To log out debugging information, set the `DEBUG` environment variable i.e.
-
-    DEBUG=* npm start
-
-[debug](https://github.com/visionmedia/debug) is used for debugging.
 
 ## Usage
 
@@ -218,3 +198,23 @@ serial/command/close
 ```
 
 This event is also emitted if the port is closed for any other reason.
+
+## Installation
+
+Requires node.js LTS.
+
+The service can be installed on any system supported by [node-serialport](https://github.com/node-serialport/node-serialport#platform-support).
+
+    npm install --production
+
+## Running
+
+    npm start
+
+## Debugging
+
+To log out debugging information, set the `DEBUG` environment variable i.e.
+
+    DEBUG=* npm start
+
+[debug](https://github.com/visionmedia/debug) is used for debugging.
