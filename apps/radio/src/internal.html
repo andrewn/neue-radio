@@ -1,30 +1,39 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <script src="modules/hls.js/dist/hls.min.js" charset="utf-8"></script>
   <script src="modules/tone/build/Tone.min.js" charset="utf-8"></script>
   <script src="/websocket" charset="utf-8"></script>
+  <link rel="stylesheet" href="assets/hiq.css">
 </head>
+
 <body>
-  <h1>This is the part of the radio app that runs in the radio itself</h1>
-  <p>Users never see this page</p>
+  <h1>Radio internal</h1>
+  <p>This is the internal part of the radio app that runs in the radio itself</p>
+  <p>Users never see this page. Playing audio on this page will play it through whichever sound output the browser is using.</p>
   <audio id="audio"></audio>
   <audio id="media"></audio>
   <script>
     const stream = "http://a.files.bbci.co.uk/media/live/manifesto/audio/simulcast/hls/nonuk/sbr_low/llnw/bbc_radio_one.m3u8";
 
+    // Example of playing an HLS stream
+    // via the Hls.js library
+    // See: https://github.com/video-dev/hls.js
     function playHlsStream() {
-      if(Hls.isSupported()) {
+      if (Hls.isSupported()) {
         var media = document.getElementById('media');
         var hls = new Hls();
         hls.loadSource(stream);
         hls.attachMedia(media);
-        hls.on(Hls.Events.MANIFEST_PARSED,function() {
+        hls.on(Hls.Events.MANIFEST_PARSED, function () {
           media.play();
         });
       }
     }
 
+    // Generates some sounds using the Tone.js library
+    // See: https://tonejs.github.io/
     const polySynth = new Tone.PolySynth(4, Tone.Synth).toMaster();
 
     function playChord() {
@@ -37,32 +46,39 @@
       polySynth.triggerRelease(['C4', 'E4', 'G4', 'B4'])
     }
 
+    function stopAll() {
+      var medias = document.querySelectorAll('audio');
+      Array.from(medias).forEach(
+        function (mediaEl) {
+          mediaEl.pause();
+        }
+      );
+      stopChord();
+    }
+
     console.log('%cHello!', 'color:blue;font-weight:bold', 'messages from the server');
 
+    // Creates a websocket connection to commuicate
+    // with the external page and other services
     const ws = createWebsocket({ debug: true });
 
     ws.subscribe(new RegExp('radio/command/.*'), ({ topic, payload }) => {
       console.log(topic, payload);
 
-      if(topic.includes("play")){
-         var audio_file = payload.params.file;
-         console.log("setting attribute to "+audio_file);
-         var a  = document.querySelector("#audio");
-         a.setAttribute("src", "assets/audio/" + audio_file);
-         a.setAttribute("autoplay","autoplay");
+      if (topic.includes("play")) {
+        var audio_file = payload.params.file;
+        var a = document.querySelector("#audio");
+        a.setAttribute("src", "assets/audio/" + audio_file);
+        a.setAttribute("autoplay", "autoplay");
       } else if (topic.includes("hls")) {
         playHlsStream();
       } else if (topic.includes("chord")) {
         playChord();
+      } else if (topic.includes("stop")) {
+        stopAll();
       }
     });
-
-    function send(key, data) {
-      ws.publish({
-        topic: key.replace('command', 'event'),
-        payload: data
-      });
-    }
   </script>
 </body>
+
 </html>
