@@ -33,30 +33,29 @@ Run services:
 
 ## Image an SD card
 
-[Download latest "Raspbian Stretch with Pixel" or "Raspbian Stretch Lite"](https://www.raspberrypi.org/downloads/raspbian/).
+[Download latest "Raspbian Stretch with Pixel" or "Raspbian Stretch Lite"](https://www.raspberrypi.org/downloads/raspbian/). We'd recommend "Raspbian Stretch Lite" as it's smaller.
 
-Use [Etcher](https://etcher.io/) to easily flash Jessie onto an SD card.
+Use [Etcher](https://etcher.io/) to easily flash Raspbian onto an SD card.
 
-When done but before ejecting
+When done but before ejecting:
 
-     touch /Volumes/boot/ssh
+    touch /Volumes/boot/ssh
 
 Final step to enable wifi by setting a country and adding a network name:
 
-     nano /Volumes/boot/wpa_supplicant.conf
+    nano /Volumes/boot/wpa_supplicant.conf
 
 contents:
 
-     country=GB
-     ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-     update_config=1
+    country=GB
+    ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+    update_config=1
 
-     network={
-       ssid="AP_NAME"
-       psk="AP_PASSWORD"
-       key_mgmt=WPA-PSK
-     }
-
+    network={
+    ssid="AP_NAME"
+    psk="AP_PASSWORD"
+    key_mgmt=WPA-PSK
+    }
 
 ## If using the Pi Zero
 
@@ -70,13 +69,15 @@ Connect an Ethernet cable or set-up wifi. Power as normal via its power input.
 
 ## Steps for all Pis
 
+Run the provisioning script which will install all required dependencies and code.
+
     curl https://raw.githubusercontent.com/andrewn/neue-radio/master/deployment/provision | sudo bash
 
 Then reboot.
 
-## Install pHat DAC if using
+## Configure audio
 
-    curl -sS get.pimoroni.com/phatdac | bash
+Read the [audio guide](AUDIO.md) to set-up the audio hardware.
 
 ## Play some audio
 

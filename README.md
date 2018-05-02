@@ -9,7 +9,26 @@ web standards and ease of prototyping across programming environments.
 
 See [INSTALL.md](docs/INSTALL.md) for detailed instructions.
 
-## Architecture Overview
+## Debugging
+
+Because these internal apps are run internally on the Pi, it can be difficult to
+debug. To enable this, a remote Web Inspector is available and is accessible from other machines on the network. This allows you to use the full [Chrome
+DevTools](https://developers.google.com/web/tools/chrome-devtools/) to inspect
+what's running on the device.
+
+In order to aid this process, a remote web inspector is available on
+http://raspberrypi.local:9222 and is accessible from other machines on the
+network.
+
+There are some complications when it comes to accessing the DevTools remotely.
+We have found two methods of getting started:
+
+1.  Visit http://raspberrypi.local:5004 where a list of all available pages will
+    be waiting.
+2.  Copy/paste the given link into Chrome on your computer to launch the
+    inspector.
+
+## Architecture
 
 This Architecture comprises of several moving parts. Most of these - as
 potential developer - you will not have to worry about or update. Having said
@@ -58,70 +77,43 @@ loads the `internal` part of each app into an IFrame.
 Once all apps are mounted by the Manager, this process loads the web page
 available on the `internal` port into a headless version of Chromium.
 
-### Debugging App
+## Available Apps
 
-Because these internal apps are run internally on the Pi, it can be difficult to
-debug. In order to aid this process, a remote web inspector is available on
-http://raspberrypi.local:9222 and is accessible from other machines on the
-network. This allows you to use the full [Chrome
-DevTools](https://developers.google.com/web/tools/chrome-devtools/) to inspect
-what's running on the device.
+### Radio
 
-There are some complications when it comes to accessing the DevTools remotely.
-We have found two methods of getting started:
+This initial implementation doesn't do very much.
+[radio/index.html](radio/index.html) plays a live HLS radio stream using
+[HLS.js](https://github.com/dailymotion/hls.js) in a web page.
 
-#### Fastest Debug
+In a future version it would be good to present a simple remote control that
+allows you to play/pause the stream.
 
-1. Visit http://raspberrypi.local:5004 where a list of all available pages will
-   be waiting.
-2. Copy/paste the given link into Chrome on your computer to launch the
-   inspector.
+### YouTube
 
-#### Manual Debug
+Plays and controls a YouTube video, using either [YouTube's IFrame
+API](https://developers.google.com/youtube/iframe_api_reference), or the
+[Downloader Service](#downloader-service) for offline support.
 
-1. Visit http://raspberrypi.local:9222 in a browser
-2. Click the link "localhost:5001/" on the page
-3. This link won't load, but copy the Page ID at the end of the URL in the
-   address bar:
-
-   e.g. in the URL
-`/devtools/page/**41521fab-b30d-41a5-8a47-9557abede207**&remoteFrontend=true`
-the page ID is **`41521fab-b30d-41a5-8a47-9557abede207`**
-
-4. Put the Page ID into the following URL and paste into the Chrome instance
-   runnning on your computer:
-
-   chrome-devtools://devtools/bundled/inspector.html?ws=raspberrypi.local:9222/devtools/page/**PAGE_ID_GOES_HERE**
-
-    For the Page ID above, that would be:
-
-    chrome-devtools://devtools/bundled/inspector.html?ws=raspberrypi.local:9222/devtools/page/**41521fab-b30d-41a5-8a47-9557abede207**
+## Available Services
 
 ### Setup Service
 
 A web service, available at `http://localhost:5020`, allows configuration of
 which apps and services run when your Pi is started. Some essential services -
 such as [Manager](#manager-service), [Debug](#debug-service), and the Setup
-Service itself -  cannot be removed.
+Service itself - cannot be removed.
 
 ### Physical Interface Service
 
 A very rough implementation for controlling connected lights and buttons exists
 in `physical`. When run it connects to the peripherals specified in
-`physical/config/physical-config.json`. The Buttons and RGB LEDs map onto the
-[Johnny-Five](http://johnny-five.io) API. The Rotary Encoders are provided by
-the
-[andrewn/raspi-rotary-encoder](https://github.com/andrewn/raspi-rotary-encoder)
-package.
+`physical/config/physical-config.json`.
 
-The physical server listens for WebSocket connections on port `5100` and emits
-and receives simple events to all connected clients.
+Supported components:
 
-At the moment, the messages are quite low-level. Further work would be to wrap
-the messages in a simple library that make listing available components and
-controlling and listening to them a bit easier.
-
-A simple demo page at http://localhost:5100 allows limited interaction.
+* Buttons, RGB LEDs, LED Matrices ([Johnny-Five](http://johnny-five.io))
+* Rotary Encoders ([andrewn/raspi-rotary-encoder](https://github.com/andrewn/raspi-rotary-encoder))
+* Capacitive touch sensor (CAP1188) ([andrewn/raspi-cap](https://github.com/andrewn/raspi-cap))
 
 ### Downloader Service
 
@@ -137,25 +129,8 @@ WebSocket server.
 
 There is a basic http interface available on http://localhost:5003.
 
-## Available Apps
-
-### Radio
-
-This initial implementation doesn't do very much.
-[radio/index.html](radio/index.html)  plays a live HLS radio stream using
-[HLS.js](https://github.com/dailymotion/hls.js) in a web page.
-
-In a future version it would be good to present a simple remote control that
-allows you to play/pause the stream.
-
-### YouTube
-
-Plays and controls a YouTube video, using either [YouTube's IFrame
-API](https://developers.google.com/youtube/iframe_api_reference), or the
-[Downloader Service](#downloader-service) for offline support.
-
 ## Contributors
 
-- [Andrew Nicolaou](https://github.com/andrewn)
-- [Libby Miller](https://github.com/libbymiller)
-- [Dan Nuttall](https://github.com/pixelblend)
+* [Andrew Nicolaou](https://github.com/andrewn)
+* [Libby Miller](https://github.com/libbymiller)
+* [Dan Nuttall](https://github.com/pixelblend)
