@@ -6,6 +6,7 @@ const writeFile = promisify(require('fs').writeFile);
 const showdown = require('showdown');
 const groupBy = require('lodash/groupBy');
 const startCase = require('lodash/startCase');
+const difference = require('lodash/difference');
 
 const root = resolve(__dirname, '..', '..');
 const outputDir = join(__dirname, 'dist');
@@ -34,6 +35,8 @@ const scrapeSummary = function(content) {
   }
 };
 
+const categoryOrder = ['', 'docs', 'shared', 'services'];
+
 const template = function({ title, html }) {
   return `
     <!DOCTYPE html>
@@ -48,7 +51,7 @@ const template = function({ title, html }) {
     <body>
       <nav>
         <b class="title">Documentation</b>
-        <a href="/"> Documentation Index</a>
+        <a href="/">Index</a>
       </nav>
       <article>
       ${html}
@@ -88,23 +91,26 @@ const outputFile = async function({ filename, html }) {
 const createIndex = async function(contents) {
   const byCategory = groupBy(contents, 'category');
 
-  const pages = Object.keys(byCategory)
-    .sort()
-    .map(category => {
-      const pagesInCategory = byCategory[category]
-        .map(
-          ({ filename, summary, title }) => `<li class="index-item" >
+  const categoriesInOrder = [
+    ...categoryOrder,
+    difference(Object.keys(byCategory), categoryOrder).sort()
+  ];
+
+  const pages = categoriesInOrder.map(category => {
+    const pagesInCategory = byCategory[category]
+      .map(
+        ({ filename, summary, title }) => `<li class="index-item" >
           <a href="${filename}">${title}</a>
           ${summary ? `${summary}` : ''}
           </li>`
-        )
-        .join('\n');
+      )
+      .join('\n');
 
-      return `
+    return `
         <h2>${startCase(category)}</h2>
         <ul>${pagesInCategory}</ul>
       `;
-    });
+  });
 
   const title = '';
 

@@ -16,7 +16,6 @@ article {
   padding: 1rem;
 }
 
-.index-item p {
-  padding-top: 0;
-  margin-top: 0;
+.index-item {
+  margin: 1rem;
 }

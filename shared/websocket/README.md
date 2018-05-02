@@ -1,8 +1,6 @@
 # Websocket Library
 
-This Isomorphic JS library allows for standardised communication between all
-parts of the Neue Architecture. It supports multiple topic subscription and
-reconnected automatically on disconnect.
+Summary: This Isomorphic JS library allows for standardised communication between all parts of the Neue Architecture. It supports multiple topic subscription and reconnected automatically on disconnect.
 
 ## Setup
 
