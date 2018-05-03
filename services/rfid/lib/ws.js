@@ -3,7 +3,7 @@
 */
 const createWebsocket = require('websocket');
 
-const webSocket = ({ host }) => {
+const webSocket = () => {
   const ws = createWebsocket();
 
   ws.ready.then(() => console.log('Listening to web socket'));
