@@ -13,7 +13,7 @@ try {
 module.exports = function createCapInstance(spec, routable) {
   connectRaspiCap({ resetPin: spec.config.resetPin }).then(cap => {
     // Listen for messages from clients
-    routable.on('resetRequest', function() {
+    routable.on('reset-request', function() {
       try {
         cap.reset();
       } catch (e) {
@@ -21,13 +21,13 @@ module.exports = function createCapInstance(spec, routable) {
       }
     });
 
-    routable.on('statusRequest', function() {
-      routable.publish('status', { sensitivty: cap.getSensitivity() });
+    routable.on('status-request', function() {
+      routable.publish('status', { sensitivity: cap.getSensitivity() });
     });
 
     routable.on('sensitivity', function(req) {
       try {
-        cap.setSensitivity(req.params.level);
+        cap.setSensitivity(req.level);
         routable.publish('status', { sensitivty: cap.getSensitivity() });
       } catch (e) {
         console.error(e);

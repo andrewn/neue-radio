@@ -1,5 +1,5 @@
 {
-  "Button": [
+  "button": [
     {
       "id": "next",
       "config": {
@@ -27,7 +27,7 @@
       }
     }
   ],
-  "Encoder": [
+  "encoder": [
     {
       "id": "power",
       "config": {
@@ -55,7 +55,7 @@
       }
     }
   ],
-  "Led.RGB": [
+  "ledrgb": [
     {
       "id": "magic",
       "config": {
