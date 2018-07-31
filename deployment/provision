@@ -42,16 +42,6 @@ EOF
 echo "*** Pulse Audio"
 apt-get install pulseaudio -y
 
-echo "*** Chrome"
-cd /tmp
-# https://launchpad.net/~osomon/+archive/ubuntu/chromium-dev/
-wget https://launchpad.net/~osomon/+archive/ubuntu/chromium-dev/+build/13722974/+files/chromium-browser_64.0.3260.2-0ubuntu0.14.04.1241_armhf.deb -O browser.deb
-wget https://launchpad.net/~osomon/+archive/ubuntu/chromium-dev/+build/13722974/+files/chromium-codecs-ffmpeg-extra_64.0.3260.2-0ubuntu0.14.04.1241_armhf.deb -O browser_codec.deb
-dpkg -i browser_codec.deb
-dpkg -i browser.deb || apt --fix-broken install -y
-rm browser*.deb
-DEBIAN_FRONTEND=noninteractive apt-get install rpi-chromium-mods -y
-
 echo "*** Enable SPI (RFID reader)"
 raspi-config nonint do_spi 0
 
