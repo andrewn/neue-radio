@@ -43,7 +43,7 @@ There are example configs in the `config` directory to use as a basis.
 
 For example, a button with id "power" will emit the following when pressed:
 
-`physical/event/button/power/press`
+`physical/event/button-power-press`
 
 ### Command a component
 
@@ -52,7 +52,7 @@ For example, a button with id "power" will emit the following when pressed:
 For example, change an "ledrgb" called "power" colour to green:
 
 Topic: `physical/command/ledrgb-power-colour`
-Payload: `{ rgb: [0, 255, 0]}`
+Payload: `{ isOn: true, color: [0, 255, 0]}`
 
 ## Available components, events and commands
 
@@ -93,10 +93,10 @@ Emits an event with name `status` containing the state of the LED.
 
 Color values can be:
 
-| Any CSS color name string | "red", "green", "blue"|
-| Hexadecimal color strings | "ff0000", "00ff00", "0000ff"|
-| Hexadecimal color strings, w/ leading # | "#ff0000", "#00ff00", "#0000ff"|
-| Array of values 0-255 | [255, 128, 4] |
+* Any CSS color name string e.g. `"red"`, `"green"`, `"blue"`
+* Hexadecimal color strings e.g. `"ff0000"`, `"00ff00"`, `"0000ff"`
+* Hexadecimal color strings, w/ leading `#` e.g. `"#ff0000"`, `"#00ff00"`, `"#0000ff"`
+* Array of values 0-255 e.g. `[255, 128, 4]`
 
 ### Rotary Encoder
 
