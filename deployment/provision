@@ -42,6 +42,9 @@ EOF
 echo "*** Pulse Audio"
 apt-get install pulseaudio -y
 
+echo "*** Chrome"
+DEBIAN_FRONTEND=noninteractive apt-get install rpi-chromium-mods -y
+
 echo "*** Enable SPI (RFID reader)"
 raspi-config nonint do_spi 0
 
