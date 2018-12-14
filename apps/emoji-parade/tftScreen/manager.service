@@ -1,0 +1,21 @@
+[Unit]
+Description=Radio app manager
+Requires=manager-web-server.service
+After=manager-web-server.service
+
+[Service]
+EnvironmentFile=/opt/radiodan/rde/deployment/systemd/ports.env
+WorkingDirectory=/opt/radiodan/rde/services/manager
+ExecStart=/usr/bin/env \
+  DISPLAY=:0.0 \
+  INTERNAL_PORT=${MANAGER_INTERNAL_PORT} \
+  REMOTE_DEBUGGING_PORT=${MANAGER_REMOTE_DEBUGGING_PORT} \
+  /opt/radiodan/rde/services/manager/start-web-environment.sh
+Restart=on-failure
+StandardOutput=syslog
+SyslogIdentifier=rde-manager
+Type=idle
+User=pi
+
+[Install]
+WantedBy=multi-user.target
