@@ -10,6 +10,7 @@ apt-get update
 
 echo "*** Prerequisites"
 apt-get install git -y
+apt-get install pigpio -y
 # apt-get upgrade -y
 
 echo "*** logrotate"
