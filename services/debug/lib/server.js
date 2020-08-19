@@ -12,7 +12,7 @@ const websocketFromUrl = value => {
 };
 
 const translateToChromeInternal = value =>
-  `chrome-devtools://devtools/bundled/inspector.html?ws=${websocketFromUrl(
+  `devtools://devtools/bundled/inspector.html?ws=${websocketFromUrl(
     value
   )}`;
 
